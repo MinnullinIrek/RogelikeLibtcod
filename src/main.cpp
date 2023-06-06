@@ -13,6 +13,7 @@
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
 #include "maps/map.h"
+#include "units/IUnit.h"
 #include "visualiser/visualiser.h"
 
 std::unique_ptr<Visualiser> visualiser;
@@ -30,7 +31,7 @@ void main_loop() {
 
   // tcod::print(g_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
   visualiser->showMap();
-  //g_context.present(g_console);
+  // g_context.present(g_console);
 
   // Handle input.
   SDL_Event event;
@@ -69,9 +70,11 @@ int main(int argc, char** argv) {
 
     auto map = std::make_unique<Map>(Coord(20, 20));
     visualiser = std::make_unique<Visualiser>(Coord(10, 10));
+    auto unit = std::make_unique<Unit>('@');
+    map->setHero(std::move(unit), {11, 11});
+
     visualiser->setMap(std::move(map));
     // visualiser->setConsole(g_console);
-
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);
 #else

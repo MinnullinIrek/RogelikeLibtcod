@@ -7,6 +7,7 @@
 #include "../header.h"
 
 class Cell;
+class IUnit;
 
 class Map {
  private:
@@ -17,6 +18,7 @@ class Map {
   ~Map();
 
   Identifier getIdentifier(const Coord& cd);
+  void setHero(std::unique_ptr<IUnit> hero, const Coord& coord);
 
  protected:
   bool isExisted(const Coord& cd) const;

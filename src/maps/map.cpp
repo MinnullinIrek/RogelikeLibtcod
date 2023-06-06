@@ -31,3 +31,9 @@ Identifier Map::getIdentifier(const Coord& cd) {
 }
 
 bool Map::isExisted(const Coord& cd) const { return m_cells.find(cd) != m_cells.end(); }
+
+void Map::setHero(std::unique_ptr<IUnit> hero, const Coord& coord) {
+  if (isExisted(coord)) {
+    m_cellsInner.at(m_cells.at(coord))->setUnit(std::move(hero));
+  }
+}

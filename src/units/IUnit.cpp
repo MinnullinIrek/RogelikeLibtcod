@@ -4,10 +4,13 @@
 #include "../header.h"
 
 IUnit::IUnit() {}
+IUnit::IUnit(Identifier id) : m_id(id) {}
 
-// Unit::Unit(const Identifier& id) : IUnit(), m_id(id) {}
-// Unit::Unit() {}
+Identifier IUnit::toChar() const { return m_id; }
 
-//Identifier Unit::toChar() { return m_id; }
-//
-//Description Unit::toString() { return Description("decription"); }
+Unit::Unit(const Identifier& id) : IUnit(id) {}
+Unit::Unit() : IUnit() {}
+
+// Identifier Unit::toChar() const { return m_id; }
+
+Description Unit::toString() { return Description("decription"); }
