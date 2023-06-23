@@ -3,20 +3,26 @@
 #endif  // __EMSCRIPTEN__
 
 #include <SDL.h>
+#include <SDL_keycode.h>
 
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
 #include <libtcod.hpp>
+#include <limits>
 
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
+#include "keyboard.h"
 #include "maps/map.h"
 #include "units/IUnit.h"
+#include "units/actor.h"
 #include "visualiser/visualiser.h"
+#include "units/mover.h"
 
 std::unique_ptr<Visualiser> visualiser;
+std::unique_ptr<Keyboard> keyboard;
 
 /// Return the data directory.
 
@@ -39,17 +45,26 @@ void main_loop() {
   // Block until events exist.  This conserves resources well but isn't compatible with animations or Emscripten.
   SDL_WaitEvent(nullptr);
 #endif
-  while (SDL_PollEvent(&event)) {
+  while (SDL_WaitEvent(&event)) {
+    bool repaint = false;
     switch (event.type) {
       case SDL_QUIT:
         std::exit(EXIT_SUCCESS);
         break;
+      case SDL_KEYDOWN:
+        keyboard->setKey(event.key.keysym.sym);
+        repaint = true;
+        break;
     }
+    if (repaint) {
+      visualiser->showMap();   
+    }
+
   }
 }
 
 /// Main program entry point.
-int main(int argc, char** argv) {
+int main(int /*argc*/, char** /*argv*/) {
   try {
     // auto params = TCOD_ContextParams{};
     // params.tcod_version = TCOD_COMPILEDVERSION;
@@ -68,12 +83,15 @@ int main(int argc, char** argv) {
 
     // g_context = tcod::Context(params);
 
-    auto map = std::make_unique<Map>(Coord(20, 20));
+    auto map = std::make_shared<Map>(Coord(20, 20));
     visualiser = std::make_unique<Visualiser>(Coord(10, 10));
-    auto unit = std::make_unique<Unit>('@');
-    map->setHero(std::move(unit), {11, 11});
+    auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
+    map->setHero(hero, {11, 11});
+    auto actor = std::make_shared<Actor>(hero);
+    keyboard = std::make_unique<Keyboard>(actor);
 
-    visualiser->setMap(std::move(map));
+    visualiser->setMap(map);
+
     // visualiser->setConsole(g_console);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);

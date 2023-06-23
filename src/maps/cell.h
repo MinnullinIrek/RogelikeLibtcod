@@ -13,12 +13,13 @@ class Cell : public ToChar {
   Cell();
   ~Cell();
   Identifier toChar() const override;
-  void setUnit(std::unique_ptr<IUnit> unit);
+  void setUnit(std::shared_ptr<IUnit> unit);
+  std::shared_ptr<IUnit> getUnit();
 
  protected:
   Coord m_coord;
   // std::unique_ptr<Bag> m_bag;
-  std::unique_ptr<IUnit> m_unit;
+  std::shared_ptr<IUnit> m_unit;
   Identifier m_id;
 };
 

@@ -41,11 +41,11 @@ Visualiser::Visualiser(const Coord& windowSize) : m_windowSize(windowSize), m_ce
 
 Visualiser::~Visualiser() {}
 
-void Visualiser::setMap(std::unique_ptr<Map> map) { m_map = std::move(map); }
+void Visualiser::setMap(std::shared_ptr<Map> map) { m_map = map; }
 
 void Visualiser::showMap() const {
   m_console.clear();
-  tcod::print(m_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
+  tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 
   auto startPos = m_center;  // getLeftUpCd(m_center);
   auto endPos = m_center + m_windowSize;
@@ -65,7 +65,7 @@ void Visualiser::showMap() const {
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
   static std::string s = " ";
   s[0] = id;
-  tcod::print(m_console, cd, s, TCOD_white, std::nullopt);
+  tcod::print(m_console, cd, s, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 }
 
 // void Visualiser::setConsole(tcod::Console& console) { m_console = console; }

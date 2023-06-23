@@ -15,6 +15,8 @@ constexpr Identifier BORDER_HOR = '*';
 
 // bool retTrue(bool b = true) { return b; }
 
+enum class EAction { none, left, right, up, down };
+
 enum class ESettings {
   hp,
   weigh

@@ -18,11 +18,15 @@ class Map {
   ~Map();
 
   Identifier getIdentifier(const Coord& cd);
-  void setHero(std::unique_ptr<IUnit> hero, const Coord& coord);
-
+  void setHero(std::shared_ptr<IUnit> hero, const Coord& coord);
+  bool moveUnitFromTo(const Coord& currentPos, const Coord& nextPos);
+  
+ private:
+  void setMover(std::shared_ptr<IUnit> unit, const Coord& coord);
+  void swapUnit(std::shared_ptr<Cell> cellStart, std::shared_ptr<Cell> endStart);
  protected:
   bool isExisted(const Coord& cd) const;
-  std::vector<std::unique_ptr<Cell>> m_cellsInner;
+  std::vector<std::shared_ptr<Cell>> m_cellsInner;
   std::unordered_map<Coord, size_t, KeyHasher> m_cells;
   // std::map<int, size_t> m_cells;
 };
