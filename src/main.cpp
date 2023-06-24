@@ -15,11 +15,13 @@
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
 #include "keyboard.h"
+#include "map_generator.h"
 #include "maps/map.h"
 #include "units/IUnit.h"
 #include "units/actor.h"
-#include "visualiser/visualiser.h"
 #include "units/mover.h"
+#include "units_factory.h"
+#include "visualiser/visualiser.h"
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -57,9 +59,8 @@ void main_loop() {
         break;
     }
     if (repaint) {
-      visualiser->showMap();   
+      visualiser->showMap();
     }
-
   }
 }
 
@@ -83,7 +84,11 @@ int main(int /*argc*/, char** /*argv*/) {
 
     // g_context = tcod::Context(params);
 
-    auto map = std::make_shared<Map>(Coord(20, 20));
+    auto unitsFactory = std::make_shared<UnitsFactory>();
+    auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
+
+    auto map = mapGenerator->generateRandomMap({20, 20});
+    // std::make_shared<Map>(Coord(20, 20));
     visualiser = std::make_unique<Visualiser>(Coord(10, 10));
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     map->setHero(hero, {11, 11});

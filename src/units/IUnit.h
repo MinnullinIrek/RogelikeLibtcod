@@ -5,9 +5,11 @@
 #include <unordered_map>
 
 #include "../header.h"
+#include "../unit_types.h"
 
 class Bag;
 class IMover;
+class Chars;
 
 class IUnit : public ToChar {
  public:
@@ -15,6 +17,7 @@ class IUnit : public ToChar {
   IUnit(Identifier id);
 
   virtual Identifier toChar() const override;
+  EUnitTypes m_type;
 
  protected:
   Identifier m_id;

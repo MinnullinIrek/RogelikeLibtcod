@@ -9,7 +9,6 @@ void Map::setMover(std::shared_ptr<IUnit> hero, const Coord& coord) {
     auto mover = unit->getMover();
     if (mover) {
       mover->setCoord(coord);
-
     }
   }
 }

@@ -2,9 +2,12 @@
 #define CELL_H
 
 #include <memory>
+
 #include "../header.h"
 
+
 class Map;
+class Cell;
 
 class IMover {
  public:
@@ -12,6 +15,8 @@ class IMover {
   virtual void moveInDirection(const Coord& coord) = 0;
   void changeMap(std::weak_ptr<Map> map);
   virtual void setCoord(const Coord& currentPos) = 0;
+  void innerMove(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cell2);
+
  protected:
   std::weak_ptr<Map> m_map;
 };
@@ -24,9 +29,8 @@ class SimpleMover : public IMover {
   virtual void moveInDirection(const Coord& coord) override;
   void setCoord(const Coord& currentPos) override;
 
-  protected:
+ protected:
   Coord m_currentPos;
-
 };
 
 #endif
