@@ -11,9 +11,9 @@ Interactor::Interactor(/* args */) {}
 
 Interactor::~Interactor() {}
 
-void Interactor::interact(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cell2) {
-  auto unit1 = cell1->getUnit();
-  auto unit2 = cell2->getUnit();
+void Interactor::interact(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> unit2) {
+  // auto unit1 = cell1->getUnit();
+  // auto unit2 = cell2->getUnit();
   assert(unit1);
 
   if (unit2) {
@@ -22,10 +22,9 @@ void Interactor::interact(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cel
     } else {
       attack(unit1, unit2);
     }
-
-  } else {
-    cell2->setUnit(unit1);
   }
 }
 
-void Interactor::attack(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> unit2) { printf("attack not ready"); }
+void Interactor::attack(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> unit2) {
+
+  printf("attack not ready"); }

@@ -24,6 +24,10 @@ void SimpleMover::moveInDirection(const Coord& coord) {
     auto cell2 = map->getCell(m_currentPos + coord);
 
      auto result = map->moveUnitFromTo(m_currentPos, newCoord);
+    if (result) {
+       m_currentPos = newCoord;
+    }
+    
     // if (result.has_value()) {
     //   auto cells = result.value();
     //   std::shared_ptr<Cell> cell1 = cells.first;

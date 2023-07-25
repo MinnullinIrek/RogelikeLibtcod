@@ -41,7 +41,7 @@ Char& Char::operator-=(const Char& rhs) {
 
 Chars::Chars() {}
 Chars::~Chars() {}
-void Chars::setValue(ECharTypes chType, CharType value) {
+void Chars::setValue(int chType, CharType value) {
   if (m_chars.find(static_cast<int>(chType)) != std::end(m_chars)) {
     m_chars.at(static_cast<int>(chType)).setValue(value);
   } else {
@@ -50,10 +50,8 @@ void Chars::setValue(ECharTypes chType, CharType value) {
   }
 }
 
-CharType Chars::getValue(ECharTypes chType) { return m_chars.at(static_cast<int>(chType)).getValue(); }
-SubKey Chars::addSubscriber(ECharTypes chType, const std::function<void(CharType)>& sub) {
+CharType Chars::getValue(int chType) { return m_chars.at(static_cast<int>(chType)).getValue(); }
+SubKey Chars::addSubscriber(int chType, const std::function<void(CharType)>& sub) {
   return m_chars.at(static_cast<int>(chType)).addSubscriber(sub);
 }
-void Chars::removeSubscriber(ECharTypes chType, SubKey key) {
-  m_chars.at(static_cast<int>(chType)).removeSubscriber(key);
-}
+void Chars::removeSubscriber(int chType, SubKey key) { m_chars.at(static_cast<int>(chType)).removeSubscriber(key); }

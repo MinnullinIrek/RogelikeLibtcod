@@ -7,6 +7,8 @@ UnitsFactory::UnitsFactory(/* args */) {}
 UnitsFactory::~UnitsFactory() {}
 
 std::shared_ptr<IUnit> UnitsFactory::createWall() {
-  static std::shared_ptr<IUnit> staticWall = std::make_shared<IUnit>('#');
+  static std::shared_ptr<IUnit> staticWall = std::make_shared<IUnit>('#', EUnitTypes::wall);
+
+
   return staticWall;
 }

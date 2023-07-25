@@ -17,14 +17,9 @@ constexpr Identifier BORDER_HOR = '*';
 
 enum class EAction { none, left, right, up, down };
 
-enum class ESettings {
-  hp,
-  weigh
-
-};
-
 enum class ItemType {
   simple,
+
 };
 
 enum class UnitType {
@@ -60,7 +55,7 @@ class ToChar {
 };
 
 class ToString {
-  virtual Description toString() = 0;
+  virtual Description toString() const = 0;
 };
 
 #endif

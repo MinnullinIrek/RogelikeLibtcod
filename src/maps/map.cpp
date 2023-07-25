@@ -3,6 +3,7 @@
 #include <assert.h>
 
 #include "../units/IUnit.h"
+#include "../units/interactor.h"
 #include "cell.h"
 
 Map::Map(){};
@@ -40,20 +41,24 @@ void Map::setHero(std::shared_ptr<IUnit> hero, const Coord& coord) {
 bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
   assert(isExisted(currentPos));
 
-  bool result;
+  bool result = false;
 
   if (isExisted(nextPos)) {
     auto cell1 = m_cells.at(currentPos);
     auto cell2 = m_cells.at(nextPos);
     auto unit1 = cell1->getUnit();
     auto unit2 = cell2->getUnit();
-
+    assert(unit1);
     if (unit2) {
+      auto interactor = unit1->getInteractor();
+      assert(interactor);
+      interactor->interact(unit1, unit2);
+
     } else {
       cell2->setUnit(unit1);
       cell1->setUnit(nullptr);
+      result = true;
     }
-    //  cells.emplace(std::make_pair(cell1, cell2));
   }
 
   return result;

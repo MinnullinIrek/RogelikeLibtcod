@@ -22,6 +22,7 @@
 #include "units/mover.h"
 #include "units_factory.h"
 #include "visualiser/visualiser.h"
+#include "units/interactor.h"
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -91,6 +92,7 @@ int main(int /*argc*/, char** /*argv*/) {
     // std::make_shared<Map>(Coord(20, 20));
     visualiser = std::make_unique<Visualiser>(Coord(10, 10));
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
+    hero->setInteractor(std::make_shared<Interactor>());
     map->setHero(hero, {11, 11});
     auto actor = std::make_shared<Actor>(hero);
     keyboard = std::make_unique<Keyboard>(actor);

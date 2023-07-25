@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include "../header.h"
 #include "../unit_types.h"
@@ -10,29 +11,41 @@
 class Bag;
 class IMover;
 class Chars;
+class Interactor;
+class BodyParts;
 
 class IUnit : public ToChar {
  public:
   IUnit();
-  IUnit(Identifier id);
+  IUnit(Identifier id, EUnitTypes uType = EUnitTypes::none);
+  virtual ~IUnit();
 
   virtual Identifier toChar() const override;
   EUnitTypes m_type;
 
+  void createChars();
+  std::shared_ptr<Chars> getChars();
+  void IUnit::setInteractor(std::shared_ptr<Interactor> interactor);
+  std::shared_ptr<Interactor> getInteractor();
+  void setBodyParts(std::shared_ptr<BodyParts> bp);
+  std::shared_ptr<BodyParts> getBodyParts();
+
  protected:
   Identifier m_id;
+  std::shared_ptr<Chars> m_chars;
+  std::shared_ptr<Interactor> m_currentInteractor;
+  std::shared_ptr<BodyParts> m_bodyParts;
 };
 
 class Unit : public IUnit, public ToString {
  public:
   Unit(const Identifier& id, std::shared_ptr<IMover> mover);
   Unit();
-  Description toString() override;
+  Description toString() const override;
   virtual std::shared_ptr<IMover> getMover();
   virtual void setMover(std::shared_ptr<IMover> mover);
 
  protected:
-  std::unordered_map<ESettings, Setting> m_settings;
   UnitType m_type;
   // std::unique_ptr<Bag> m_bag;
   std::shared_ptr<IMover> m_mover;
