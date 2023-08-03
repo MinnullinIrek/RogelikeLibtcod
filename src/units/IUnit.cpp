@@ -18,7 +18,8 @@ std::shared_ptr<Chars> IUnit::getChars() { return m_chars; }
 
 Identifier IUnit::toChar() const { return m_id; }
 
-Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover) : IUnit(id), m_mover(mover) {}
+Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover) : IUnit(id), m_mover(mover),
+m_bag(std::make_unique<Bag>()) {}
 Unit::Unit() : IUnit() {}
 
 // Identifier Unit::toChar() const { return m_id; }

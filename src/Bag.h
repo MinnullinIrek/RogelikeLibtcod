@@ -1,23 +1,28 @@
 #ifndef Bag_H
 #define Bag_H
 
-#include <list>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 #include "header.h"
 
 struct Item_Count;
-class IItem;
+class IItems;
 
-// class Bag {
-//  public:
-//   Bag();
-//   ~Bag();
-//   void putItem(std::unique_ptr<IItem> item, Count count);
-//   std::unique_ptr<IItem> popItem(Count num);
-//   std::list<std::string> showBag(Count startNum, Count endNum);
-//   std::list<std::unique_ptr<Item_Count>> m_items;
-// };
+class Bag {
+ public:
+  Bag();
+  ~Bag();
+  void putItem(std::shared_ptr<IItems> item, Count count);
+  std::pair<std::weak_ptr<IItems>, Count> popItem(Count popCount);
+  void select(int next);
+  std::list<std::string> showBag(Count count);
+
+ private:
+  bool contains(std::shared_ptr<IItems> item);
+  std::unordered_map<std::shared_ptr<IItems>, Count> m_items;
+  std::unordered_map<std::shared_ptr<IItems>, Count>::iterator m_selected;
+};
 
 #endif

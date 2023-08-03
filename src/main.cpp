@@ -14,15 +14,16 @@
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
+#include "items_factory.h"
 #include "keyboard.h"
 #include "map_generator.h"
 #include "maps/map.h"
 #include "units/IUnit.h"
 #include "units/actor.h"
+#include "units/interactor.h"
 #include "units/mover.h"
 #include "units_factory.h"
 #include "visualiser/visualiser.h"
-#include "units/interactor.h"
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -93,6 +94,10 @@ int main(int /*argc*/, char** /*argv*/) {
     visualiser = std::make_unique<Visualiser>(Coord(10, 10));
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     hero->setInteractor(std::make_shared<Interactor>());
+    auto itemsFactory = std::make_unique<ItemsFactory>();
+    // itemsFactory->createArmour(EArmorItemTypes::clothes);
+    // itemsFactory->createWeapon(EWeaponType::axe);
+
     map->setHero(hero, {11, 11});
     auto actor = std::make_shared<Actor>(hero);
     keyboard = std::make_unique<Keyboard>(actor);

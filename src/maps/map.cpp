@@ -44,8 +44,8 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
   bool result = false;
 
   if (isExisted(nextPos)) {
-    auto cell1 = m_cells.at(currentPos);
-    auto cell2 = m_cells.at(nextPos);
+    auto& cell1 = m_cells.at(currentPos);
+    auto& cell2 = m_cells.at(nextPos);
     auto unit1 = cell1->getUnit();
     auto unit2 = cell2->getUnit();
     assert(unit1);
@@ -66,14 +66,14 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
 
 void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
   assert(isExisted(coord));
-  auto cell = m_cells.at(coord);
+  auto& cell = m_cells.at(coord);
   assert(!cell->getUnit());
   m_cells.at(coord)->setUnit(unit);
 }
 
 std::shared_ptr<Cell> Map::getCell(const Coord& cd) const {
   if (isExisted(cd)) {
-    m_cells.at(cd);
+    return m_cells.at(cd);
   }
   return nullptr;
 }

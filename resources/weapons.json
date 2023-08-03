@@ -1,0 +1,752 @@
+{
+  "items": [
+    {
+      "name": "axe",
+      "description": "simple axe",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 2.0
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "chop": 10.0
+            },
+            {
+              "cut": 4.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.9
+            },
+            {
+              "cut": 0.99
+            },
+            {
+              "spike": 0.999
+            },
+            {
+              "fire": 0.5
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.9
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm"
+        ],
+        [
+          "rarm"
+        ]
+      ]
+    },
+    {
+      "name": "short sword",
+      "description": "iron short sword",
+      "ranged": [
+        "close"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 1.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 5.0
+            },
+            {
+              "cut": 5.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.1
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.999
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm"
+        ],
+        [
+          "rarm"
+        ]
+      ]
+    },
+    {
+      "name": "long sword",
+      "description": "iron long sword",
+      "ranged": [
+        "close"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 1.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 7.0
+            },
+            {
+              "cut": 7.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.1
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.999
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm"
+        ],
+        [
+          "rarm"
+        ]
+      ]
+    },
+    {
+      "name": "long sword",
+      "description": "iron long sword",
+      "ranged": [
+        "close"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 1.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 7.0
+            },
+            {
+              "chop": 4.0
+            },
+            {
+              "cut": 7.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.1
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.999
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm"
+        ],
+        [
+          "rarm"
+        ]
+      ]
+    },
+    {
+      "name": "great sword",
+      "description": "iron long sword",
+      "ranged": [
+        "close"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 3.0
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 14.0
+            },
+            {
+              "cut": 10.0
+            },
+            {
+              "chop": 14.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.9
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm",
+          "rarm"
+        ]
+      ]
+    },
+    {
+      "name": "spike",
+      "description": "spike",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 3.0
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 10.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.9
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "larm",
+          "rarm"
+        ],
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    },
+    {
+      "name": "pilum",
+      "description": "",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 3.0
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 14.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.9
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    },
+    {
+      "name": "knife",
+      "description": "",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 0.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "spike": 3.0
+            },
+            {
+              "cut": 3.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.8
+            },
+            {
+              "spike": 0.9
+            },
+            {
+              "fire": 0.7
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    },
+    {
+      "name": "small shield",
+      "description": "",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 0.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "crush": 3.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.5
+            },
+            {
+              "spike": 0.3
+            },
+            {
+              "fire": 0.4
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "crush": 0.3
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        },
+        {
+          "name": "skills",
+          "value": [
+            {
+              "parry": 0.3
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    },
+    {
+      "name": "medium shield",
+      "description": "",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 1.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "crush": 3.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.5
+            },
+            {
+              "spike": 0.3
+            },
+            {
+              "fire": 0.4
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "crush": 0.3
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        },
+        {
+          "name": "skills",
+          "value": [
+            {
+              "parry": 0.5
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    },
+    {
+      "name": "big shield",
+      "description": "",
+      "ranged": [
+        "close",
+        "thrown"
+      ],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            {
+              "hp": 100.0
+            },
+            {
+              "weight": 3.5
+            }
+          ]
+        },
+        {
+          "name": "damage",
+          "value": [
+            {
+              "crush": 3.0
+            }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            {
+              "chop": 0.3
+            },
+            {
+              "cut": 0.3
+            },
+            {
+              "spike": 0.3
+            },
+            {
+              "fire": 0.4
+            },
+            {
+              "ice": 0.7
+            },
+            {
+              "electricity": 0.99
+            },
+            {
+              "crush": 0.3
+            },
+            {
+              "sound": 1.0
+            }
+          ]
+        },
+        {
+          "name": "skills",
+          "value": [
+            {
+              "parry": 0.9
+            }
+          ]
+        }
+      ],
+      "wearingSlots": [
+        [
+          "rarm"
+        ],
+        [
+          "larm"
+        ]
+      ]
+    }
+  ]
+}

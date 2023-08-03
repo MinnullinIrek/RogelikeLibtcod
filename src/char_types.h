@@ -13,6 +13,9 @@ enum class ESetting {
   damage1,
   damage2,
   damage3,
+  addBaseChar,
+  addAttribute,
+
 };
 
 enum class ECharTypes {
@@ -42,6 +45,9 @@ enum class EDamageType {
   sound,
 
   count
+};
+enum class ESkills {
+  parry = static_cast<int>(EDamageType::count),
 };
 
 #endif

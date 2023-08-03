@@ -2,10 +2,13 @@
 
 #include <assert.h>
 
+#include <fstream>
+
+//#include "../json/single_include/nlohmann/json.hpp"
 #include "items/IItems.h"
 #include "units/chars.h"
 
-ItemsFactory::ItemsFactory() {}
+ItemsFactory::ItemsFactory() { readJson(); }
 ItemsFactory::~ItemsFactory() {}
 
 std::shared_ptr<WearingItem> ItemsFactory::createWeapon(EWeaponType weaponType) {
@@ -51,7 +54,7 @@ std::shared_ptr<WearingItem> ItemsFactory::createWeapon(EWeaponType weaponType) 
   return witem;
 }
 
-std::shared_ptr<WearingItem> createArmour(EWeaponType weaponType) {
+std::shared_ptr<WearingItem> ItemsFactory::createArmour(EArmorItemTypes armourType) {
   ESetting sett;
   std::shared_ptr<Chars> baseChars = std::make_shared<Chars>();
   baseChars->setValue(static_cast<int>(ECharTypes::hp), 100);
@@ -77,14 +80,14 @@ std::shared_ptr<WearingItem> createArmour(EWeaponType weaponType) {
   damageAbsorbtion->setValue(static_cast<int>(EDamageType::sound), 0.0f);
 
   std::shared_ptr<WearingItem> witem;
-  switch (weaponType) {
-    case EWeaponType::axe: {
+  switch (armourType) {
+    case EArmorItemTypes::clothes: {
       /* code */
       ArmourStruct wpn;
       wpn.m_slots = {{EWearingSlot::brest}};
       witem = std::make_shared<Armour>(wpn);
     } break;
-    case EWeaponType::blade:
+    case EArmorItemTypes::light:
       /* code */
       assert(false);
       break;
@@ -94,4 +97,14 @@ std::shared_ptr<WearingItem> createArmour(EWeaponType weaponType) {
       break;
   }
   return witem;
+}
+
+void ItemsFactory::readJson() {
+ /* std::ifstream fileStream("resources/weapons.json");
+  nlohmann::json jsonMain;
+  fileStream >> jsonMain;
+
+  for (auto json : jsonMain) {
+    auto name = json["name"];
+  }*/
 }

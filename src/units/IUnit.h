@@ -47,7 +47,7 @@ class Unit : public IUnit, public ToString {
 
  protected:
   UnitType m_type;
-  // std::unique_ptr<Bag> m_bag;
+  std::unique_ptr<Bag> m_bag;
   std::shared_ptr<IMover> m_mover;
 };
 
