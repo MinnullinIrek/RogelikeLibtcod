@@ -113,7 +113,10 @@ int main(int /*argc*/, char** /*argv*/) {
     }
 #endif
   } catch (const std::exception& exc) {
-    std::cerr << exc.what() << "\n";
+    std::cerr << exc.what() << std::endl;
+    throw;
+  } catch (const std::string& exc) {
+    std::cerr << exc << std::endl;
     throw;
   }
 }
