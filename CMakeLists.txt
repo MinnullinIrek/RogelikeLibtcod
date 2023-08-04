@@ -23,8 +23,6 @@ file(
 )
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
-//target_include_directories(${PROJECT_NAME} PRIVATE ${json/single_include/nlohmann})
-
 # Ensure the C++17 standard is available.
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
@@ -39,6 +37,7 @@ if (MSVC)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 endif()
+target_include_directories(${PROJECT_NAME} PRIVATE ${json/single_include/nlohmann})
 
 if (EMSCRIPTEN)
     # Attach data folder to Emscripten builds.
@@ -82,5 +81,3 @@ FetchContent_MakeAvailable(googletest)
 add_executable(example test/example.cpp)
 target_link_libraries(example gtest_main)
 add_test(NAME example_test COMMAND example)
-
-

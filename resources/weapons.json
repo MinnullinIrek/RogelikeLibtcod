@@ -64,11 +64,13 @@
         [
           "rarm"
         ]
-      ]
+      ],
+      "weaponSize": "medium"
     },
     {
       "name": "short sword",
       "description": "iron short sword",
+      "weaponSize": "medium",
       "ranged": [
         "close"
       ],
@@ -134,6 +136,7 @@
     {
       "name": "long sword",
       "description": "iron long sword",
+      "weaponSize": "heavy",
       "ranged": [
         "close"
       ],
@@ -154,74 +157,6 @@
           "value": [
             {
               "spike": 7.0
-            },
-            {
-              "cut": 7.0
-            }
-          ]
-        },
-        {
-          "name": "resistance",
-          "value": [
-            {
-              "chop": 0.1
-            },
-            {
-              "cut": 0.8
-            },
-            {
-              "spike": 0.999
-            },
-            {
-              "fire": 0.7
-            },
-            {
-              "ice": 0.7
-            },
-            {
-              "electricity": 0.99
-            },
-            {
-              "sound": 1.0
-            }
-          ]
-        }
-      ],
-      "wearingSlots": [
-        [
-          "larm"
-        ],
-        [
-          "rarm"
-        ]
-      ]
-    },
-    {
-      "name": "long sword",
-      "description": "iron long sword",
-      "ranged": [
-        "close"
-      ],
-      "chars": [
-        {
-          "name": "baseChar",
-          "value": [
-            {
-              "hp": 100.0
-            },
-            {
-              "weight": 1.5
-            }
-          ]
-        },
-        {
-          "name": "damage",
-          "value": [
-            {
-              "spike": 7.0
-            },
-            {
-              "chop": 4.0
             },
             {
               "cut": 7.0
@@ -267,6 +202,7 @@
     {
       "name": "great sword",
       "description": "iron long sword",
+      "weaponSize":"giant",
       "ranged": [
         "close"
       ],
@@ -333,6 +269,7 @@
     {
       "name": "spike",
       "description": "spike",
+      "weaponSize":"heavy",
       "ranged": [
         "close",
         "thrown"
@@ -400,6 +337,7 @@
     {
       "name": "pilum",
       "description": "",
+      "weaponSize":"medium",
       "ranged": [
         "close",
         "thrown"
@@ -463,6 +401,7 @@
     {
       "name": "knife",
       "description": "",
+      "weaponSize":"small",
       "ranged": [
         "close",
         "thrown"
@@ -529,6 +468,7 @@
     {
       "name": "small shield",
       "description": "",
+      "weaponSize":"small",
       "ranged": [
         "close",
         "thrown"
@@ -603,6 +543,7 @@
     {
       "name": "medium shield",
       "description": "",
+      "weaponSize":"medium",
       "ranged": [
         "close",
         "thrown"
@@ -677,6 +618,7 @@
     {
       "name": "big shield",
       "description": "",
+      "weaponSize":"giant",
       "ranged": [
         "close",
         "thrown"

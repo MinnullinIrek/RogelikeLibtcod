@@ -9,28 +9,9 @@
 #include "../char_types.h"
 #include "../eitems.h"
 #include "../header.h"
+#include "item_structs.h"
 
 class Chars;
-struct WeaponStruct;
-
-struct WearingStruct {
-  std::string name;
-  std::string description;
-  std::map<ESetting, std::shared_ptr<Chars>> m_chars;
-};
-
-struct WeaponStruct : public WearingStruct {
-  std::vector<std::vector<EWearingSlot>> m_slots;
-  std::vector<EWeaponType> m_weaponType;
-  EWeaponSize m_weaponSize;
-  EWeaponRangedClose m_rangedClose;
-};
-
-struct ArmourStruct : public WearingStruct {
-  std::vector<std::vector<EWearingSlot>> m_slots;
-  std::vector<EArmorItemTypes> m_armourType;
-  std::map<ESetting, std::shared_ptr<Chars>> m_chars;
-};
 
 class IItems : public ToString {
  private:

@@ -49,7 +49,7 @@ enum class EWeaponSize {
   giant,
 };
 
-enum class EWeaponRangedClose { melee, ranged, magik };
+enum class EWeaponRangedClose { melee, ranged, magik, thrown, close };
 
 enum class EWeaponOneTwoHand { oneHand, twoHand };
 
