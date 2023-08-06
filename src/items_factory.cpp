@@ -2,14 +2,13 @@
 
 #include <assert.h>
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
 #include "../json/single_include/nlohmann/json.hpp"
-
 #include "items/IItems.h"
 #include "units/chars.h"
-
 
 ItemsFactory::ItemsFactory() {
   m_rangedClose.insert({"close", EWeaponRangedClose::close});
@@ -72,8 +71,6 @@ ItemsFactory::ItemsFactory() {
 
   m_chars.insert({"parry", static_cast<int>(ESkills::parry)});
 
-   
-
   readJson();
 }
 ItemsFactory::~ItemsFactory() {}
@@ -104,7 +101,7 @@ std::shared_ptr<WearingItem> ItemsFactory::createWeapon(EWeaponType weaponType) 
       wpn.m_chars[ESetting::resistance] = damgeResistance;
       wpn.m_chars[ESetting::damage] = damage;
 
-      wpn.m_rangedClose.push_back( EWeaponRangedClose::melee);
+      wpn.m_rangedClose.push_back(EWeaponRangedClose::melee);
       wpn.m_weaponSize = EWeaponSize::small;
       wpn.m_slots = {{EWearingSlot::rhand}, {EWearingSlot::lhend}};
       witem = std::make_shared<Weapon>(wpn);
@@ -168,106 +165,108 @@ std::shared_ptr<WearingItem> ItemsFactory::createWeapon(EWeaponType weaponType) 
 
 void ItemsFactory::readJson() {
   std::string fName = "../resources/weapons.json";
+
   std::ifstream fileStream(fName);
+
+  if (!fileStream.is_open()) {
+    fName = "resources/weapons.json";
+    fileStream.open(fName);
+  }
+
   if (fileStream.is_open()) {
-    //std::string s;
+    // std::string s;
     nlohmann::json jsonMain1;
     try {
       fileStream >> jsonMain1;
     } catch (...) {
       std::cerr << "exception on reading " << fName << std::endl;
     }
-    
+
     nlohmann::json jsonMain = jsonMain1.begin().value();
-    //s = jsonMain.dump();
-    for ( auto& iter = jsonMain.begin(); iter != jsonMain.end(); ++iter ) {
-     auto sv = iter.value();
-     WeaponStruct str;
-    // std::shared_ptr<Weapon> wpn = std::make_shared<Weapon>(str);
-     //s = sv.dump();
+    // s = jsonMain.dump();
+    for (auto& iter = jsonMain.begin(); iter != jsonMain.end(); ++iter) {
+      auto sv = iter.value();
+      WeaponStruct str;
+      // std::shared_ptr<Weapon> wpn = std::make_shared<Weapon>(str);
+      // s = sv.dump();
 
-     if(sv.contains("name")) {
-       str.name = sv["name"];
-     } else {
-       throw std::string("weapon [name] doesn't exist in weapon.json");
-     }
+      if (sv.contains("name")) {
+        str.name = sv["name"];
+      } else {
+        throw std::string("weapon [name] doesn't exist in weapon.json");
+      }
 
-     if (sv.contains("description")) {
-       str.description = sv["description"];
-     } else {
-       throw std::string("weapon [description] doesn't exist in weapon.json");
-     }
-     
-     if (sv.contains("ranged")) {
-       for (auto& iterRanged = sv["ranged"].begin(); iterRanged != sv["ranged"].end(); ++iterRanged) {
-         auto rang = iterRanged.value().get<std::string>();
-         if (m_rangedClose.find(rang) == m_rangedClose.end()) {
-           throw std::string("m_rangedClose doesn't contains key ") + rang; 
-         }
-         str.m_rangedClose.push_back(m_rangedClose.at(rang));
-       }
-     } else {
-       throw std::string("weapon [ranged] doesn't exist in weapon.json weapon name =") +
-              str.name;
-     }
-     
+      if (sv.contains("description")) {
+        str.description = sv["description"];
+      } else {
+        throw std::string("weapon [description] doesn't exist in weapon.json");
+      }
 
-     if (sv.contains("wearingSlots")) {
-       for (auto& iterSlots = sv["wearingSlots"].begin(); iterSlots != sv["wearingSlots"].end(); ++iterSlots) {
-         std::vector<EWearingSlot> slots;
-         for (auto& iterSlot = iterSlots->begin(); iterSlot != iterSlots->end(); ++iterSlot) {
-           auto rang = iterSlot.value().get<std::string>();
-           if (m_slots.find(rang) == m_slots.end()) {
-             throw std::string("m_rangedClose doesn't contains key ") + rang;
-           }
-           slots.push_back(m_slots.at(rang));
-         }
-         str.m_slots.push_back(slots);
-       }
-     } else {
-       throw std::string("weapon [wearingSlots] doesn't exist in weapon.json weapon name =") + str.name;
-     }
+      if (sv.contains("ranged")) {
+        for (auto& iterRanged = sv["ranged"].begin(); iterRanged != sv["ranged"].end(); ++iterRanged) {
+          auto rang = iterRanged.value().get<std::string>();
+          if (m_rangedClose.find(rang) == m_rangedClose.end()) {
+            throw std::string("m_rangedClose doesn't contains key ") + rang;
+          }
+          str.m_rangedClose.push_back(m_rangedClose.at(rang));
+        }
+      } else {
+        throw std::string("weapon [ranged] doesn't exist in weapon.json weapon name =") + str.name;
+      }
 
-     //str.m_chars;
-     if (sv.contains("chars")) {
-       for (auto& iterChar = sv["chars"].begin(); iterChar != sv["chars"].end(); ++iterChar) {
+      if (sv.contains("wearingSlots")) {
+        for (auto& iterSlots = sv["wearingSlots"].begin(); iterSlots != sv["wearingSlots"].end(); ++iterSlots) {
+          std::vector<EWearingSlot> slots;
+          for (auto& iterSlot = iterSlots->begin(); iterSlot != iterSlots->end(); ++iterSlot) {
+            auto rang = iterSlot.value().get<std::string>();
+            if (m_slots.find(rang) == m_slots.end()) {
+              throw std::string("m_rangedClose doesn't contains key ") + rang;
+            }
+            slots.push_back(m_slots.at(rang));
+          }
+          str.m_slots.push_back(slots);
+        }
+      } else {
+        throw std::string("weapon [wearingSlots] doesn't exist in weapon.json weapon name =") + str.name;
+      }
 
-         for (const auto& chVal : {"name", "value"}) {
-           if (!iterChar.value().contains(chVal)) {
-             throw std::string("weapon [chars][") + chVal +
-               "] doesn't exist in weapon.json weapon name =" + str.name;
-           }
-         }
-         auto name = iterChar.value()["name"];
-         ESetting sett = m_settings[name];
-         std::shared_ptr<Chars> charVal = std::make_shared<Chars>();
+      // str.m_chars;
+      if (sv.contains("chars")) {
+        for (auto& iterChar = sv["chars"].begin(); iterChar != sv["chars"].end(); ++iterChar) {
+          for (const auto& chVal : {"name", "value"}) {
+            if (!iterChar.value().contains(chVal)) {
+              throw std::string("weapon [chars][") + chVal + "] doesn't exist in weapon.json weapon name =" + str.name;
+            }
+          }
+          auto name = iterChar.value()["name"];
+          ESetting sett = m_settings[name];
+          std::shared_ptr<Chars> charVal = std::make_shared<Chars>();
 
-         for (auto& iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
-           auto ch = iterCh.value();
-           auto s = iterCh->dump();
-           auto key = ch.begin().key();
-           auto val = ch.begin().value().get<CharType>();
-           if (m_chars.find(key) == m_chars.end()) {
-             throw std::string("m_rangedClose doesn't contains key ") + key;
-           }
-           charVal->setValue(m_chars.at(key), val);
-         }
+          for (auto& iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
+            auto ch = iterCh.value();
+            auto s = iterCh->dump();
+            auto key = ch.begin().key();
+            auto val = ch.begin().value().get<CharType>();
+            if (m_chars.find(key) == m_chars.end()) {
+              throw std::string("m_rangedClose doesn't contains key ") + key;
+            }
+            charVal->setValue(m_chars.at(key), val);
+          }
 
-         str.m_chars.insert({sett, charVal});
-       }
-     } else {
-       throw std::string("weapon [chars] doesn't exist in weapon.json weapon name =") + str.name;
-     }
+          str.m_chars.insert({sett, charVal});
+        }
+      } else {
+        throw std::string("weapon [chars] doesn't exist in weapon.json weapon name =") + str.name;
+      }
 
-     auto key = sv["weaponSize"].get<std::string>();
-     if (m_weaponSize.find(key) == m_weaponSize.end()) {
-       throw std::string("m_rangedClose doesn't contains key ") + key;
-     }
-     str.m_weaponSize = m_weaponSize.at(key);
-     m_strs.push_back(str);
-
+      auto key = sv["weaponSize"].get<std::string>();
+      if (m_weaponSize.find(key) == m_weaponSize.end()) {
+        throw std::string("m_rangedClose doesn't contains key ") + key;
+      }
+      str.m_weaponSize = m_weaponSize.at(key);
+      m_strs.push_back(str);
     }
-    
+
   } else {
     throw "file not open fName = " + fName;
   }

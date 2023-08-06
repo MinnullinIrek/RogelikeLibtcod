@@ -5,7 +5,6 @@
 
 #include "../header.h"
 
-
 class Map;
 class Cell;
 
@@ -16,6 +15,7 @@ class IMover {
   void changeMap(std::weak_ptr<Map> map);
   virtual void setCoord(const Coord& currentPos) = 0;
   void innerMove(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cell2);
+  virtual const Coord& getCoord() const = 0;
 
  protected:
   std::weak_ptr<Map> m_map;
@@ -27,6 +27,8 @@ class SimpleMover : public IMover {
   ~SimpleMover();
 
   virtual void moveInDirection(const Coord& coord) override;
+  virtual const Coord& getCoord() const override;
+
   void setCoord(const Coord& currentPos) override;
 
  protected:

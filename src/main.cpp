@@ -89,9 +89,8 @@ int main(int /*argc*/, char** /*argv*/) {
     auto unitsFactory = std::make_shared<UnitsFactory>();
     auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
 
-    auto map = mapGenerator->generateRandomMap({20, 20});
-    // std::make_shared<Map>(Coord(20, 20));
-    visualiser = std::make_unique<Visualiser>(Coord(10, 10));
+    auto map = mapGenerator->generateRandomMap({200, 200});
+    visualiser = std::make_unique<Visualiser>(Coord(20, 20));
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();
@@ -115,7 +114,10 @@ int main(int /*argc*/, char** /*argv*/) {
   } catch (const std::exception& exc) {
     std::cerr << exc.what() << std::endl;
     throw;
-  } catch (const std::string& exc) {
+  } catch (const char* exc) {
+    std::cerr << exc << std::endl;
+    throw;
+  }catch (const std::string& exc) {
     std::cerr << exc << std::endl;
     throw;
   }

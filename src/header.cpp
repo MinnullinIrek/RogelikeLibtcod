@@ -14,3 +14,5 @@ Coord operator+(const Coord& left, const Coord& right) { return Coord(left.x + r
 Coord operator-(const Coord& left, const Coord& right) { return Coord(left.x - right.x, left.y - right.y); }
 // Coord Coord::operator/(float del) { return Coord(x / del, y / del); }
 Coord Coord::del(float d) const { return Coord(x / d, y / d); }
+
+std::string Coord::toString() const { return std::string("[") + std::to_string(x) + "," + std::to_string(y) + "]"; }

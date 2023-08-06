@@ -36,6 +36,7 @@ struct Coord {
   friend Coord operator-(const Coord& left, const Coord& right);
   // Coord operator/(float del);
   Coord del(float d) const;
+  std::string toString() const;
   int x;
   int y;
 };
@@ -45,7 +46,6 @@ struct KeyHasher {
     using std::hash;
     using std::size_t;
     // using int;
-
     return ((hash<int>()(k.x) ^ (hash<int>()(k.y) << 1)) >> 1);
   }
 };

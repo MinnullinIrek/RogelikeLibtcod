@@ -23,11 +23,11 @@ void SimpleMover::moveInDirection(const Coord& coord) {
     auto cell1 = map->getCell(m_currentPos);
     auto cell2 = map->getCell(m_currentPos + coord);
 
-     auto result = map->moveUnitFromTo(m_currentPos, newCoord);
+    auto result = map->moveUnitFromTo(m_currentPos, newCoord);
     if (result) {
-       m_currentPos = newCoord;
+      m_currentPos = newCoord;
     }
-    
+
     // if (result.has_value()) {
     //   auto cells = result.value();
     //   std::shared_ptr<Cell> cell1 = cells.first;
@@ -48,3 +48,5 @@ void SimpleMover::setCoord(const Coord& currentPos) { m_currentPos = currentPos;
 SimpleMover::SimpleMover(std::weak_ptr<Map> map) : IMover(map) {}
 
 SimpleMover::~SimpleMover() {}
+
+const Coord& SimpleMover::getCoord() const { return m_currentPos; }
