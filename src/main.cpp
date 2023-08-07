@@ -24,6 +24,7 @@
 #include "units/mover.h"
 #include "units_factory.h"
 #include "visualiser/visualiser.h"
+#include "info.h"
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -101,8 +102,12 @@ int main(int /*argc*/, char** /*argv*/) {
     auto actor = std::make_shared<Actor>(hero);
     keyboard = std::make_unique<Keyboard>(actor);
 
-    visualiser->setMap(map);
+    std::shared_ptr<Info> info = std::make_shared<Info>();
+    info->setHero(hero);
 
+
+    visualiser->setMap(map);
+    visualiser->setInfo(info);
     // visualiser->setConsole(g_console);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);

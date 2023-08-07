@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include "header.h"
 
 class Unit;
 
@@ -12,7 +13,7 @@ class Info {
   ~Info();
   void setHero(std::weak_ptr<Unit> hero);
   std::string getText();
-
+  const Coord& getCoord() const; 
  private:
   std::weak_ptr<Unit> m_mainHero;
 };

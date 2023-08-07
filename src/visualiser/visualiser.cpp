@@ -5,8 +5,10 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
+#include <assert.h>
 
 #include "../maps/map.h"
+#include "../info.h"
 
 auto get_data_dir() -> std::filesystem::path {
   static auto root_directory = std::filesystem::path{"."};  // Begin at the working directory.
@@ -45,22 +47,45 @@ void Visualiser::setMap(std::shared_ptr<Map> map) { m_map = map; }
 
 void Visualiser::showMap() const {
   m_console.clear();
-  tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+  //tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 
-  auto startPos = m_center;  // getLeftUpCd(m_center);
-  auto endPos = m_center + m_windowSize;
+  auto heroCoord = m_info->getCoord();
 
-  for (auto x = startPos.x; x < endPos.x; ++x) {
-    for (auto y = startPos.y; y < endPos.y; ++y) {
+  heroCoord;
+  m_windowSize;
+  auto mapSize = m_map->getSize();
+
+  Coord mapStart{0, 0};
+
+  mapStart.x = std::max((heroCoord.x - m_windowSize.x / 2), 0);
+  mapStart.y = std::max((heroCoord.y - m_windowSize.y / 2), 0);
+
+  auto startPos = m_center;
+  auto endPos = m_center + mapStart+ m_windowSize - Coord{startPos.x, startPos.y};
+
+
+
+
+  for (auto x = mapStart.x; x < endPos.x ; ++x) {
+    for (auto y = mapStart.y; y < endPos.y; ++y) {
       auto id = m_map->getIdentifier({x, y});
-      showId({x, y}, id);
+      showId({x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}, id);
     }
   }
 
   showBorder();
-
+  showInfo();
   m_context.present(m_console);
+
+  
 }
+
+void Visualiser::showInfo() const {
+  assert(m_info);
+  auto text = m_info->getText();
+  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+}
+  
 
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
   static std::string s = " ";
@@ -84,4 +109,8 @@ void Visualiser::showBorder() const {
       showId({x, y}, BORDER_HOR);
     }
   }
+}
+
+void Visualiser::setInfo(std::shared_ptr<Info> info) {
+  m_info = info;
 }

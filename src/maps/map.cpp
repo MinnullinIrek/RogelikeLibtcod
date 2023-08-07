@@ -8,11 +8,15 @@
 
 Map::Map(){};
 
-Map::Map(const Coord& size) { setSize(size); }
+Map::Map(const Coord& size): m_size(size) { setSize(size); }
 
 Map::~Map() {}
 
+const Coord& Map::getSize() const { return m_size; }
+
+
 void Map::setSize(const Coord& size) {
+  m_size = size;
   m_cells.clear();
 
   for (decltype(size.x) x = 0; x < size.x; ++x) {
