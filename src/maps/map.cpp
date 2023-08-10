@@ -69,12 +69,12 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
 }
 
 void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
-  //assert(isExisted(coord));
+  assert(isExisted(coord));
   if (!isExisted(coord)) {    
     throw std::string("can't set unit to map") + unit->toChar() + "to coord = " + coord.toString();
   }
   auto& cell = m_cells.at(coord);
-  assert(!cell->getUnit());
+  //assert(!cell->getUnit()); eror assert
   m_cells.at(coord)->setUnit(unit);
 }
 

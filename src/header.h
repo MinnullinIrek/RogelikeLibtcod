@@ -40,7 +40,13 @@ struct Coord {
   int x;
   int y;
 };
+//
+struct LineCord {
+  Coord cord_s;
+  Coord cord_e;
+};
 
+//
 struct KeyHasher {
   std::size_t operator()(const Coord& k) const {
     using std::hash;

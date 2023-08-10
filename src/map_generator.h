@@ -13,6 +13,7 @@ class MapGenerator {
   std::shared_ptr<Map> generateRandomMap(const Coord& size);
 
  private:
+  void generateRoom(const int& roomCount, const Coord& size);
   std::weak_ptr<UnitsFactory> m_unitFactory;
 };
 
