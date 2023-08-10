@@ -18,7 +18,7 @@ class Visualiser {
   void setInfo(std::shared_ptr<Info> info);
   void showMap() const;
   void showInfo() const;
-  Coord getLeftUpCd(const Coord& center) const;
+  //Coord getLeftUpCd(const Coord& center) const;
   // void setConsole(tcod::Console& console);
   void showBorder() const;
 

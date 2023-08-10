@@ -83,7 +83,7 @@ void Visualiser::showMap() const {
 void Visualiser::showInfo() const {
   assert(m_info);
   auto text = m_info->getText();
-  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, TCOD_ColorRGB{0, 0, 255});
 }
   
 
@@ -94,7 +94,7 @@ void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
 }
 
 // void Visualiser::setConsole(tcod::Console& console) { m_console = console; }
-Coord Visualiser::getLeftUpCd(const Coord& center) const { return center - m_windowSize.del(2); }
+//Coord Visualiser::getLeftUpCd(const Coord& center) const { return center - m_windowSize.del(2); }
 void Visualiser::showBorder() const {
   // m_center;
   // auto x = m_center.x - 1;
