@@ -25,6 +25,7 @@ enum class ECharTypes {
   dexterity,
   charisma,
   wisdom,
+  perception,
 
   hp,
   energy,

@@ -44,11 +44,13 @@ class Unit : public IUnit, public ToString {
   Description toString() const override;
   virtual std::shared_ptr<IMover> getMover();
   virtual void setMover(std::shared_ptr<IMover> mover);
+  void lookAround(bool isEyeOpened);
 
  protected:
   UnitType m_type;
   std::unique_ptr<Bag> m_bag;
   std::shared_ptr<IMover> m_mover;
+  std::vector<Coord> m_watchingCoords;
 };
 
 #endif

@@ -76,8 +76,6 @@ void Visualiser::showMap() const {
   showBorder();
   showInfo();
   m_context.present(m_console);
-
-  
 }
 
 void Visualiser::showInfo() const {

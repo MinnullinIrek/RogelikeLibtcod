@@ -104,6 +104,11 @@
     "any": "cpp",
     "set": "cpp",
     "unordered_set": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "csignal": "cpp",
+    "ranges": "cpp",
+    "regex": "cpp",
+    "span": "cpp",
+    "valarray": "cpp"
   }
 }

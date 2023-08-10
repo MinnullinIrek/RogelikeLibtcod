@@ -27,7 +27,7 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
     auto coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
 
     while (std::find(std::begin(existingCoords), std::end(existingCoords), coord) != std::end(existingCoords)) {
-      coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
+      coord = Coord{random<int>(0, size.x), random<int>(0, size.y)};
     }
     existingCoords.push_back(coord);
     map->setUnit(unitFactory->createWall(), coord);

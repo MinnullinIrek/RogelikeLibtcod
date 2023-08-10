@@ -30,9 +30,7 @@ class Map {
 
  protected:
   bool isExisted(const Coord& cd) const;
-  // std::vector<std::shared_ptr<Cell>> m_cellsInner;
   std::unordered_map<Coord, std::shared_ptr<Cell>, KeyHasher> m_cells;
-  // std::map<int, size_t> m_cells;
   Coord m_size;
 };
 

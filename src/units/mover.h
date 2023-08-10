@@ -1,5 +1,5 @@
-#ifndef CELL_H
-#define CELL_H
+#ifndef MOVER_H
+#define MOVER_H
 
 #include <memory>
 

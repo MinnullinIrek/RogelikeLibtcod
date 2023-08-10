@@ -2,6 +2,8 @@
 
 #include "../Bag.h"
 #include "../header.h"
+#include "../maps/cell.h"
+#include "../maps/map.h"
 #include "algorithm"
 #include "chars.h"
 #include "interactor.h"
@@ -18,8 +20,8 @@ std::shared_ptr<Chars> IUnit::getChars() { return m_chars; }
 
 Identifier IUnit::toChar() const { return m_id; }
 
-Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover) : IUnit(id), m_mover(mover),
-m_bag(std::make_unique<Bag>()) {}
+Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover)
+    : IUnit(id), m_mover(mover), m_bag(std::make_unique<Bag>()) {}
 Unit::Unit() : IUnit() {}
 
 // Identifier Unit::toChar() const { return m_id; }
@@ -33,3 +35,18 @@ void Unit::setMover(std::shared_ptr<IMover> mover) { m_mover = mover; }
 void IUnit::setBodyParts(std::shared_ptr<BodyParts> bp) { m_bodyParts = bp; }
 
 std::shared_ptr<BodyParts> IUnit::getBodyParts() { return m_bodyParts; }
+
+void Unit::lookAround(bool isEyeOpened) {
+  if (isEyeOpened) {
+    auto watchingLength = m_chars->getValue(static_cast<int>(ECharTypes::perception));
+    if (watchingLength == 0) {
+      // throw "person is blind";
+      watchingLength = 5;
+    }
+    auto heroCoord = m_mover->getCoord();
+    // IMover m;
+
+  } else {
+    m_watchingCoords.clear();
+  }
+}
