@@ -16,26 +16,7 @@
 MapGenerator::MapGenerator(std::weak_ptr<UnitsFactory> unitFactory) : m_unitFactory(unitFactory) {}
 
 MapGenerator::~MapGenerator() {}
-/* void MapGenerator::generateRoom(const int& roomsCount, const Coord& size) {
- 
 
-  for (auto i = roomsCount; i > 0; --i) {
-    auto unitFactory = m_unitFactory.lock();
-    auto cord = RoomCoord{
-        {random<int>(0, size.x - 1), random<int>(0, size.y - 1)},
-        {random<int>(0, size.x - 1), random<int>(0, size.y - 1)}};
-    //auto coord_s = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    //auto coord_e = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    //while (std::find(std::begin(randomRoomCord), std::end(randomRoomCord), coord_s) != std::end(randomRoomCord)) {
-
-    //}
-    //while (std::find(std::begin(randomRoomCord), std::end(randomRoomCord), coord_e) != std::end(randomRoomCord)) {
-
-    //}
-    randomRoomCord[i] = cord, unitFactory->createWall();
-  }
-
-}*/
 std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
   auto map = std::make_shared<Map>(size);
   const auto wallsCount = static_cast<int>(size.x * size.y * RROOM_PERCENT);
@@ -90,19 +71,5 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
     }    
   }
 
-  //for (int i = 0; i < wallsCount; i++) {
-  //}
-  /*
-  std::list<Coord> existingCoords;
-  for (auto i = wallsCount; i > 0; --i) {
-    auto coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-
-    while (std::find(std::begin(existingCoords), std::end(existingCoords), coord) != std::end(existingCoords)) {
-      coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    }
-    existingCoords.push_back(coord);
-    map->setUnit(unitFactory->createWall(), coord);
-  }*/
-  
   return map;
 }
