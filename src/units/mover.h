@@ -16,6 +16,7 @@ class IMover {
   virtual void setCoord(const Coord& currentPos) = 0;
   void innerMove(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cell2);
   virtual const Coord& getCoord() const = 0;
+  std::weak_ptr<Map> getMap();
 
  protected:
   std::weak_ptr<Map> m_map;

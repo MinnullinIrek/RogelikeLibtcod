@@ -8,12 +8,11 @@
 
 Map::Map(){};
 
-Map::Map(const Coord& size): m_size(size) { setSize(size); }
+Map::Map(const Coord& size) : m_size(size) { setSize(size); }
 
 Map::~Map() {}
 
 const Coord& Map::getSize() const { return m_size; }
-
 
 void Map::setSize(const Coord& size) {
   m_size = size;
@@ -69,8 +68,8 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
 }
 
 void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
-  //assert(isExisted(coord));
-  if (!isExisted(coord)) {    
+  // assert(isExisted(coord));
+  if (!isExisted(coord)) {
     throw std::string("can't set unit to map") + unit->toChar() + "to coord = " + coord.toString();
   }
   auto& cell = m_cells.at(coord);
@@ -83,4 +82,9 @@ std::shared_ptr<Cell> Map::getCell(const Coord& cd) const {
     return m_cells.at(cd);
   }
   return nullptr;
+}
+
+bool Map::isWall(const Coord& cd) const {
+  auto cell = getCell(cd);
+  return cell && cell->isWall();
 }

@@ -16,6 +16,8 @@ class Cell : public ToChar {
   void setUnit(std::shared_ptr<IUnit> unit);
   std::shared_ptr<IUnit> getUnit();
   std::shared_ptr<Bag> getBag();
+  bool isWall() const;
+
  protected:
   Coord m_coord;
   std::shared_ptr<Bag> m_bag;

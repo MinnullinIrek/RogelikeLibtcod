@@ -44,7 +44,17 @@ void Unit::lookAround(bool isEyeOpened) {
       watchingLength = 5;
     }
     auto heroCoord = m_mover->getCoord();
-    // IMover m;
+    auto map = m_mover->getMap().lock();
+
+    Coord cd = heroCoord;
+    auto isWall = map->isWall(cd);
+    std::initializer_list<Coord> tempCoords{{-1, 1}, {-1, 0}, {-1, -1}, {0, 1}, {0, -1}, {1, 1}, {1, 0}, {1, -1}};
+    for (int i = 0; i < watchingLength; ++i) {
+      cd;
+      for (const auto& ct : tempCoords) {
+        auto cdTemp
+      }
+    }
 
   } else {
     m_watchingCoords.clear();

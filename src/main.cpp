@@ -14,6 +14,7 @@
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
+#include "info.h"
 #include "items_factory.h"
 #include "keyboard.h"
 #include "map_generator.h"
@@ -24,7 +25,7 @@
 #include "units/mover.h"
 #include "units_factory.h"
 #include "visualiser/visualiser.h"
-#include "info.h"
+
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -92,7 +93,7 @@ int main(int /*argc*/, char** /*argv*/) {
 
     auto map = mapGenerator->generateRandomMap({200, 200});
     visualiser = std::make_unique<Visualiser>(Coord(20, 20));
-    auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
+    auto hero = std::make_shared<Unit>('@', std::stati c_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();
     // itemsFactory->createArmour(EArmorItemTypes::clothes);
@@ -104,7 +105,6 @@ int main(int /*argc*/, char** /*argv*/) {
 
     std::shared_ptr<Info> info = std::make_shared<Info>();
     info->setHero(hero);
-
 
     visualiser->setMap(map);
     visualiser->setInfo(info);
@@ -122,7 +122,7 @@ int main(int /*argc*/, char** /*argv*/) {
   } catch (const char* exc) {
     std::cerr << exc << std::endl;
     throw;
-  }catch (const std::string& exc) {
+  } catch (const std::string& exc) {
     std::cerr << exc << std::endl;
     throw;
   }

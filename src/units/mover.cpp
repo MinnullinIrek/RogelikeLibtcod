@@ -50,3 +50,5 @@ SimpleMover::SimpleMover(std::weak_ptr<Map> map) : IMover(map) {}
 SimpleMover::~SimpleMover() {}
 
 const Coord& SimpleMover::getCoord() const { return m_currentPos; }
+
+std::weak_ptr<Map> IMover::getMap() { return m_map; }
