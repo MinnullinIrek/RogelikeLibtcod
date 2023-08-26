@@ -13,35 +13,18 @@
 #include "units_factory.h"
 #include "utils/random.h"
 #include "unit_types.h"
+#include "maps/room.h"
+
 MapGenerator::MapGenerator(std::weak_ptr<UnitsFactory> unitFactory) : m_unitFactory(unitFactory) {}
 
 MapGenerator::~MapGenerator() {}
-/* void MapGenerator::generateRoom(const int& roomsCount, const Coord& size) {
- 
 
-  for (auto i = roomsCount; i > 0; --i) {
-    auto unitFactory = m_unitFactory.lock();
-    auto cord = RoomCoord{
-        {random<int>(0, size.x - 1), random<int>(0, size.y - 1)},
-        {random<int>(0, size.x - 1), random<int>(0, size.y - 1)}};
-    //auto coord_s = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    //auto coord_e = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    //while (std::find(std::begin(randomRoomCord), std::end(randomRoomCord), coord_s) != std::end(randomRoomCord)) {
-
-    //}
-    //while (std::find(std::begin(randomRoomCord), std::end(randomRoomCord), coord_e) != std::end(randomRoomCord)) {
-
-    //}
-    randomRoomCord[i] = cord, unitFactory->createWall();
-  }
-
-}*/
 std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
   auto map = std::make_shared<Map>(size);
   const auto wallsCount = static_cast<int>(size.x * size.y * RROOM_PERCENT);
   auto unitFactory = m_unitFactory.lock();
   assert(unitFactory);
-  std::vector<LineCord> lineCord;
+  /* std::vector<LineCord> lineCord;
   lineCord.reserve(wallsCount);
 
   for (int i = 0; i < wallsCount - 1;i++) {
@@ -89,20 +72,49 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
       }
     }    
   }
+*/
+  int i;
+  std::vector<Room> rooms;
+  for (i = 0; i < 10;i++) {
+    rooms.push_back(Room(map));
+  }
+  for (int j = 0; j < 7;j++) {
+    rooms[j].randRoomChange();
 
-  //for (int i = 0; i < wallsCount; i++) {
-  //}
-  /*
-  std::list<Coord> existingCoords;
-  for (auto i = wallsCount; i > 0; --i) {
-    auto coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-
-    while (std::find(std::begin(existingCoords), std::end(existingCoords), coord) != std::end(existingCoords)) {
-      coord = Coord{random<int>(0, size.x - 1), random<int>(0, size.y - 1)};
-    }
-    existingCoords.push_back(coord);
-    map->setUnit(unitFactory->createWall(), coord);
-  }*/
+  }
+  for (int j = 0; j < 9;j++) {
+    rooms[j].roomFinalChange();
+  }
+  /* Room room2(map);
+  Room room(map);
+  Room room3(map);
+  Room room4(map);
+  Room room53(map);
+  Room room23(map);
+  Room room32(map);
+  Room room44(map);
+  Room room34(map);
+  for (int j = 0; j < 25; j++) {
+    room.randRoomChange();
+    room2.randRoomChange();
+    room4.randRoomChange();
+    room53.randRoomChange();
+  }
   
-  return map;
+  
+    
+  
+  room44.roomFinalChange();
+    room53.roomFinalChange();
+    room4.roomFinalChange();
+    room2.roomFinalChange();
+    room32.roomFinalChange();
+    room23.roomFinalChange();
+    room.roomFinalChange();
+    room3.roomFinalChange();*/
+  /* for (i = 0; i < wallsCount; i++) {
+    room[i] = Room(map);
+  }*/
+  return rooms.back().roomFinalChange();
+  
 }

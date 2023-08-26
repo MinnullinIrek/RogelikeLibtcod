@@ -90,8 +90,8 @@ int main(int /*argc*/, char** /*argv*/) {
     auto unitsFactory = std::make_shared<UnitsFactory>();
     auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
 
-    auto map = mapGenerator->generateRandomMap({200, 200});
-    visualiser = std::make_unique<Visualiser>(Coord(20, 20));
+    auto map = mapGenerator->generateRandomMap({50, 50});
+    visualiser = std::make_unique<Visualiser>(Coord(50, 50));
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();
