@@ -114,3 +114,11 @@ void Visualiser::showBorder() const {
 void Visualiser::setInfo(std::shared_ptr<Info> info) {
   m_info = info;
 }
+
+  void Visualiser::showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b) {
+  for (auto cd : coords) {
+      //char ch = random<char>('a', 'z');
+    tcod::print(m_console, {cd.x, cd.y}, "#", TCOD_ColorRGB{r, g, b}, std::nullopt);
+  }
+
+  }

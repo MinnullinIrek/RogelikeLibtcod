@@ -26,7 +26,7 @@
 #include "visualiser/visualiser.h"
 #include "info.h"
 
-std::unique_ptr<Visualiser> visualiser;
+std::shared_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
 
 /// Return the data directory.
@@ -91,7 +91,9 @@ int main(int /*argc*/, char** /*argv*/) {
     auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
 
     auto map = mapGenerator->generateRandomMap({50, 50});
-    visualiser = std::make_unique<Visualiser>(Coord(50, 50));
+    visualiser = std::make_shared<Visualiser>(Coord(50, 50));
+    map->setVisualiser(visualiser);
+
     auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();

@@ -7,6 +7,8 @@
 #include <list>
 #include <map>
 #include <vector>
+#include <array>
+#include <thread>
 
 #include "constants.h"
 #include "maps/map.h"
@@ -14,6 +16,8 @@
 #include "utils/random.h"
 #include "unit_types.h"
 #include "maps/room.h"
+#include "visualiser/visualiser.h"
+
 
 MapGenerator::MapGenerator(std::weak_ptr<UnitsFactory> unitFactory) : m_unitFactory(unitFactory) {}
 
@@ -24,97 +28,54 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
   const auto wallsCount = static_cast<int>(size.x * size.y * RROOM_PERCENT);
   auto unitFactory = m_unitFactory.lock();
   assert(unitFactory);
-  /* std::vector<LineCord> lineCord;
-  lineCord.reserve(wallsCount);
 
-  for (int i = 0; i < wallsCount - 1;i++) {
-    if (i % 2 == 0) {
-      int randomNumY = random(0, size.y - 1);
+  const int roomCellCount = 10;
 
-      Coord cord_s = {0, randomNumY};
-      Coord cord_e = {size.x - 1, randomNumY};
+  const int delivereCount = size.x * size.y / roomCellCount;
 
-      lineCord.push_back({cord_s, cord_e});
+  //1 разделить карту несколько раз
+  auto rooms = delivereMap(size);
 
-    } else {
-      int randomNumX = random(0,size.x - 1);
-      Coord cord_s = {randomNumX, 0};
-      Coord cord_e = {randomNumX, size.y - 1};
-      lineCord.push_back({cord_s, cord_e});
+
+
+
+  return map;
+  
+}
+
+std::vector<RoomStart> MapGenerator::delivereMap(const Coord& size) {
+  std::vector<RoomStart> rooms;
+  rooms.push_back(RoomStart{Coord(0, 0), Coord(size.x - 1, size.y - 1)});
+  const int roomCellCount = 10;
+  const int delivereCount = size.x * size.y / roomCellCount;
+  //rooms.reserve(roomsCount);
+
+  for (auto i = 0; i < delivereCount; ++i) {
+    std::vector<RoomStart> newRooms;
+    bool isHorizontal = true;
+    for (auto room : rooms) {
+      auto genartedRooms =  room.deliver(isHorizontal);
+
+      newRooms.push_back(genartedRooms.at(0));
+      newRooms.push_back(genartedRooms.at(1));
+
+      isHorizontal = !isHorizontal; 
 
     }
+
+
+
+    rooms = newRooms;
+    //отрисовка для наглядности
+    for (auto room : rooms) {
+      auto coords =  room.getAllCoords();
+      //generate rgb
+      int r, g,  b;
+      m_visualizer->showCoords(coords, r, g, b);
     }
-  for (int i = 0; i < wallsCount - 1; i++) {
-    if (lineCord[i].cord_s.x < lineCord[i].cord_e.x) {
-      for (int j = 0; j < size.x - 1; j++) {
-        if (map->getCell({j + 1 ,lineCord[i].cord_s.y }) == map->getCell({ j - 1, lineCord[i].cord_s.y})) {
-          // map->setUnit(unitFactory->createNull(), {lineCord[i].cord_s.x, j / 2});
-          if (j > 0) {
-            map->setUnit(nullptr, {j - 1, lineCord[i].cord_s.y});
-          }
-          if (j > 2) {
-            map->setUnit(nullptr, {j - 2, lineCord[i].cord_s.y});
-            map->setUnit(nullptr, {j - 3, lineCord[i].cord_s.y});
-          }
-          }
-        map->setUnit(unitFactory->createWall(), {j, lineCord[i].cord_s.y});
-      }
-    }
-    if (lineCord[i].cord_s.y < lineCord[i].cord_e.y) {
-      for (int j = 0; j < size.y; j++) {
-        if (map->isWall({lineCord[i].cord_s.x, j + 1}) == map->isWall({lineCord[i].cord_s.x, j - 1})) {
-          //map->setUnit(unitFactory->createNull(), {lineCord[i].cord_s.x, j / 2});
-          if (j > 0) {
-            map->setUnit(nullptr, {lineCord[i].cord_s.x, j - 1});
-          }
-        }
-        map->setUnit(unitFactory->createWall(), {lineCord[i].cord_s.x, j});
-      }
-    }    
-  }
-*/
-  int i;
-  std::vector<Room> rooms;
-  for (i = 0; i < 10;i++) {
-    rooms.push_back(Room(map));
-  }
-  for (int j = 0; j < 7;j++) {
-    rooms[j].randRoomChange();
+
+
+    //std::thread::thread::sleep(1 sek);
 
   }
-  for (int j = 0; j < 9;j++) {
-    rooms[j].roomFinalChange();
-  }
-  /* Room room2(map);
-  Room room(map);
-  Room room3(map);
-  Room room4(map);
-  Room room53(map);
-  Room room23(map);
-  Room room32(map);
-  Room room44(map);
-  Room room34(map);
-  for (int j = 0; j < 25; j++) {
-    room.randRoomChange();
-    room2.randRoomChange();
-    room4.randRoomChange();
-    room53.randRoomChange();
-  }
-  
-  
-    
-  
-  room44.roomFinalChange();
-    room53.roomFinalChange();
-    room4.roomFinalChange();
-    room2.roomFinalChange();
-    room32.roomFinalChange();
-    room23.roomFinalChange();
-    room.roomFinalChange();
-    room3.roomFinalChange();*/
-  /* for (i = 0; i < wallsCount; i++) {
-    room[i] = Room(map);
-  }*/
-  return rooms.back().roomFinalChange();
-  
 }
