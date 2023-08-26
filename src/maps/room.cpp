@@ -26,7 +26,7 @@ Room::Room(std::shared_ptr<Map> map) : m_map(map) {
     Coord cd = vec[i];
     if (cd.x > 0 || cd.y > 0) {
       m_map->setUnit(unitFactory->createWall(), cd);
-    }
+  }
     }
  // m_size->x = 3;
   //m_size->y = 3;
@@ -148,8 +148,8 @@ std::shared_ptr<Map> Room::roomFinalChange() {
     }
     wallCounter = 0;
   }
-  
-  
+
+
 
   return m_map;
 }

@@ -33,7 +33,7 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
 
   const int delivereCount = size.x * size.y / roomCellCount;
 
-  //1 разделить карту несколько раз
+  //1 ��������� ����� ��������� ���
   auto rooms = delivereMap(size);
 
 
