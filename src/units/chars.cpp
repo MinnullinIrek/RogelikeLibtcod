@@ -50,7 +50,9 @@ void Chars::setValue(int chType, CharType value) {
   }
 }
 
-CharType Chars::getValue(int chType) { return m_chars.at(static_cast<int>(chType)).getValue(); }
+CharType Chars::getValue(int chType) {
+  return m_chars.at(static_cast<int>(chType)).getValue();
+}
 SubKey Chars::addSubscriber(int chType, const std::function<void(CharType)>& sub) {
   return m_chars.at(static_cast<int>(chType)).addSubscriber(sub);
 }

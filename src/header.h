@@ -7,7 +7,7 @@ using Setting = float;
 using Count = int;
 using Identifier = char;
 using Description = std::string;
-
+using Distance = float;
 constexpr Count MAXMAPSIZE = 1000;
 constexpr Identifier emptyID = '~';
 constexpr Identifier BORDER_VERT = '*';
@@ -37,6 +37,7 @@ struct Coord {
   // Coord operator/(float del);
   Coord del(float d) const;
   std::string toString() const;
+  Distance length() const;
   int x;
   int y;
 };

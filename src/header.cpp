@@ -16,3 +16,4 @@ Coord operator-(const Coord& left, const Coord& right) { return Coord(left.x - r
 Coord Coord::del(float d) const { return Coord(x / d, y / d); }
 
 std::string Coord::toString() const { return std::string("[") + std::to_string(x) + "," + std::to_string(y) + "]"; }
+Distance Coord::length() const { return sqrt(x*x + y*y); }

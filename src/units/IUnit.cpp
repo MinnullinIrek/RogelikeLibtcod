@@ -48,14 +48,33 @@ void Unit::lookAround(bool isEyeOpened) {
 
     Coord cd = heroCoord;
     auto isWall = map->isWall(cd);
+    m_watchingCoords.push_back(cd);
     std::initializer_list<Coord> tempCoords{{-1, 1}, {-1, 0}, {-1, -1}, {0, 1}, {0, -1}, {1, 1}, {1, 0}, {1, -1}};
+
+    auto isFar = [&heroCoord](const Coord& lastCd, const Coord& nextCd) -> bool {
+      return (lastCd - heroCoord).length() < (nextCd - heroCoord).length();
+    };
+
+    m_watchingCoords.clear();
+    std::list<Coord> checkingCoords;
+    checkingCoords.push_back(heroCoord);
+
     for (int i = 0; i < watchingLength; ++i) {
-      cd;
-      for (const auto& ct : tempCoords) {
-        auto cdTemp
+      for ( auto it = checkingCoords.begin(); it != checkingCoords.end(); ) {
+        auto wCd = *it;
+        it = checkingCoords.erase(it);
+
+        if (!map->isWall(wCd)) {
+          for (const auto& ct : tempCoords) {
+            auto cdTemp = wCd + ct;
+            if (isFar(wCd, cdTemp)) {
+              m_watchingCoords.push_back(cdTemp);
+              checkingCoords.push_front(wCd);       
+            }
+          }
+        }
       }
     }
-
   } else {
     m_watchingCoords.clear();
   }
