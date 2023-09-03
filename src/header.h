@@ -28,7 +28,7 @@ struct Identifier {
 };
 
 constexpr Count MAXMAPSIZE = 1000;
-const Identifier emptyID = '~';
+const Identifier emptyID = '.';
 const Identifier notSeen = ' ';
 const Identifier BORDER_VERT = '*';
 const Identifier BORDER_HOR = '*';
