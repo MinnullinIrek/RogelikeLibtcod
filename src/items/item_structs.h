@@ -22,7 +22,7 @@ struct WearingStruct {
 struct WeaponStruct : public WearingStruct {
   std::vector<std::vector<EWearingSlot>> m_slots;
   std::vector<EWeaponType> m_weaponType;
-  EWeaponSize m_weaponSize;
+  EWeaponSize m_weaponSize = EWeaponSize::small;
   std::vector<EWeaponRangedClose> m_rangedClose;
 };
 

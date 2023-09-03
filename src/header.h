@@ -5,14 +5,34 @@
 
 using Setting = float;
 using Count = int;
-using Identifier = char;
 using Description = std::string;
 using Distance = float;
-constexpr Count MAXMAPSIZE = 1000;
-constexpr Identifier emptyID = '~';
-constexpr Identifier BORDER_VERT = '*';
-constexpr Identifier BORDER_HOR = '*';
 
+// using Identifier = char;
+struct Color {
+  uint8_t r, g, b;
+};
+struct Identifier {
+  Identifier() {}
+  Identifier(char symbol) : symbol(symbol){};
+  // Identifier(const std::initializer_list<uint8_t>& color, const std::initializer_list<uint8_t>& bgColor, char symbol)
+  //     : color(color),
+  //       bgColor(bgColor),
+  //       symbol(symbol){
+
+  //       };
+
+  Color color = {255, 255, 255};
+  Color bgColor = {0, 0, 0};
+  char symbol = 'N';
+};
+
+constexpr Count MAXMAPSIZE = 1000;
+const Identifier emptyID = '~';
+const Identifier notSeen = ' ';
+const Identifier BORDER_VERT = '*';
+const Identifier BORDER_HOR = '*';
+const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
 enum class EAction { none, left, right, up, down };

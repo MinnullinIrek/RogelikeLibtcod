@@ -4,12 +4,13 @@
 #include "../header.h"
 #include "../maps/cell.h"
 #include "../maps/map.h"
+#include "../utils/consts_reader.h"
 #include "algorithm"
 #include "chars.h"
 #include "interactor.h"
 #include "mover.h"
 
-IUnit::IUnit() {}
+IUnit::IUnit() : m_type(EUnitTypes::none) {}
 IUnit::IUnit(Identifier id, EUnitTypes uType) : m_id(id), m_type(uType) {}
 void IUnit::createChars() { m_chars = std::make_shared<Chars>(); }
 IUnit::~IUnit() {}
@@ -21,7 +22,7 @@ std::shared_ptr<Chars> IUnit::getChars() { return m_chars; }
 Identifier IUnit::toChar() const { return m_id; }
 
 Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover)
-    : IUnit(id), m_mover(mover), m_bag(std::make_unique<Bag>()) {}
+    : IUnit(id, EUnitTypes::none), m_mover(mover), m_bag(std::make_unique<Bag>()) {}
 Unit::Unit() : IUnit() {}
 
 // Identifier Unit::toChar() const { return m_id; }
@@ -38,29 +39,31 @@ std::shared_ptr<BodyParts> IUnit::getBodyParts() { return m_bodyParts; }
 
 void Unit::lookAround(bool isEyeOpened) {
   if (isEyeOpened) {
-    auto watchingLength = m_chars->getValue(static_cast<int>(ECharTypes::perception));
+    auto watchingLength = m_chars->getValue(static_cast<int>(ECharTypes::perception)) / 2;
     if (watchingLength == 0) {
       // throw "person is blind";
       watchingLength = 5;
     }
-    auto heroCoord = m_mover->getCoord();
+
+    const auto& heroCoord = m_mover->getCoord();
     auto map = m_mover->getMap().lock();
 
     Coord cd = heroCoord;
-    auto isWall = map->isWall(cd);
-    m_watchingCoords.push_back(cd);
     std::initializer_list<Coord> tempCoords{{-1, 1}, {-1, 0}, {-1, -1}, {0, 1}, {0, -1}, {1, 1}, {1, 0}, {1, -1}};
 
     auto isFar = [&heroCoord](const Coord& lastCd, const Coord& nextCd) -> bool {
-      return (lastCd - heroCoord).length() < (nextCd - heroCoord).length();
+      return ((lastCd - heroCoord).length() + SF("visibilityMagic")) <= (nextCd - heroCoord).length();
     };
 
     m_watchingCoords.clear();
+    m_watchingCoords[cd] = true;
+    map->setSeen(cd);
+
     std::list<Coord> checkingCoords;
     checkingCoords.push_back(heroCoord);
 
     for (int i = 0; i < watchingLength; ++i) {
-      for ( auto it = checkingCoords.begin(); it != checkingCoords.end(); ) {
+      for (auto it = checkingCoords.begin(); it != checkingCoords.end();) {
         auto wCd = *it;
         it = checkingCoords.erase(it);
 
@@ -68,8 +71,11 @@ void Unit::lookAround(bool isEyeOpened) {
           for (const auto& ct : tempCoords) {
             auto cdTemp = wCd + ct;
             if (isFar(wCd, cdTemp)) {
-              m_watchingCoords.push_back(cdTemp);
-              checkingCoords.push_front(wCd);       
+              m_watchingCoords[cdTemp] = true;
+              map->setSeen(cdTemp);
+              if ((heroCoord - cdTemp).length() <= watchingLength) {
+                checkingCoords.push_front(cdTemp);
+              }
             }
           }
         }
@@ -79,3 +85,5 @@ void Unit::lookAround(bool isEyeOpened) {
     m_watchingCoords.clear();
   }
 }
+
+const std::unordered_map<Coord, bool, KeyHasher>& Unit::getWatchingCoords() const { return m_watchingCoords; }

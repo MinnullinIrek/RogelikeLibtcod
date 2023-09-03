@@ -13,15 +13,25 @@ std::string Info::getText() {
   std::string text = "Info:\n___________\n";
   auto hero = m_mainHero.lock();
   if (hero) {
-    auto pos = hero->getMover()->getCoord();
+    auto& pos = hero->getMover()->getCoord();
     text += "pos: " + pos.toString();
   }
   return text;
 }
 
-const Coord& Info::getCoord() const { auto hero = m_mainHero.lock();
+const Coord& Info::getCoord() const {
+  auto hero = m_mainHero.lock();
   if (!hero) {
     throw std::string("Info::getCoord: no hero");
   }
   return hero->getMover()->getCoord();
+}
+
+
+const std::unordered_map<Coord, bool, KeyHasher>& Info::getWatchingCoords() const {
+  auto hero = m_mainHero.lock();
+  if (!hero) {
+    throw("Info::getWatchingCoords() no hero");
+  }
+  return hero->getWatchingCoords();
 }

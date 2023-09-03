@@ -70,7 +70,7 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
 void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
   // assert(isExisted(coord));
   if (!isExisted(coord)) {
-    throw std::string("can't set unit to map") + unit->toChar() + "to coord = " + coord.toString();
+    throw std::string("can't set unit to map") + unit->toChar().symbol + "to coord = " + coord.toString();
   }
   auto& cell = m_cells.at(coord);
   assert(!cell->getUnit());
@@ -82,6 +82,12 @@ std::shared_ptr<Cell> Map::getCell(const Coord& cd) const {
     return m_cells.at(cd);
   }
   return nullptr;
+}
+
+void Map::setSeen(const Coord& cd) {
+  if (isExisted(cd)) {
+    m_cells.at(cd)->setSeen(true);
+  }
 }
 
 bool Map::isWall(const Coord& cd) const {

@@ -21,7 +21,7 @@ class IUnit : public ToChar {
   virtual ~IUnit();
 
   virtual Identifier toChar() const override;
-  EUnitTypes m_type;
+  EUnitTypes m_type = EUnitTypes::none;
 
   void createChars();
   std::shared_ptr<Chars> getChars();
@@ -45,12 +45,13 @@ class Unit : public IUnit, public ToString {
   virtual std::shared_ptr<IMover> getMover();
   virtual void setMover(std::shared_ptr<IMover> mover);
   void lookAround(bool isEyeOpened);
+  const std::unordered_map<Coord, bool, KeyHasher>& getWatchingCoords() const;
 
  protected:
-  UnitType m_type;
   std::unique_ptr<Bag> m_bag;
   std::shared_ptr<IMover> m_mover;
-  std::vector<Coord> m_watchingCoords;
+  // std::unordered_map<Coord> m_watchingCoords;
+  std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
 };
 
 #endif

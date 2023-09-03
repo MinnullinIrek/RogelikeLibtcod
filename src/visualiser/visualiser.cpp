@@ -1,14 +1,14 @@
 #include "visualiser.h"
 
 #include <SDL.h>
+#include <assert.h>
 
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
-#include <assert.h>
 
-#include "../maps/map.h"
 #include "../info.h"
+#include "../maps/map.h"
 
 auto get_data_dir() -> std::filesystem::path {
   static auto root_directory = std::filesystem::path{"."};  // Begin at the working directory.
@@ -47,10 +47,10 @@ void Visualiser::setMap(std::shared_ptr<Map> map) { m_map = map; }
 
 void Visualiser::showMap() const {
   m_console.clear();
-  //tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+  // tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 
   auto heroCoord = m_info->getCoord();
-
+  auto& watchingCoords = m_info->getWatchingCoords();
   heroCoord;
   m_windowSize;
   auto mapSize = m_map->getSize();
@@ -61,14 +61,16 @@ void Visualiser::showMap() const {
   mapStart.y = std::max((heroCoord.y - m_windowSize.y / 2), 0);
 
   auto startPos = m_center;
-  auto endPos = m_center + mapStart+ m_windowSize - Coord{startPos.x, startPos.y};
+  auto endPos = m_center + mapStart + m_windowSize - Coord{startPos.x, startPos.y};
 
-
-
-
-  for (auto x = mapStart.x; x < endPos.x ; ++x) {
+  for (auto x = mapStart.x; x < endPos.x; ++x) {
     for (auto y = mapStart.y; y < endPos.y; ++y) {
-      auto id = m_map->getIdentifier({x, y});
+      Coord cd = {x, y};
+      auto id = m_map->getIdentifier(cd);
+      if (watchingCoords.find(cd) == watchingCoords.end()) {
+        static Color gray = {125, 125, 125};
+        id.color = gray;
+      }
       showId({x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}, id);
     }
   }
@@ -83,12 +85,17 @@ void Visualiser::showInfo() const {
   auto text = m_info->getText();
   tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 }
-  
 
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
   static std::string s = " ";
-  s[0] = id;
-  tcod::print(m_console, cd, s, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+  s[0] = id.symbol;
+  // uint8_t r, g, b;
+  tcod::print(
+      m_console,
+      cd,
+      s,
+      TCOD_ColorRGB{id.color.r, id.color.g, id.color.b},
+      TCOD_ColorRGB{id.bgColor.r, id.bgColor.g, id.bgColor.b});
 }
 
 // void Visualiser::setConsole(tcod::Console& console) { m_console = console; }
@@ -109,6 +116,4 @@ void Visualiser::showBorder() const {
   }
 }
 
-void Visualiser::setInfo(std::shared_ptr<Info> info) {
-  m_info = info;
-}
+void Visualiser::setInfo(std::shared_ptr<Info> info) { m_info = info; }

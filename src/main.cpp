@@ -24,8 +24,8 @@
 #include "units/interactor.h"
 #include "units/mover.h"
 #include "units_factory.h"
+#include "utils/consts_reader.h"
 #include "visualiser/visualiser.h"
-
 
 std::unique_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -88,13 +88,14 @@ int main(int /*argc*/, char** /*argv*/) {
 
     // g_context = tcod::Context(params);
 
+    MagicConsts::instance().readJson();
     auto unitsFactory = std::make_shared<UnitsFactory>();
     auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
 
     auto map = mapGenerator->generateRandomMap({200, 200});
     visualiser = std::make_unique<Visualiser>(Coord(20, 20));
-    auto hero = unitsFactory->createHero();
-      //std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
+    auto hero = std::static_pointer_cast<Unit>(unitsFactory->createHero(map));
+    // std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
 
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();
@@ -110,6 +111,7 @@ int main(int /*argc*/, char** /*argv*/) {
 
     visualiser->setMap(map);
     visualiser->setInfo(info);
+    hero->lookAround(true);
     // visualiser->setConsole(g_console);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);

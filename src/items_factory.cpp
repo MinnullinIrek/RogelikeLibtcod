@@ -185,10 +185,8 @@ void ItemsFactory::readJson() {
     nlohmann::json jsonMain = jsonMain1.begin().value();
     // s = jsonMain.dump();
     for (auto& iter = jsonMain.begin(); iter != jsonMain.end(); ++iter) {
-      auto sv = iter.value();
+      auto& sv = iter.value();
       WeaponStruct str;
-      // std::shared_ptr<Weapon> wpn = std::make_shared<Weapon>(str);
-      // s = sv.dump();
 
       if (sv.contains("name")) {
         str.name = sv["name"];
@@ -238,14 +236,14 @@ void ItemsFactory::readJson() {
               throw std::string("weapon [chars][") + chVal + "] doesn't exist in weapon.json weapon name =" + str.name;
             }
           }
-          auto name = iterChar.value()["name"];
+          auto& name = iterChar.value()["name"];
           ESetting sett = m_settings[name];
           std::shared_ptr<Chars> charVal = std::make_shared<Chars>();
 
           for (auto& iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
-            auto ch = iterCh.value();
+            auto& ch = iterCh.value();
             auto s = iterCh->dump();
-            auto key = ch.begin().key();
+            auto& key = ch.begin().key();
             auto val = ch.begin().value().get<CharType>();
             if (m_chars.find(key) == m_chars.end()) {
               throw std::string("m_rangedClose doesn't contains key ") + key;

@@ -17,12 +17,14 @@ class Cell : public ToChar {
   std::shared_ptr<IUnit> getUnit();
   std::shared_ptr<Bag> getBag();
   bool isWall() const;
+  void setSeen(bool isSeen);
 
  protected:
   Coord m_coord;
   std::shared_ptr<Bag> m_bag;
   std::shared_ptr<IUnit> m_unit;
   Identifier m_id;
+  bool m_isSeen = false;
 };
 
 #endif
