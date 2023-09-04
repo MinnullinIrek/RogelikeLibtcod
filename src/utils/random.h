@@ -18,6 +18,13 @@ struct uniform_distribution_selector<false, T> {
 
 template <typename T>
 T random(T lower = T(0), T higher = T(99)) {
+  if (lower == higher) {
+    return lower;
+  }
+  if (lower > higher) {
+    return lower;
+  }
+
   using uniform_distribution_type = typename uniform_distribution_selector<std::is_integral<T>::value, T>::type;
 
   uniform_distribution_type distribution(lower, higher);
