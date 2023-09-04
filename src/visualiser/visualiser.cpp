@@ -51,8 +51,6 @@ void Visualiser::showMap() const {
 
   auto heroCoord = m_info->getCoord();
 
-  heroCoord;
-  m_windowSize;
   auto mapSize = m_map->getSize();
 
   Coord mapStart{0, 0};
@@ -115,10 +113,16 @@ void Visualiser::setInfo(std::shared_ptr<Info> info) {
   m_info = info;
 }
 
-  void Visualiser::showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b) {
+void Visualiser::showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b) {
+  static std::string ch = "a";
   for (auto cd : coords) {
-      //char ch = random<char>('a', 'z');
-    tcod::print(m_console, {cd.x, cd.y}, "#", TCOD_ColorRGB{r, g, b}, std::nullopt);
+    tcod::print(m_console, {cd.x, cd.y}, ch, TCOD_ColorRGB{r, g, b}, std::nullopt);
   }
+  ++ch[0];
+  if (ch[0] > 'z') {
+    ch[0] = 'a';
+  }
+}
 
-  }
+void Visualiser::clear() { m_console.clear(); }
+void Visualiser::show() { m_context.present(m_console); }

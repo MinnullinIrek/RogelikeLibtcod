@@ -22,6 +22,9 @@ class Visualiser {
   // void setConsole(tcod::Console& console);
   void showBorder() const;
   void showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b);
+  void clear();
+  void show();
+
  protected:
   void showId(std::array<int, 2>&& cd, const Identifier& id) const;
 
