@@ -1,4 +1,5 @@
 #include "header.h"
+
 #include "utils/random.h"
 
 /*class  Room:
@@ -19,9 +20,9 @@ void Room::roomchange()
   if (selector == 1) { //up
       for (int j = 0;j < m_size->y ; j++) {
         room[{m_size->x, j}]->createWall();
-      }      
+      }
 
-    
+
 
 
 
@@ -45,5 +46,6 @@ Coord operator+(const Coord& left, const Coord& right) { return Coord(left.x + r
 Coord operator-(const Coord& left, const Coord& right) { return Coord(left.x - right.x, left.y - right.y); }
 // Coord Coord::operator/(float del) { return Coord(x / del, y / del); }
 Coord Coord::del(float d) const { return Coord(x / d, y / d); }
+Coord Coord::operator/(float d) { return del(d); }
 
 std::string Coord::toString() const { return std::string("[") + std::to_string(x) + "," + std::to_string(y) + "]"; }

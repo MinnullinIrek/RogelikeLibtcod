@@ -17,13 +17,19 @@ struct RoomStart {
   RoomStart() {}
   RoomStart(std::array<Coord, 2>&& borders) : m_borders(borders) {}
   RoomStart(const std::array<Coord, 2>& borders) : m_borders(borders) {}
-  std::array<Coord, 2> m_borders;
 
-  std::list<Coord> getAllCoords() const;
+  std::list<Coord> getAllCoords(bool outer = true) const;
 
   std::list<RoomStart> deliver(bool isHorizontal) const;
 
   void innerBorder();
+  Coord getCenter();
+  bool isNeighbor(const RoomStart& room);
+
+  std::array<Coord, 2> m_borders;
+  std::array<Coord, 2> m_innerBorders;
+
+  std::list<RoomStart*> m_neighbors;
 };
 
 class MapGenerator {
@@ -35,6 +41,7 @@ class MapGenerator {
 
  private:
   std::list<RoomStart> delivereMap(const Coord& size);
+  void findNeighbors(std::list<RoomStart>& rooms);
   void generateRoom(const int& roomCount, const Coord& size);
   std::weak_ptr<UnitsFactory> m_unitFactory;
   std::shared_ptr<Visualiser> m_visualizer;
