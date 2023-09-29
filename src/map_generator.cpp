@@ -20,6 +20,7 @@
 #include "units_factory.h"
 #include "utils/random.h"
 #include "visualiser/visualiser.h"
+#include "units/IUnit.h"
 
 using namespace std::chrono_literals;
 
@@ -41,8 +42,19 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
   auto rooms = delivereMap(size);
 
   auto map = std::make_shared<Map>(size);
-  
 
+  for (int x = 0; x < size.x; ++x) {
+    for (int y = 0; y < size.y; ++y) {
+      map->setUnit(std::make_shared<IUnit>('#', EUnitTypes::wall), Coord(x, y));
+    }
+  }
+
+  for (const auto& room : rooms) {
+    auto coords =  room.getAllCoords(false);
+    for (const auto& cd : coords) {
+      map->setUnit(nullptr, cd);
+    }
+  }
 
   return map;
 }
