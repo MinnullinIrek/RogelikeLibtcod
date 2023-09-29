@@ -131,7 +131,7 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
     m_visualizer->showCoords(coords, r, g, b);
   }
   m_visualizer->show();
-  std::this_thread::sleep_for(5000ms);
+  std::this_thread::sleep_for(1000ms);
 
 
   return rooms;
@@ -171,32 +171,20 @@ void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
   auto last = rooms.end();
   --last;
   auto it = start;
-  int i = 0;
   for (;; ++it) {
     for (auto neighbor = it->m_neighbors.begin(); neighbor != it->m_neighbors.end(); ++neighbor) {
-      printf("%d %d \n", __LINE__, i);
       auto corridorCoords = findWays(*it, **neighbor);
-      printf("%d %d \n", __LINE__, i);
-
       //assert(!corridorCoords.empty());
       if (corridorCoords.empty()) {
         continue;
       }
-      printf("%d %d \n", __LINE__, i);
 
       auto selectedCorrs = random<int>(0, static_cast<int>(corridorCoords.size() - 1));
-      printf("%d %d \n", __LINE__, i);
-
       auto coords = corridorCoords.at(selectedCorrs);
-      printf("%d %d \n", __LINE__, i);
       auto roomCor = RoomStart(std::array<Coord, 2>{coords.first, coords.second});
-      printf("%d %d \n", __LINE__, i);
       roomCor.m_innerBorders = roomCor.m_borders;
-      printf("%d %d \n", __LINE__, i);
       rooms.push_back(roomCor);
-      printf("%d %d \n", __LINE__, i);
 
-      ++i;
     }
 
     if (it == last) {
