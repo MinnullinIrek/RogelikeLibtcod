@@ -131,6 +131,7 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
 
   auto rooms = delivereMap(size);
 
+
   return map;
 }
 
@@ -190,9 +191,24 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
     m_visualizer->showCoords(coords, r, g, b);
   }
   m_visualizer->show();
-  //std::this_thread::sleep_for(5000ms);
+  // std::this_thread::sleep_for(5000ms);
 
   findNeighbors(rooms);
+
+  makeCorridor(rooms);
+  m_visualizer->clear();
+  for (auto room : rooms) {
+    auto coords = room.getAllCoords(false);
+
+    int r = random<int>(0, 255);
+    int g = random<int>(0, 255);
+    int b = random<int>(0, 255);
+
+    m_visualizer->showCoords(coords, r, g, b);
+  }
+  m_visualizer->show();
+  std::this_thread::sleep_for(5000ms);
+
 
   return rooms;
 }
@@ -203,23 +219,23 @@ void MapGenerator::findNeighbors(std::list<RoomStart>& rooms) {
   for (auto it = rooms.begin(); it != rooms.end(); ++it) {
     auto j = it;
     ++j;
-    int r =  random<int>(0, 255);
+    int r = random<int>(0, 255);
     int g = random<int>(0, 255);
     int b = random<int>(0, 255);
 
     m_visualizer->showCoords(it->getAllCoords(false), r, g, b);
     m_visualizer->show();
-    //std::this_thread::sleep_for(1000ms);
+    // std::this_thread::sleep_for(1000ms);
 
     for (; j != rooms.end(); ++j) {
       if (j->isNeighbor(*it)) {
         it->m_neighbors.push_back(&(*j));
         m_visualizer->showCoords(j->getAllCoords(false), r, g, b);
         m_visualizer->show();
-        //std::this_thread::sleep_for(1000ms);
+        // std::this_thread::sleep_for(1000ms);
       }
     }
-    //std::this_thread::sleep_for(2000ms);
+    // std::this_thread::sleep_for(2000ms);
   }
 }
 
@@ -230,7 +246,8 @@ bool RoomStart::isNeighbor(const RoomStart& room) {
   for (const auto& i : nextI) {
     const auto j = i == 1 ? 1 : 0;
     if (m_borders[j].x + i == room.m_borders[1 - j].x) {
-      auto result = isNear(m_innerBorders[0].y, m_innerBorders[1].y, room.m_innerBorders[0].y, room.m_innerBorders[1].y);
+      auto result =
+          isNear(m_innerBorders[0].y, m_innerBorders[1].y, room.m_innerBorders[0].y, room.m_innerBorders[1].y);
       if (result) {
         return true;
       }
@@ -248,4 +265,108 @@ bool RoomStart::isNeighbor(const RoomStart& room) {
   }
 
   return false;
+}
+
+void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
+  rooms;
+
+  auto start = rooms.begin();
+  auto last = rooms.end();
+  --last;
+  auto it = start;
+  int i = 0;
+  for (;; ++it) {
+    for (auto neighbor = it->m_neighbors.begin(); neighbor != it->m_neighbors.end(); ++neighbor) {
+      printf("%d %d \n", __LINE__, i);
+      auto corridorCoords = findWays(*it, **neighbor);
+      printf("%d %d \n", __LINE__, i);
+
+      //assert(!corridorCoords.empty());
+      if (corridorCoords.empty()) {
+        continue;
+      }
+      printf("%d %d \n", __LINE__, i);
+
+      auto selectedCorrs = random<int>(0, corridorCoords.size() - 1);
+      printf("%d %d \n", __LINE__, i);
+
+      auto coords = corridorCoords.at(selectedCorrs);
+      printf("%d %d \n", __LINE__, i);
+      auto roomCor = RoomStart(std::array<Coord, 2>{coords.first, coords.second});
+      printf("%d %d \n", __LINE__, i);
+      roomCor.m_innerBorders = roomCor.m_borders;
+      printf("%d %d \n", __LINE__, i);
+      rooms.push_back(roomCor);
+      printf("%d %d \n", __LINE__, i);
+
+      ++i;
+    }
+
+    if (it == last) {
+      break;
+    }
+  }
+}
+
+std::vector<std::pair<Coord, Coord>> MapGenerator::findWays(
+    const RoomStart& room1, const RoomStart& room2)
+{
+  std::vector<std::pair<Coord, Coord>> corridors;
+  room1;
+  room2;
+
+  const auto xL1 = room1.m_innerBorders[0].x;
+  const auto xR1 = room1.m_innerBorders[1].x;
+
+  const auto yU1 = room1.m_innerBorders[0].y;
+  const auto yD1 = room1.m_innerBorders[1].y;
+
+  const auto xL2 = room2.m_innerBorders[0].x;
+  const auto xR2 = room2.m_innerBorders[1].x;
+
+  const auto yU2 = room2.m_innerBorders[0].y;
+  const auto yD2 = room2.m_innerBorders[1].y;
+
+  auto middleX1 = (xL1 + xR1) / 2;
+  auto middleX2 = (xL2 + xR2) / 2;
+
+  auto middleY1 = (yU1 + yD1) / 2;
+  auto middleY2 = (yU2 + yD2) / 2;
+
+  auto isHorizontal = abs(middleX1 - middleX2) - abs(middleY1 - middleY2) > 0;
+
+  std::vector<int> commonVars;
+
+  const auto& cm11 = isHorizontal ? yU1 : xL1;
+  const auto& cm12 = isHorizontal ? yD1 : xR1;
+
+  const auto& cm21 = isHorizontal ? yU2 : xL2;
+  const auto& cm22 = isHorizontal ? yD2 : xR2;
+
+  for (auto c = MAX(cm11, cm21); c <= MIN(cm12, cm22); ++c) {
+    commonVars.push_back(c);
+  }
+
+  auto middleNonCommon1 = isHorizontal ? middleX1 : middleY1;
+  auto middleNonCommon2 = isHorizontal ? middleX2 : middleY2;
+
+  for (auto cv : commonVars) {
+    Coord cd1;
+    Coord cd2;
+
+    if (isHorizontal) {
+      cd1.x = middleNonCommon1;
+      cd2.x = middleNonCommon2;
+      cd1.y = cv;
+      cd2.y = cv;
+    } else {
+      cd1.y = middleNonCommon1;
+      cd2.y = middleNonCommon2;
+      cd1.x = cv;
+      cd2.x = cv;
+    }
+    corridors.push_back({cd1, cd2});
+  }
+
+  return corridors;
 }
