@@ -113,10 +113,11 @@ void Visualiser::setInfo(std::shared_ptr<Info> info) {
   m_info = info;
 }
 
-void Visualiser::showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b) {
+void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b) {
   static std::string ch = "a";
   for (auto cd : coords) {
-    tcod::print(m_console, {cd.x, cd.y}, ch, TCOD_ColorRGB{r, g, b}, std::nullopt);
+    tcod::print(m_console, {cd.x, cd.y}, ch, TCOD_ColorRGB{
+      static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)}, std::nullopt);
   }
   ++ch[0];
   if (ch[0] > 'z') {

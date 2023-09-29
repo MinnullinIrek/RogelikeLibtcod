@@ -21,7 +21,7 @@ class Visualiser {
   //Coord getLeftUpCd(const Coord& center) const;
   // void setConsole(tcod::Console& console);
   void showBorder() const;
-  void showCoords(std::list<Coord> coords, uint8_t r, uint8_t g, uint8_t b);
+  void showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b);
   void clear();
   void show();
 

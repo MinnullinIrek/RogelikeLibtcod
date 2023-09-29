@@ -44,8 +44,8 @@ bool operator==(const Coord& c1, const Coord& c2) { return c1.x == c2.x && c1.y 
 
 Coord operator+(const Coord& left, const Coord& right) { return Coord(left.x + right.x, left.y + right.y); }
 Coord operator-(const Coord& left, const Coord& right) { return Coord(left.x - right.x, left.y - right.y); }
-// Coord Coord::operator/(float del) { return Coord(x / del, y / del); }
-Coord Coord::del(float d) const { return Coord(x / d, y / d); }
+// Coord Coord::operator/(float del) { return Coord(static_cast<int>(x / del), static_cast<int>(y / del)); }
+Coord Coord::del(float d) const { return Coord(static_cast<int>(x / d), static_cast<int>(y / d)); }
 Coord Coord::operator/(float d) { return del(d); }
 
 std::string Coord::toString() const { return std::string("[") + std::to_string(x) + "," + std::to_string(y) + "]"; }

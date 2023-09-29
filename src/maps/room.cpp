@@ -5,21 +5,19 @@
 
 Room::Room(std::shared_ptr<Map> map) : m_map(map) {
   Coord sizeMap = map->getSize();
-  //do {
-    Coord startPos = Coord{random(0, sizeMap.x - 2), random(0, sizeMap.y - 2)};
- // } while (!map->isWall(startPos));
-  upLeftPos = Coord{startPos.x + 1, startPos.y - 1};
-  map->setUnit(unitFactory->createWall(), startPos);
+    Coord startPos1 = Coord{random(0, sizeMap.x - 2), random(0, sizeMap.y - 2)};
+  upLeftPos = Coord{startPos1.x + 1, startPos1.y - 1};
+  map->setUnit(unitFactory->createWall(), startPos1);
   std::vector vec = {
-      Coord{startPos},
-      Coord{startPos.x + 1, startPos.y},
-      Coord{startPos.x - 1, startPos.y},
-      Coord{startPos.x, startPos.y + 1},
-      Coord{startPos.x, startPos.y - 1},
-      Coord{startPos.x + 1, startPos.y + 1},
-      Coord{startPos.x + 1, startPos.y - 1},
-      Coord{startPos.x - 1, startPos.y + 1},
-      Coord{startPos.x - 1, startPos.y - 1}};
+      Coord{startPos1},
+      Coord{startPos1.x + 1, startPos1.y},
+      Coord{startPos1.x - 1, startPos1.y},
+      Coord{startPos1.x, startPos1.y + 1},
+      Coord{startPos1.x, startPos1.y - 1},
+      Coord{startPos1.x + 1, startPos1.y + 1},
+      Coord{startPos1.x + 1, startPos1.y - 1},
+      Coord{startPos1.x - 1, startPos1.y + 1},
+      Coord{startPos1.x - 1, startPos1.y - 1}};
   
   for (int i = 0; i < 9; i++) {
     room[{vec[i]}]->createWall();
