@@ -3,11 +3,11 @@
 
 #include <string_view>
 
-// class Logger {
-//  private:
-/* data */
-//  public:
-// static void log(std::string_view filename, std::string_view function, int line, const char* format, ...);
-// };
+struct Logger {
+ static void log(std::string_view filename, std::string_view function, int line, const char* format, ...);
+};
+
+#define LOG(format, ...) Logger::log(__FILE__, __FUNCTION__, __LINE__, format, __VA_ARGS__);
 
 #endif
+

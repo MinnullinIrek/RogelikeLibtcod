@@ -83,7 +83,7 @@ void Visualiser::showMap() const {
 void Visualiser::showInfo() const {
   assert(m_info);
   auto text = m_info->getText();
-  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, std::nullopt);
+  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, TCOD_ColorRGB{0, 0, 255});
 }
 
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
@@ -98,11 +98,7 @@ void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
       TCOD_ColorRGB{id.bgColor.r, id.bgColor.g, id.bgColor.b});
 }
 
-// void Visualiser::setConsole(tcod::Console& console) { m_console = console; }
-Coord Visualiser::getLeftUpCd(const Coord& center) const { return center - m_windowSize.del(2); }
 void Visualiser::showBorder() const {
-  // m_center;
-  // auto x = m_center.x - 1;
   for (auto x : {m_center.x - 1, m_center.x + m_windowSize.x}) {
     for (auto y = m_center.y - 1; y < m_center.y + m_windowSize.y + 1; ++y) {
       showId({x, y}, BORDER_VERT);
@@ -117,3 +113,19 @@ void Visualiser::showBorder() const {
 }
 
 void Visualiser::setInfo(std::shared_ptr<Info> info) { m_info = info; }
+
+
+void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b) {
+  static std::string ch = "a";
+  for (auto cd : coords) {
+    tcod::print(m_console, {cd.x, cd.y}, ch, TCOD_ColorRGB{
+      static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)}, std::nullopt);
+  }
+  ++ch[0];
+  if (ch[0] > 'z') {
+    ch[0] = 'a';
+  }
+}
+
+void Visualiser::clear() { m_console.clear(); }
+void Visualiser::show() { m_context.present(m_console); }

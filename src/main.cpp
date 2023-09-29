@@ -27,7 +27,7 @@
 #include "utils/consts_reader.h"
 #include "visualiser/visualiser.h"
 
-std::unique_ptr<Visualiser> visualiser;
+std::shared_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
 
 /// Return the data directory.
@@ -92,11 +92,10 @@ int main(int /*argc*/, char** /*argv*/) {
     auto unitsFactory = std::make_shared<UnitsFactory>();
     auto mapGenerator = std::make_shared<MapGenerator>(unitsFactory);
 
-    auto map = mapGenerator->generateRandomMap({200, 200});
-    visualiser = std::make_unique<Visualiser>(Coord(20, 20));
+    visualiser = std::make_shared<Visualiser>(Coord(50, 50));
+    mapGenerator->setVisualiser(visualiser);
+    auto map = mapGenerator->generateRandomMap({50, 50});
     auto hero = std::static_pointer_cast<Unit>(unitsFactory->createHero(map));
-    // std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
-
     hero->setInteractor(std::make_shared<Interactor>());
     auto itemsFactory = std::make_unique<ItemsFactory>();
     // itemsFactory->createArmour(EArmorItemTypes::clothes);

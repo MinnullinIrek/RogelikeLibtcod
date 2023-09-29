@@ -1,7 +1,13 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+#include <map>
+#include <memory>
 #include <string>
+
+#include "unit_types.h"
+#include "units_factory.h"
+
 
 using Setting = float;
 using Count = int;
@@ -54,14 +60,28 @@ struct Coord {
 
   friend Coord operator+(const Coord& left, const Coord& right);
   friend Coord operator-(const Coord& left, const Coord& right);
-  // Coord operator/(float del);
+  Coord operator/(float del);
   Coord del(float d) const;
   std::string toString() const;
   Distance length() const;
   int x;
   int y;
 };
-
+//
+struct LineCord {
+  Coord cord_s;
+  Coord cord_e;
+};
+/* class Room {
+ public:
+  Room();
+  void roomchange();
+  std::map<Coord, std::shared_ptr<UnitsFactory>> get_room() { return room; }
+ private:
+  std::map<Coord, std::shared_ptr<UnitsFactory>> room;
+  std::shared_ptr<Coord> m_size;
+};*/
+//
 struct KeyHasher {
   std::size_t operator()(const Coord& k) const {
     using std::hash;
