@@ -12,7 +12,7 @@ std::vector<std::string> Window::deliver() {
   const int length = m_rectangle.rd.x - m_rectangle.lu.x;
 
   for (int i = 0;;) {
-    int iRight = __min(length, m_text.length() - i);
+    int iRight = __min(length, static_cast<int>(m_text.length()) - i);
 
     delivered.push_back(m_text.substr(i, iRight));
     if (i >= m_text.length()) {
@@ -34,8 +34,12 @@ std::vector<std::string> Window::getText(int start) {
   }
   assert(start < texts.size());
 
+  m_start = start;
+
   for (int i = start; i < __min(length + start, texts.size() + start); ++i) {
     finalTexts.push_back(texts.at(i));
   }
   return finalTexts;
 }
+
+int Window::getStart() { return m_start; }

@@ -94,4 +94,13 @@ class ToString {
   virtual Description toString() const = 0;
 };
 
+struct Text {
+  Text(std::string_view text, const Color& color, const Color& bgColor)
+      : m_text(text), m_color(color), m_bgColor(bgColor){};
+
+  std::string m_text;
+  Color m_color;
+  Color m_bgColor;
+};
+
 #endif
