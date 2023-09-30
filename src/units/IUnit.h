@@ -46,11 +46,11 @@ class Unit : public IUnit, public ToString {
   virtual void setMover(std::shared_ptr<IMover> mover);
   void lookAround(bool isEyeOpened);
   const std::unordered_map<Coord, bool, KeyHasher>& getWatchingCoords() const;
+  std::shared_ptr<Bag> getBag();
 
  protected:
-  std::unique_ptr<Bag> m_bag;
+  std::shared_ptr<Bag> m_bag;
   std::shared_ptr<IMover> m_mover;
-  // std::unordered_map<Coord> m_watchingCoords;
   std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
 };
 

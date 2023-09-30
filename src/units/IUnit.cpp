@@ -87,3 +87,5 @@ void Unit::lookAround(bool isEyeOpened) {
 }
 
 const std::unordered_map<Coord, bool, KeyHasher>& Unit::getWatchingCoords() const { return m_watchingCoords; }
+
+std::shared_ptr<Bag> Unit::getBag() { return m_bag; }

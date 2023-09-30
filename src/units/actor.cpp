@@ -36,7 +36,9 @@ void Actor::move(EAction action) {
     case EAction::right:
       dir = {1, 0};
       break;
-
+    case EAction::inventory:
+//showInventoryWindow
+      break;
     default:
       break;
   }

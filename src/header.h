@@ -8,7 +8,6 @@
 #include "unit_types.h"
 #include "units_factory.h"
 
-
 using Setting = float;
 using Count = int;
 using Description = std::string;
@@ -41,7 +40,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none, left, right, up, down };
+enum class EAction { none, left, right, up, down, inventory };
 
 enum class ItemType {
   simple,
@@ -67,21 +66,17 @@ struct Coord {
   int x;
   int y;
 };
+
+struct Rectangle {
+  Coord lu;
+  Coord rd;
+};
 //
 struct LineCord {
   Coord cord_s;
   Coord cord_e;
 };
-/* class Room {
- public:
-  Room();
-  void roomchange();
-  std::map<Coord, std::shared_ptr<UnitsFactory>> get_room() { return room; }
- private:
-  std::map<Coord, std::shared_ptr<UnitsFactory>> room;
-  std::shared_ptr<Coord> m_size;
-};*/
-//
+
 struct KeyHasher {
   std::size_t operator()(const Coord& k) const {
     using std::hash;
