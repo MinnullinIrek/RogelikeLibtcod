@@ -9,6 +9,8 @@
 
 #include "../info.h"
 #include "../maps/map.h"
+#include "tab.h"
+#include "window.h"
 
 auto get_data_dir() -> std::filesystem::path {
   static auto root_directory = std::filesystem::path{"."};  // Begin at the working directory.
@@ -43,7 +45,26 @@ Visualiser::Visualiser(const Coord& windowSize) : m_windowSize(windowSize), m_ce
 
 Visualiser::~Visualiser() {}
 
-void Visualiser::setMap(std::shared_ptr<Map> map) { m_map = map; }
+void Visualiser::setMap(std::shared_ptr<Map> map) {
+  m_map = map;
+
+  auto tab = createTab("map");
+  //auto nameKey = tab->addWindow(std::make_shared<Window>("map"));
+
+  //auto mapWindow = std::m
+
+
+
+}
+
+std::shared_ptr<Tab> Visualiser::createTab(std::string_view name) {
+  static auto showLambda = [this](Text&& text, const Coord& cd) {
+    tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
+  };
+  auto tab = std::make_shared<Tab>(name, showLambda);
+
+  return tab;
+}
 
 void Visualiser::showMap() const {
   m_console.clear();
@@ -114,12 +135,15 @@ void Visualiser::showBorder() const {
 
 void Visualiser::setInfo(std::shared_ptr<Info> info) { m_info = info; }
 
-
 void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b) {
   static std::string ch = "a";
   for (auto cd : coords) {
-    tcod::print(m_console, {cd.x, cd.y}, ch, TCOD_ColorRGB{
-      static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)}, std::nullopt);
+    tcod::print(
+        m_console,
+        {cd.x, cd.y},
+        ch,
+        TCOD_ColorRGB{static_cast<uint8_t>(r), static_cast<uint8_t>(g), static_cast<uint8_t>(b)},
+        std::nullopt);
   }
   ++ch[0];
   if (ch[0] > 'z') {
@@ -129,3 +153,15 @@ void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned in
 
 void Visualiser::clear() { m_console.clear(); }
 void Visualiser::show() { m_context.present(m_console); }
+
+void Visualiser::showAgain() {
+  static auto showLambda = [this](Text&& text, const Coord& cd) {
+    tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
+  };
+
+  if (m_currentTab) {
+    m_currentTab->show(showLambda, {0, 0});
+  }
+}
+
+TCOD_ColorRGB Visualiser::convertColor(const Color& color) { return TCOD_ColorRGB{color.r, color.g, color.b}; }

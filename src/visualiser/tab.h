@@ -13,9 +13,9 @@
 class Window;
 using WindowKey = int;
 
-class Tab : public Shower, public IWindow {
+class Tab : /*public Shower,*/ public IWindow {
  public:
-  Tab(std::string_view name, std::function<void(Text&& text, const Coord& cd)>&& shower);
+  Tab(std::string_view name, std::function<void(Text&& text, const Coord& cd)>&& shower, const Rectangle& r = {{0,0}, {0,0}});
   virtual ~Tab();
   std::string_view getName();
   WindowKey addWindow(std::shared_ptr<IWindow> window);
