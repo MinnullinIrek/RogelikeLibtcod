@@ -27,14 +27,14 @@ void SimpleMover::moveInDirection(const Coord& coord) {
     if (result) {
       m_currentPos = newCoord;
     }
-    emit();
-    // if (result.has_value()) {
-    //   auto cells = result.value();
-    //   std::shared_ptr<Cell> cell1 = cells.first;
-    //   auto cell2 = cells.second;
-    //   // auto unit1 = cell1->getUnit();
-    //   // cell1
-    //   std::shared_ptr<Cell> c;
+    // emit();
+    //  if (result.has_value()) {
+    //    auto cells = result.value();
+    //    std::shared_ptr<Cell> cell1 = cells.first;
+    //    auto cell2 = cells.second;
+    //    // auto unit1 = cell1->getUnit();
+    //    // cell1
+    //    std::shared_ptr<Cell> c;
 
     //   m_currentPos = newCoord;
     // }

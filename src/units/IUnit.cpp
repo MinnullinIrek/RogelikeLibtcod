@@ -84,6 +84,7 @@ void Unit::lookAround(bool isEyeOpened) {
   } else {
     m_watchingCoords.clear();
   }
+  getMover()->emit();
 }
 
 const std::unordered_map<Coord, bool, KeyHasher>& Unit::getWatchingCoords() const { return m_watchingCoords; }

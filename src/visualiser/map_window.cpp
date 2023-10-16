@@ -30,9 +30,7 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         auto hero = std::dynamic_pointer_cast<Unit>(h);
         auto& w = hero->getWatchingCoords();
 
-        auto& watchingCoords =
-          std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->
-          getWatchingCoords();
+        auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
         auto size = map->getSize();
 
         Coord windowSize = {m_rectangle.rd.x - m_rectangle.lu.x, m_rectangle.rd.x - m_rectangle.lu.y};
@@ -53,7 +51,7 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
               static Color gray = {125, 125, 125};
               id.color = gray;
             }
-            m_cells[cd] = id;
+            m_cells[{x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}] = id;
           }
         }
       } else {

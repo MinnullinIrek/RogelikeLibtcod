@@ -120,7 +120,7 @@ int main(int /*argc*/, char** /*argv*/) {
     visualiser->setMap(map);
     visualiser->setInfo(info);
     hero->lookAround(true);
-    hero->getMover()->emit();
+
     // visualiser->setConsole(g_console);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);
