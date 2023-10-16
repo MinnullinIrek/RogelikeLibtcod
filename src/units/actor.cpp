@@ -37,7 +37,7 @@ void Actor::move(EAction action) {
       dir = {1, 0};
       break;
     case EAction::inventory:
-//showInventoryWindow
+      // showInventoryWindow
       break;
     default:
       break;
@@ -49,4 +49,5 @@ void Actor::move(EAction action) {
   hero->lookAround(false);
   mover->moveInDirection(dir);
   hero->lookAround(true);
+  mover->emit();
 }

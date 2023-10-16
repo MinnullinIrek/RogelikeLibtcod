@@ -35,5 +35,4 @@ class Window : public IWindow {
   int m_start = 0;
 };
 
-
 #endif  // WINDOW_H

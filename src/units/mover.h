@@ -4,11 +4,12 @@
 #include <memory>
 
 #include "../header.h"
+#include "../utils/subscriber.h"
 
 class Map;
 class Cell;
 
-class IMover {
+class IMover : public Publisher {
  public:
   IMover(std::weak_ptr<Map> map);
   virtual void moveInDirection(const Coord& coord) = 0;

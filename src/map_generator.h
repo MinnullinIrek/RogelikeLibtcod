@@ -16,7 +16,6 @@ class Map;
 class UnitsFactory;
 class Visualiser;
 
-
 class MapGenerator {
  public:
   MapGenerator(std::weak_ptr<UnitsFactory> unitFactory);

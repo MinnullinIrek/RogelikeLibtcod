@@ -6,11 +6,12 @@
 #include <vector>
 
 #include "../header.h"
+#include "../utils/subscriber.h"
 
 class Cell;
 class IUnit;
 
-class Map {
+class Map : public Publisher {
  private:
  public:
   Map();
@@ -26,6 +27,7 @@ class Map {
   std::shared_ptr<Cell> getCell(const Coord& cd) const;
   bool isWall(const Coord& cd) const;
   void setSeen(const Coord& cd);
+
  private:
   void setMover(std::shared_ptr<IUnit> unit, const Coord& coord);
 

@@ -25,6 +25,8 @@
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
+#include "utils/subscriber.h"
+#include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
 
 std::shared_ptr<Visualiser> visualiser;
@@ -108,9 +110,17 @@ int main(int /*argc*/, char** /*argv*/) {
     std::shared_ptr<Info> info = std::make_shared<Info>();
     info->setHero(hero);
 
+    auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
+
+    auto connector = Connector::instance();
+    connector.connect(
+        std::static_pointer_cast<Publisher>(hero->getMover()), std::static_pointer_cast<Subscriber>(mapWindow));
+
+    visualiser->addWindow(std::static_pointer_cast<IWindow>(mapWindow));
     visualiser->setMap(map);
     visualiser->setInfo(info);
     hero->lookAround(true);
+    hero->getMover()->emit();
     // visualiser->setConsole(g_console);
 #ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 0);

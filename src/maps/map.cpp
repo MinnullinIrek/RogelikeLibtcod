@@ -63,7 +63,9 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
       result = true;
     }
   }
-
+  if (result) {
+    emit();
+  }
   return result;
 }
 
@@ -74,7 +76,7 @@ void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
   }
   auto& cell = m_cells.at(coord);
 
-    //eror assert
+  // eror assert
   m_cells.at(coord)->setUnit(unit);
 }
 

@@ -11,7 +11,7 @@
 class Map;
 class Info;
 class Tab;
-class Window;
+class IWindow;
 
 class Visualiser {
  public:
@@ -31,10 +31,11 @@ class Visualiser {
   // void addTab(std::shared_ptr<Tab> tab, std::string_view name);
   void showAgain();
   std::shared_ptr<Tab> createTab(std::string_view name);
+  void addWindow(std::shared_ptr<IWindow> window);
 
  protected:
   void showId(std::array<int, 2>&& cd, const Identifier& id) const;
-  TCOD_ColorRGB convertColor(const Color& color);
+  TCOD_ColorRGB convertColor(const Color& color) const;
 
  private:
   Coord m_windowSize;
@@ -46,6 +47,7 @@ class Visualiser {
   const Coord m_center;
   std::list<std::shared_ptr<Tab>> m_tabs;
   std::shared_ptr<Tab> m_currentTab;
+  std::vector<std::shared_ptr<IWindow>> m_windows;
 };
 
 #endif

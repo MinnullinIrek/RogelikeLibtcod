@@ -9,8 +9,9 @@
 
 #include "../info.h"
 #include "../maps/map.h"
+#include "iwindow.h"
 #include "tab.h"
-#include "window.h"
+
 
 auto get_data_dir() -> std::filesystem::path {
   static auto root_directory = std::filesystem::path{"."};  // Begin at the working directory.
@@ -49,12 +50,9 @@ void Visualiser::setMap(std::shared_ptr<Map> map) {
   m_map = map;
 
   auto tab = createTab("map");
-  //auto nameKey = tab->addWindow(std::make_shared<Window>("map"));
+  // auto nameKey = tab->addWindow(std::make_shared<Window>("map"));
 
-  //auto mapWindow = std::m
-
-
-
+  // auto mapWindow = std::m
 }
 
 std::shared_ptr<Tab> Visualiser::createTab(std::string_view name) {
@@ -70,33 +68,43 @@ void Visualiser::showMap() const {
   m_console.clear();
   // tcod::print(m_console, {0, 0}, "Hello World", TCOD_ColorRGB{255, 255, 255}, std::nullopt);
 
-  auto heroCoord = m_info->getCoord();
-  auto& watchingCoords = m_info->getWatchingCoords();
-  heroCoord;
-  m_windowSize;
-  auto mapSize = m_map->getSize();
+  // auto heroCoord = m_info->getCoord();
+   auto& watchingCoords = m_info->getWatchingCoords();
+  // heroCoord;
+  // m_windowSize;
+  // auto mapSize = m_map->getSize();
 
-  Coord mapStart{0, 0};
+  // Coord mapStart{0, 0};
 
-  mapStart.x = std::max((heroCoord.x - m_windowSize.x / 2), 0);
-  mapStart.y = std::max((heroCoord.y - m_windowSize.y / 2), 0);
+  // mapStart.x = std::max((heroCoord.x - m_windowSize.x / 2), 0);
+  // mapStart.y = std::max((heroCoord.y - m_windowSize.y / 2), 0);
 
-  auto startPos = m_center;
-  auto endPos = m_center + mapStart + m_windowSize - Coord{startPos.x, startPos.y};
+  // auto startPos = m_center;
+  // auto endPos = m_center + mapStart + m_windowSize - Coord{startPos.x, startPos.y};
 
-  for (auto x = mapStart.x; x < endPos.x; ++x) {
-    for (auto y = mapStart.y; y < endPos.y; ++y) {
-      Coord cd = {x, y};
-      auto id = m_map->getIdentifier(cd);
-      if (watchingCoords.find(cd) == watchingCoords.end()) {
-        static Color gray = {125, 125, 125};
-        id.color = gray;
-      }
-      showId({x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}, id);
-    }
+  // for (auto x = mapStart.x; x < endPos.x; ++x) {
+  //   for (auto y = mapStart.y; y < endPos.y; ++y) {
+  //     Coord cd = {x, y};
+  //     auto id = m_map->getIdentifier(cd);
+  //     if (watchingCoords.find(cd) == watchingCoords.end()) {
+  //       static Color gray = {125, 125, 125};
+  //       id.color = gray;
+  //     }
+  //     showId({x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}, id);
+  //   }
+  // }
+
+  // std::for_each(m_windows.begin(), m_windows.end(), [](const auto& window){(*window)->show()})
+
+  static auto showLamb = [this](Text&& text, const Coord& cd) {
+    tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
+  };
+
+  for (auto& win : m_windows) {
+    win->show(showLamb, {0, 0});
   }
 
-  showBorder();
+  //showBorder();
   showInfo();
   m_context.present(m_console);
 }
@@ -164,4 +172,6 @@ void Visualiser::showAgain() {
   }
 }
 
-TCOD_ColorRGB Visualiser::convertColor(const Color& color) { return TCOD_ColorRGB{color.r, color.g, color.b}; }
+TCOD_ColorRGB Visualiser::convertColor(const Color& color) const { return TCOD_ColorRGB{color.r, color.g, color.b}; }
+
+void Visualiser::addWindow(std::shared_ptr<IWindow> window) { m_windows.push_back(window); }

@@ -18,11 +18,12 @@ class Publisher {
 
   void setConnection(std::weak_ptr<Connections> connection, PublisherKey publisherNum);
   PublisherKey getPublisherKey();
+  void emit();
 
+ protected:
  private:
   std::weak_ptr<Connections> m_connection;
   PublisherKey m_publisherKey = 0;
-  void emit();
 };
 
 class Subscriber {
@@ -53,7 +54,7 @@ class Connections {
 
 class Connector {
  public:
-  Connector& instance() {
+  static Connector& instance() {
     static Connector connection;
     return connection;
   }

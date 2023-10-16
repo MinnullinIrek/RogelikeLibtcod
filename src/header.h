@@ -98,9 +98,14 @@ struct Text {
   Text(std::string_view text, const Color& color, const Color& bgColor)
       : m_text(text), m_color(color), m_bgColor(bgColor){};
 
+  Text(const Identifier& id)
+      : m_text(" "),
+        m_color(id.color), m_bgColor(id.bgColor) { m_text[0] = id.symbol; }
+
   std::string m_text;
   Color m_color;
   Color m_bgColor;
 };
+
 
 #endif

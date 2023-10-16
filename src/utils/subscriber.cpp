@@ -49,25 +49,35 @@ void Connections::notifySubscribers(PublisherKey publisherNum) {
 
 SubscriberKey Connections::addSubscriber(std::shared_ptr<Publisher> publisher, std::shared_ptr<Subscriber> subscriber) {
   auto publisherKey = publisher->getPublisherKey();
-  auto subs = m_subscribers.at(publisherKey);
-  //auto it = std::find(subs.begin(), subs.end(), subscriber);
-  //if (it == subs.end()){
-    m_subscribers.at(publisherKey).push_back(subscriber);
+  m_subscribers[publisherKey].push_back(subscriber);
   //}
   return {publisherKey, subscriber};
 }
 
 void Connections::removeSubscriber(SubscriberKey&& key) {
-  //auto subscribersIt = m_subscribers.find(key.first);
+  auto subscribersIt = m_subscribers.find(key.first);
 
-  //if (subscribersIt != m_subscribers.end()) {
-    //subscribersIt->second.remove(key.second);
-  //}
+  if (subscribersIt != m_subscribers.end()) {
+    auto lockedRemoing = key.second.lock();
+    // subscribersIt->second.remove(key.second);
+    auto subIt = subscribersIt->second.begin();
+    for (; subIt != subscribersIt->second.end();) {
+      auto subscriber = subIt->lock();
+      if (!subscriber) {
+        subIt = subscribersIt->second.erase(subIt);
+      } else if (subscriber == lockedRemoing) {
+        subscribersIt->second.erase(subIt);
+        break;
+      } else {
+        ++subIt;
+      }
+    }
+  }
 
- /* if (subscribersIt->second.size() == 0) {
+  if (subscribersIt->second.size() == 0) {
     m_subscribers.erase(key.first);
     m_publishers.erase(key.first);
-  }*/
+  }
 }
 
 void Connector::connect(std::shared_ptr<Publisher> publisher, std::shared_ptr<Subscriber> subscriber) {
@@ -76,6 +86,8 @@ void Connector::connect(std::shared_ptr<Publisher> publisher, std::shared_ptr<Su
   m_connections->addSubscriber(publisher, subscriber);
 }
 
-void Connector::unsubscribe(std::shared_ptr<Publisher> publisher, std::shared_ptr<Subscriber> subscriber) {}
+void Connector::unsubscribe(std::shared_ptr<Publisher> publisher, std::shared_ptr<Subscriber> subscriber) {
+  m_connections->removeSubscriber({publisher->getPublisherKey(), std::weak_ptr<Subscriber>(subscriber)});
+};
 
 Connector::Connector() : m_connections(std::make_shared<Connections>()) {}
