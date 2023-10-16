@@ -28,6 +28,7 @@
 #include "utils/subscriber.h"
 #include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
+#include "visualiser/window.h"
 
 std::shared_ptr<Visualiser> visualiser;
 std::unique_ptr<Keyboard> keyboard;
@@ -111,12 +112,36 @@ int main(int /*argc*/, char** /*argv*/) {
     info->setHero(hero);
 
     auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
-
     auto connector = Connector::instance();
     connector.connect(
         std::static_pointer_cast<Publisher>(hero->getMover()), std::static_pointer_cast<Subscriber>(mapWindow));
 
     visualiser->addWindow(std::static_pointer_cast<IWindow>(mapWindow));
+
+    auto infoWindow = std::make_shared<Window>(
+        [](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
+          auto lockedPublisher = moverPub.lock();
+          if (lockedPublisher) {
+            auto mover = std::dynamic_pointer_cast<IMover>(lockedPublisher);
+            if (mover) {
+              auto heroCd = mover->getCoord();
+              text = "Info:\n___________\n";
+              text += "pos: " + heroCd.toString();
+              color = {255, 255, 255};
+              bkColor = {0, 0, 255};
+              return 0;
+            }
+          }
+          return 1;
+        },
+        std::string_view(""),
+        Color{255, 255, 255},
+        Color{0, 0, 255},
+        Rectangle{{40, 10}, {60, 15}},
+        false);
+    connector.connect(hero->getMover(), infoWindow);
+    visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
+
     visualiser->setMap(map);
     visualiser->setInfo(info);
     hero->lookAround(true);
