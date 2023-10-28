@@ -70,6 +70,8 @@ struct Coord {
 struct Rectangle {
   Coord lu;
   Coord rd;
+  int width() const { return rd.x - lu.x; }
+  int height() const { return rd.y - lu.y; }
 };
 //
 struct LineCord {
@@ -95,17 +97,15 @@ class ToString {
 };
 
 struct Text {
+  Text() : m_text(""), m_color({255, 255, 255}), m_bgColor({0,0,0}) {}
   Text(std::string_view text, const Color& color, const Color& bgColor)
       : m_text(text), m_color(color), m_bgColor(bgColor){};
 
-  Text(const Identifier& id)
-      : m_text(" "),
-        m_color(id.color), m_bgColor(id.bgColor) { m_text[0] = id.symbol; }
+  Text(const Identifier& id) : m_text(" "), m_color(id.color), m_bgColor(id.bgColor) { m_text[0] = id.symbol; }
 
   std::string m_text;
   Color m_color;
   Color m_bgColor;
 };
-
 
 #endif

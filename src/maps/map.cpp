@@ -74,7 +74,6 @@ void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
   if (!isExisted(coord)) {
     throw std::string("can't set unit to map") + unit->toChar().symbol + "to coord = " + coord.toString();
   }
-  auto& cell = m_cells.at(coord);
 
   // eror assert
   m_cells.at(coord)->setUnit(unit);

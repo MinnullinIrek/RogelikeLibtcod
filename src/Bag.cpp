@@ -46,7 +46,7 @@ void Bag::select(int next) {
 
 bool Bag::contains(std::shared_ptr<IItems> item) { return m_items.find(item) != m_items.end(); }
 
-std::list<std::string> Bag::showBag(Count count) {
+std::list<Text> Bag::showBag(Count count) {
   auto size = m_items.size();
 
   Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
@@ -59,7 +59,7 @@ std::list<std::string> Bag::showBag(Count count) {
     }
   }
   std::string sbag;
-  std::list<std::string> bagList;
+  std::list<Text> bagList;
 
   // std::for_each(m_items.begin(), m_items.end(), [&sbag](const auto& itemPair){ itemPair.fi })
   auto it = m_selected;
@@ -76,7 +76,8 @@ std::list<std::string> Bag::showBag(Count count) {
 
     sbag += item->toString() + std::to_string(it->second);
     sbag += '\n';
-    bagList.push_back(sbag);
+    
+    bagList.emplace_back(Text(sbag, Color{255, 255, 255}, Color{0, 0, 0}));
   }
   return bagList;
 }

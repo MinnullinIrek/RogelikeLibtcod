@@ -28,7 +28,7 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         auto cell = map->getCell(heroCoord);
         auto h = cell->getUnit();
         auto hero = std::dynamic_pointer_cast<Unit>(h);
-        auto& w = hero->getWatchingCoords();
+        //auto& w = hero->getWatchingCoords();
 
         auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
         auto size = map->getSize();

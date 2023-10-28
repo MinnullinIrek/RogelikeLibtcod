@@ -20,4 +20,4 @@ Coord Coord::del(float d) const { return Coord(static_cast<int>(x / d), static_c
 Coord Coord::operator/(float d) { return del(d); }
 
 std::string Coord::toString() const { return std::string("[") + std::to_string(x) + "," + std::to_string(y) + "]"; }
-Distance Coord::length() const { return sqrt(x*x + y*y); }
+Distance Coord::length() const { return static_cast<Distance>(sqrt(x*x + y*y)); }

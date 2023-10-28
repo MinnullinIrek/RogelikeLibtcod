@@ -29,9 +29,7 @@ class Window : public IWindow, public Subscriber {
   std::string m_text;
   Color m_color;
   Color m_bgColor;
-  // Text m_text;
 
-  // Rectangle m_rectangle;
   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
 
   void notify(std::weak_ptr<Publisher> publisher) override;

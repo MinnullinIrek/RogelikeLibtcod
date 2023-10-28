@@ -17,7 +17,7 @@ class Bag {
   void putItem(std::shared_ptr<IItems> item, Count count);
   std::pair<std::weak_ptr<IItems>, Count> popItem(Count popCount);
   void select(int next);
-  std::list<std::string> showBag(Count count);
+  std::list<Text> showBag(Count count);
 
  private:
   bool contains(std::shared_ptr<IItems> item);
