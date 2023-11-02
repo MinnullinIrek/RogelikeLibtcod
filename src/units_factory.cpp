@@ -31,7 +31,6 @@ std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
         std::make_shared<IItems>(
             "some stuff " + std::to_string(i),
             "some incredible stuff " + std::to_string(i),
-            
             std::map<ESetting, std::shared_ptr<Chars>>{}),
         1);
   }
