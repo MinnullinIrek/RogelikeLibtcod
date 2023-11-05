@@ -107,7 +107,7 @@ void prepareFsm() {
 
   {
     // fsm_cxx::GameState::MapState;
-    ActorStrategy* strategyMove = new ActorStrategyMap();
+    //ActorStrategy* strategyMove = new ActorStrategyMap();
     // strategyMove->m_actions[EAction::down] = [](EAction action, std::weak_ptr<Unit> hero) {};
 
     // gameStruct.m_strategies[fsm_cxx::GameState::MapState] =
@@ -133,7 +133,7 @@ void initGameStruct() {
   gameStruct.map->setHero(gameStruct.hero, {11, 11});
 
   gameStruct.actor = std::make_shared<Actor>();
-  gameStruct.keyboard = std::make_unique<Keyboard>(gameStruct.actor);
+  gameStruct.keyboard = std::make_shared<Keyboard>(gameStruct.actor);
 }
 
 /// Main program entry point.
