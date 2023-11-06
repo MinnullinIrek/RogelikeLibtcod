@@ -17,6 +17,10 @@ class Actor;
 class ActorStrategy;
 
 struct GameStruct {
+  static GameStruct& instance() {
+    static GameStruct gameStr;
+    return gameStr;
+  }
   std::shared_ptr<Visualiser> visualiser;
   std::shared_ptr<Keyboard> keyboard;
   std::shared_ptr<Unit> hero;
@@ -25,7 +29,9 @@ struct GameStruct {
   std::shared_ptr<MapGenerator> mapGenerator;
   std::shared_ptr<Actor> actor;
   std::unordered_map<fsm_cxx::GameState, std::unique_ptr<ActorStrategy>> m_strategies;
+  std::unique_ptr<ActorStrategy> m_strategyFsm;
 };
 
-static GameStruct gameStruct;
+//static GameStruct gameStruct;
+#define gameStruct GameStruct::instance()
 #endif  // GAME_STRUCT_H

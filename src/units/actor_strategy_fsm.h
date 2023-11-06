@@ -5,7 +5,10 @@
 
 class ActorStrategyFsm : public ActorStrategy {
  public:
-  virtual bool doKey(EAction action);
+  ActorStrategyFsm();
+  virtual bool doKey(EAction action) override;
+
+ private:
 };
 
 #endif  // ACTOR_STRATEGY_H

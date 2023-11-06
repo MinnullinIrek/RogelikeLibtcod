@@ -80,7 +80,7 @@ void initMapState() {}
 void prepareFsm() {
   using FSM = decltype(gamefsm);
   using States = fsm_cxx::GameState;
-  gamefsm;
+  // gamefsm;
 
   gamefsm.state().set(States::Initial).as_initial().build();
   gamefsm.state().set(States::Terminated).as_terminated().build();
@@ -98,7 +98,7 @@ void prepareFsm() {
       .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
         std::cout << "          .. <MapState> entering" << '\n';
 
-        // gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::MapState));
+        gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::MapState).get());
       })
       .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
         std::cout << "          .. <MapState> exiting" << '\n';
@@ -107,18 +107,16 @@ void prepareFsm() {
 
   {
     // fsm_cxx::GameState::MapState;
-    //ActorStrategy* strategyMove = new ActorStrategyMap();
-    // strategyMove->m_actions[EAction::down] = [](EAction action, std::weak_ptr<Unit> hero) {};
-
-    // gameStruct.m_strategies[fsm_cxx::GameState::MapState] =
+    ActorStrategy* strategyMove = new ActorStrategyMap();
+    gameStruct.m_strategies[fsm_cxx::GameState::MapState] = std::make_unique<ActorStrategyMap>();
   }
   {
-    // fsm_cxx::GameState::MapState;
-    // ActorStrategy* strategyMove = new ActorStrategy();
-    // strategyMove->m_actions[EAction::down] = [](EAction action, std::weak_ptr<Unit> hero) {};
+    // ActorStrategy* strategyFsm = new ActorStrategyFsm();
 
-    // gameStruct.m_strategies[fsm_cxx::GameState::MapState] =
+    gameStruct.m_strategyFsm = std::make_unique<ActorStrategyFsm>();
   }
+  gameStruct.actor->setFsmStrategy(gameStruct.m_strategyFsm.get());
+  gameStruct.actor->setStrategy(gameStruct.m_strategies[fsm_cxx::GameState::MapState].get());
 }
 
 void initGameStruct() {
@@ -160,7 +158,7 @@ int main(int /*argc*/, char** /*argv*/) {
     initGameStruct();
     prepareFsm();
     std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove
-    info->setHero(gameStruct.hero);  // todo remove
+    //info->setHero(gameStruct.hero);  // todo remove
 
     auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
     auto connector = Connector::instance();

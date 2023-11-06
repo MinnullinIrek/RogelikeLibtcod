@@ -5,7 +5,7 @@
 
 class ActorStrategyMap : public ActorStrategy {
  public:
-  virtual bool doKey(EAction action);
+  virtual bool doKey(EAction action) override;
   bool operator()(EAction action) { return doKey(action); }
 };
 
