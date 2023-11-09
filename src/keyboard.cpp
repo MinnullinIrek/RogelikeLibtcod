@@ -33,6 +33,9 @@ void Keyboard::setKey(int key) {
     case SDLK_i:
       action = EAction::inventory;
       break;
+    case SDLK_m:
+      action = EAction::map;
+      break;
     default:
       break;
   }

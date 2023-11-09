@@ -27,11 +27,6 @@ bool ActorStrategyInventory::doKey(EAction action) {
       return false;
       break;
   }
-  auto mover = hero->getMover();
-  hero->lookAround(false);
-  mover->moveInDirection(dir);
-  hero->lookAround(true);
-  mover->emit();
-
+  bag->select(dir.y);
   return false;
 }

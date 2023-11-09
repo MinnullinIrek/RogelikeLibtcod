@@ -14,6 +14,7 @@
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
+#include "Bag.h"
 #include "game_struct.h"
 #include "info.h"
 #include "items_factory.h"
@@ -37,8 +38,6 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
-#include "Bag.h"
-
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
@@ -145,6 +144,17 @@ void prepareFsm() {
         std::cout << "          .. <closed -> opened> exiting" << '\n';
       })
       .build();
+  gamefsm->transition()
+      .set(fsm_cxx::GameState::InventoryState, events::ToMap{}, fsm_cxx::GameState::MapState)
+      .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
+      .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> entering" << '\n';
+        initMapState();
+      })
+      .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> exiting" << '\n';
+      })
+      .build();
 
   {
     // fsm_cxx::GameState::MapState;
@@ -173,7 +183,7 @@ void prepareFsm() {
   gamefsm->state().set(fsm_cxx::GameState::Initial).as_initial().build();
 
   gamefsm->step_by(events::ToBegin{});
-   //gamefsm->step_by(events::ToInventory{});
+  // gamefsm->step_by(events::ToInventory{});
 }
 
 void initGameStruct() {
@@ -218,7 +228,6 @@ int main(int /*argc*/, char** /*argv*/) {
     // std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove
     //  info->setHero(gameStruct.hero);  // todo remove
 
-    
     auto bag = gameStruct.hero->getBag();
     auto inventoryWindow = std::make_shared<InventoryWindow>(Rectangle{{1, 1}, {30, 30}});
     auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
@@ -226,9 +235,7 @@ int main(int /*argc*/, char** /*argv*/) {
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
     auto connector = Connector::instance();
-    connector.connect(
-        gameStruct.hero->getMover(),
-        mapWindow);
+    connector.connect(gameStruct.hero->getMover(), mapWindow);
 
     connector.connect(bag, inventoryWindow);
     bag->emit();

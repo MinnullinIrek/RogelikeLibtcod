@@ -6,9 +6,10 @@
 
 #include "items/IItems.h"
 
-Bag::Bag() {}
+Bag::Bag() : m_selected(m_items.end()) {}
 Bag::~Bag() {}
 void Bag::putItem(std::shared_ptr<IItems> item, Count count) {
+  auto wasEmpty = m_items.empty();
   assert(count >= 0);
   assert(item);
 
@@ -16,6 +17,9 @@ void Bag::putItem(std::shared_ptr<IItems> item, Count count) {
     m_items.at(item) += count;
   } else {
     m_items.insert(std::make_pair(item, count));
+  }
+  if (wasEmpty && (!m_items.empty())) {
+    m_selected = m_items.begin();
   }
   emit();
 }
@@ -31,12 +35,15 @@ std::pair<std::weak_ptr<IItems>, Count> Bag::popItem(Count popCount) {
   if (m_selected->second <= 0) {
     m_selected = m_items.erase(m_selected);
   }
+  if (m_items.empty()) {
+    m_selected = m_items.end();
+  }
   emit();
   return popItem;
 }
 
 void Bag::select(int next) {
-  if (m_items.empty()) {
+  if (!m_items.empty()) {
     if (next > 0 && m_selected != m_items.end()) {
       ++m_selected;
     } else if (next < 0 && m_selected != m_items.begin()) {
@@ -50,7 +57,6 @@ bool Bag::contains(std::shared_ptr<IItems> item) { return m_items.find(item) != 
 
 std::list<Text> Bag::showBag(Count count) {
   auto size = m_items.size();
-  m_selected = m_items.begin(); //todo rewrite in put and pop also
   Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
   Count toEnd = m_items.size() - toStart - 1;
 
@@ -62,15 +68,15 @@ std::list<Text> Bag::showBag(Count count) {
   }
   std::list<Text> bagList;
 
-  // std::for_each(m_items.begin(), m_items.end(), [&sbag](const auto& itemPair){ itemPair.fi })
   auto it = m_selected;
   for (auto i = toStart; i > 0; --i) {
     --it;
   };
-  for (auto i = 0; i < toStart + toEnd; ++i, ++it) {
+  for (auto i = 0; i < toStart + toEnd && it != m_items.end(); ++i, ++it) {
     std::shared_ptr<IItems> item = it->first;
-    std::string sbag = ((it == m_selected) ? "[#] " : "[ ] ") + item->toString() + "[" + std::to_string(it->second) + "]";
-    
+    std::string sbag =
+        ((it == m_selected) ? "[#] " : "[ ] ") + item->toString() + "[" + std::to_string(it->second) + "]";
+
     bagList.emplace_back(Text(sbag, Color{255, 255, 255}, Color{0, 0, 0}));
   }
   return bagList;

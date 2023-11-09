@@ -40,7 +40,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none , left, right, up, down, inventory };
+enum class EAction { none, left, right, up, down, inventory, map };
 
 enum class ItemType {
   simple,
@@ -97,7 +97,7 @@ class ToString {
 };
 
 struct Text {
-  Text() : m_text(""), m_color({255, 255, 255}), m_bgColor({0,0,0}) {}
+  Text() : m_text(""), m_color({255, 255, 255}), m_bgColor({0, 0, 0}) {}
   Text(std::string_view text, const Color& color, const Color& bgColor)
       : m_text(text), m_color(color), m_bgColor(bgColor){};
 
