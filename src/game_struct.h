@@ -30,6 +30,7 @@ struct GameStruct {
   std::shared_ptr<Actor> actor;
   std::unordered_map<fsm_cxx::GameState, std::unique_ptr<ActorStrategy>> m_strategies;
   std::unique_ptr<ActorStrategy> m_strategyFsm;
+  fsm_cxx::machine_t<fsm_cxx::GameState>* gameFsm;
 };
 
 //static GameStruct gameStruct;

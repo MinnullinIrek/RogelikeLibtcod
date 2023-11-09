@@ -23,6 +23,7 @@
 #include "units/IUnit.h"
 #include "units/actor.h"
 #include "units/actor_strategy_fsm.h"
+#include "units/actor_strategy_inventory.h"
 #include "units/actor_strategy_map.h"
 #include "units/interactor.h"
 #include "units/mover.h"
@@ -30,11 +31,16 @@
 #include "utils/consts_reader.h"
 #include "utils/gamefsm.h"
 #include "utils/subscriber.h"
+#include "visualiser/inventory_window.h"
+#include "visualiser/main_window.h"
 #include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
+#include "Bag.h"
 
+
+std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
 
 /// Return the data directory.
@@ -75,33 +81,68 @@ void main_loop() {
   }
 }
 
-void initMapState() {}
+void initMapState() {
+  gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::MapState).get());
+  // gameStruct.actor->setStrategy(gameStruct.m_strategies[fsm_cxx::GameState::MapState].get());
+  mainWindow->setCurrent(EMainWindows::emap);
+}
+
+void initInventoryState() {
+  gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::InventoryState).get());
+  mainWindow->setCurrent(EMainWindows::einventory);
+}
 
 void prepareFsm() {
-  using FSM = decltype(gamefsm);
+  gamefsm = new fsm_cxx::machine_t<fsm_cxx::GameState>();
+  using FSM = fsm_cxx::machine_t<fsm_cxx::GameState>;  // decltype(*gamefsm);
   using States = fsm_cxx::GameState;
   // gamefsm;
 
-  gamefsm.state().set(States::Initial).as_initial().build();
-  gamefsm.state().set(States::Terminated).as_terminated().build();
-  gamefsm.state()
+  gamefsm->state().set(States::Initial).as_initial().build();
+  gamefsm->state().set(States::Terminated).as_terminated().build();
+  gamefsm->state()
       .set(States::Error)
       .as_error()
       .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
         std::cerr << "          .. <error> entering" << '\n';
       })
       .build();
-  gamefsm.state()
-      .set(States::MapState)
-      .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) -> bool { return true; })
+  /* gamefsm.state()
+       .set(States::MapState)
+       .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) -> bool { return true; })
+       .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
+       .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+         std::cout << "          .. <MapState> entering" << '\n';
+         initMapState();
+       })
+       .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+         std::cout << "          .. <MapState> exiting" << '\n';
+       })
+       .build();*/
+
+  // gamefsm.transition().set(fsm_cxx::GameState::Initial, fsm_cxx::begin(), fsm_cxx::GameState::MapState);
+  // set(my_state::Initial, begin{}, my_state::Closed).build();
+  gamefsm->transition()
+      .set(fsm_cxx::GameState::Initial, events::ToBegin{}, fsm_cxx::GameState::MapState)
       .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
       .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
-        std::cout << "          .. <MapState> entering" << '\n';
-
-        gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::MapState).get());
+        std::cout << "          .. <closed -> opened> entering" << '\n';
+        initMapState();
       })
       .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
-        std::cout << "          .. <MapState> exiting" << '\n';
+        std::cout << "          .. <closed -> opened> exiting" << '\n';
+      })
+      .build();
+
+  gamefsm->transition()
+      .set(fsm_cxx::GameState::MapState, events::ToInventory{}, fsm_cxx::GameState::InventoryState)
+      .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
+      .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> entering" << '\n';
+        initInventoryState();
+      })
+      .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> exiting" << '\n';
       })
       .build();
 
@@ -111,12 +152,28 @@ void prepareFsm() {
     gameStruct.m_strategies[fsm_cxx::GameState::MapState] = std::make_unique<ActorStrategyMap>();
   }
   {
+    // fsm_cxx::GameState::InventoryState;
+    ActorStrategy* strategyMove = new ActorStrategyInventory();
+
+    gameStruct.m_strategies[fsm_cxx::GameState::InventoryState] = std::make_unique<ActorStrategyInventory>();
+  }
+  {
     // ActorStrategy* strategyFsm = new ActorStrategyFsm();
 
     gameStruct.m_strategyFsm = std::make_unique<ActorStrategyFsm>();
   }
   gameStruct.actor->setFsmStrategy(gameStruct.m_strategyFsm.get());
-  gameStruct.actor->setStrategy(gameStruct.m_strategies[fsm_cxx::GameState::MapState].get());
+
+  auto st = gamefsm->state();
+
+  gameStruct.gameFsm = gamefsm;
+
+  void* f = gamefsm;
+
+  gamefsm->state().set(fsm_cxx::GameState::Initial).as_initial().build();
+
+  gamefsm->step_by(events::ToBegin{});
+   //gamefsm->step_by(events::ToInventory{});
 }
 
 void initGameStruct() {
@@ -156,17 +213,26 @@ int main(int /*argc*/, char** /*argv*/) {
 
     MagicConsts::instance().readJson();
     initGameStruct();
+    mainWindow = std::make_shared<MainWindow>(Rectangle{{1, 1}, {30, 30}});
     prepareFsm();
-    std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove
-    //info->setHero(gameStruct.hero);  // todo remove
+    // std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove
+    //  info->setHero(gameStruct.hero);  // todo remove
 
+    
+    auto bag = gameStruct.hero->getBag();
+    auto inventoryWindow = std::make_shared<InventoryWindow>(Rectangle{{1, 1}, {30, 30}});
     auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
+    mainWindow->addWindow(EMainWindows::einventory, inventoryWindow);
+    mainWindow->addWindow(EMainWindows::emap, mapWindow);
+
     auto connector = Connector::instance();
     connector.connect(
-        std::static_pointer_cast<Publisher>(gameStruct.hero->getMover()),
-        std::static_pointer_cast<Subscriber>(mapWindow));
+        gameStruct.hero->getMover(),
+        mapWindow);
 
-    gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mapWindow));
+    connector.connect(bag, inventoryWindow);
+    bag->emit();
+    gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
     auto infoWindow = std::make_shared<Window>(
         [](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
@@ -193,7 +259,7 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
 
     gameStruct.visualiser->setMap(gameStruct.map);
-    gameStruct.visualiser->setInfo(info);  // todo remove
+    // gameStruct.visualiser->setInfo(info);  // todo remove
     gameStruct.hero->lookAround(true);
     // fsm_cxx::test_state_meta();
     //  gameStruct.visualiser->setConsole(g_console);

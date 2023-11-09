@@ -26,6 +26,6 @@ struct events {
   };
 };
 
-static fsm_cxx::machine_t<fsm_cxx::GameState> gamefsm;
+static fsm_cxx::machine_t<fsm_cxx::GameState> *gamefsm;
 
 #endif  // GAMEFSM_H

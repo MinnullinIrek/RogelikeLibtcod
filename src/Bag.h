@@ -6,11 +6,12 @@
 #include <unordered_map>
 
 #include "header.h"
+#include "utils/subscriber.h"
 
 struct Item_Count;
 class IItems;
 
-class Bag {
+class Bag : public Publisher{
  public:
   Bag();
   ~Bag();

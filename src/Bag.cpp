@@ -17,6 +17,7 @@ void Bag::putItem(std::shared_ptr<IItems> item, Count count) {
   } else {
     m_items.insert(std::make_pair(item, count));
   }
+  emit();
 }
 
 std::pair<std::weak_ptr<IItems>, Count> Bag::popItem(Count popCount) {
@@ -30,7 +31,7 @@ std::pair<std::weak_ptr<IItems>, Count> Bag::popItem(Count popCount) {
   if (m_selected->second <= 0) {
     m_selected = m_items.erase(m_selected);
   }
-
+  emit();
   return popItem;
 }
 
@@ -42,15 +43,16 @@ void Bag::select(int next) {
       --m_selected;
     }
   }
+  emit();
 }
 
 bool Bag::contains(std::shared_ptr<IItems> item) { return m_items.find(item) != m_items.end(); }
 
 std::list<Text> Bag::showBag(Count count) {
   auto size = m_items.size();
-
+  m_selected = m_items.begin(); //todo rewrite in put and pop also
   Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
-  Count toEnd = static_cast<Count>(std::distance(m_items.end(), m_selected));
+  Count toEnd = m_items.size() - toStart - 1;
 
   if (size > count) {
     if (toStart > toEnd) {
@@ -58,7 +60,6 @@ std::list<Text> Bag::showBag(Count count) {
       toEnd = count - toStart;
     }
   }
-  std::string sbag;
   std::list<Text> bagList;
 
   // std::for_each(m_items.begin(), m_items.end(), [&sbag](const auto& itemPair){ itemPair.fi })
@@ -67,15 +68,8 @@ std::list<Text> Bag::showBag(Count count) {
     --it;
   };
   for (auto i = 0; i < toStart + toEnd; ++i, ++it) {
-    if (it == m_selected) {
-      sbag += "[#] ";
-    } else {
-      sbag += "[ ] ";
-    }
     std::shared_ptr<IItems> item = it->first;
-
-    sbag += item->toString() + std::to_string(it->second);
-    sbag += '\n';
+    std::string sbag = ((it == m_selected) ? "[#] " : "[ ] ") + item->toString() + "[" + std::to_string(it->second) + "]";
     
     bagList.emplace_back(Text(sbag, Color{255, 255, 255}, Color{0, 0, 0}));
   }
