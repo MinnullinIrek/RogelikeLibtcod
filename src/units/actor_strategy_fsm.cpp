@@ -8,7 +8,6 @@
 ActorStrategyFsm::ActorStrategyFsm() {}
 
 bool ActorStrategyFsm::doKey(EAction action) {
-  // gameStruct.gameFsm;
   auto gamefsm = gameStruct.gameFsm;
   auto state = gamefsm->state();
   void* f = &gamefsm;
