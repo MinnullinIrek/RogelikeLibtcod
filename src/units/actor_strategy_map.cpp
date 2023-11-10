@@ -3,11 +3,12 @@
 #include "../game_struct.h"
 #include "../units/IUnit.h"
 #include "../units/mover.h"
+#include "command.h"
 
-bool ActorStrategyMap::doKey(EAction action) {
-  auto hero = gameStruct.hero;
+std::optional<std::shared_ptr<Command>> ActorStrategyMap::doKey(EAction action) {
+  // auto hero = gameStruct.hero;
   Coord dir = {0, 0};
-
+  std::optional<std::shared_ptr<Command>> command;
   switch (action) {
     case EAction::down:
       dir = {0, 1};
@@ -22,14 +23,25 @@ bool ActorStrategyMap::doKey(EAction action) {
       dir = {1, 0};
       break;
     default:
-      return false;
+      return command;
       break;
   }
-  auto mover = hero->getMover();
-  hero->lookAround(false);
-  mover->moveInDirection(dir);
-  hero->lookAround(true);
-  mover->emit();
-
-  return false;
+  command = std::make_shared<Command>(
+      [dir]() {
+        auto hero = gameStruct.hero;
+        auto mover = hero->getMover();
+        hero->lookAround(false);
+        mover->moveInDirection(dir);
+        hero->lookAround(true);
+        mover->emit();
+      },
+      [dir]() {
+        auto hero = gameStruct.hero;
+        auto mover = hero->getMover();
+        hero->lookAround(false);
+        mover->moveInDirection(dir.revert());
+        hero->lookAround(true);
+        mover->emit();
+      });
+  return command;
 }

@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include "../game_struct.h"
 #include "IUnit.h"
 #include "actor_strategy.h"
 #include "mover.h"
@@ -16,14 +17,26 @@ Actor::Actor() {
 Actor::~Actor() {}
 
 void Actor::doKey(EAction action) {
+  if (action == EAction::undo) {
+    gameStruct.m_invoker.undo();
+    return;
+  }
+
+  bool isFsm = false;
   if (m_fsmStrategy) {
-    if (m_fsmStrategy->doKey(action)) {
-      return;
+    auto command = m_fsmStrategy->doKey(action);
+    if (command) {
+      gameStruct.m_invoker.setCommand(command.value());
+      isFsm = true;
     }
   }
-  if (m_currentStrategy) {
-    m_currentStrategy->doKey(action);
+  if (!isFsm && m_currentStrategy) {
+    auto command = m_currentStrategy->doKey(action);
+    if (command) {
+      gameStruct.m_invoker.setCommand(command.value());
+    }
   }
+  gameStruct.m_invoker.run();
 }
 
 void Actor::setStrategy(ActorStrategy* strategy) { m_currentStrategy = std::move(strategy); }

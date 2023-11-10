@@ -15,7 +15,11 @@ Keyboard::~Keyboard() {}
 
 void Keyboard::setActor(std::shared_ptr<Actor> actor) { m_actor = actor; }
 
-void Keyboard::setKey(int key) {
+void Keyboard::setKey(int key, bool down) {
+  //pushKeys(key, down);
+  if (!down) {
+    return;
+  }
   EAction action = EAction::none;
   switch (key) {
     case SDLK_RIGHT:
@@ -36,10 +40,24 @@ void Keyboard::setKey(int key) {
     case SDLK_m:
       action = EAction::map;
       break;
+    case SDLK_z:
+      if (m_lastKeys == SDLK_LCTRL) {
+        action = EAction::undo;
+      }
+      break;
     default:
       break;
   }
+  m_lastKeys = key;
   if (action != EAction::none) {
     m_actor->doKey(action);
+  }
+}
+
+void Keyboard::pushKeys(int key, bool down) {
+  if (down) {
+    m_pressedKeys.emplace(key);
+  } else {
+    m_pressedKeys.erase(key);
   }
 }

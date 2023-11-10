@@ -1,29 +1,27 @@
 #include "actor_strategy_fsm.h"
 
+
+
 #include "../fsm/fsm_cxx.hh"
 #include "../game_struct.h"
 #include "../utils/fsm.h"
 #include "../utils/gamefsm.h"
+#include "command.h"
 
 ActorStrategyFsm::ActorStrategyFsm() {}
 
-bool ActorStrategyFsm::doKey(EAction action) {
-  auto gamefsm = gameStruct.gameFsm;
-  auto state = gamefsm->state();
-  void* f = &gamefsm;
-
+std::optional<std::shared_ptr<Command>> ActorStrategyFsm::doKey(EAction action) {
+  std::optional<std::shared_ptr<Command>> command;
   switch (action) {
     case EAction::inventory:
-      gamefsm->step_by(events::ToInventory{});
-      return true;
+      command = std::make_shared<Command>([]() { gameStruct.gameFsm->step_by(events::ToInventory{}); });
       break;
     case EAction::map:
-      gamefsm->step_by(events::ToMap{});
-      return true;
+      command = std::make_shared<Command>([]() { gameStruct.gameFsm->step_by(events::ToMap{}); });
       break;
     default:
       break;
   }
 
-  return false;
+  return command;
 }

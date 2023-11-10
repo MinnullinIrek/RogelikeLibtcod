@@ -4,11 +4,11 @@
 #include "../game_struct.h"
 #include "../units/IUnit.h"
 #include "../units/mover.h"
+#include "command.h"
 
-bool ActorStrategyInventory::doKey(EAction action) {
-  auto hero = gameStruct.hero;
-  auto bag = hero->getBag();
+std::optional<std::shared_ptr<Command>> ActorStrategyInventory::doKey(EAction action) {
   Coord dir = {0, 0};
+  std::optional<std::shared_ptr<Command>> command;
 
   switch (action) {
     case EAction::down:
@@ -24,9 +24,10 @@ bool ActorStrategyInventory::doKey(EAction action) {
       dir = {1, 0};
       break;
     default:
-      return false;
+      return command;
       break;
   }
-  bag->select(dir.y);
-  return false;
+  command = std::make_shared<Command>([dir]() { gameStruct.hero->getBag()->select(dir.y); });
+
+  return command;
 }

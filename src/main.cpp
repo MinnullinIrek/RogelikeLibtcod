@@ -70,7 +70,7 @@ void main_loop() {
         std::exit(EXIT_SUCCESS);
         break;
       case SDL_KEYDOWN:
-        gameStruct.keyboard->setKey(event.key.keysym.sym);
+        gameStruct.keyboard->setKey(event.key.keysym.sym, true);
         repaint = true;
         break;
     }
@@ -144,6 +144,7 @@ void prepareFsm() {
         std::cout << "          .. <closed -> opened> exiting" << '\n';
       })
       .build();
+
   gamefsm->transition()
       .set(fsm_cxx::GameState::InventoryState, events::ToMap{}, fsm_cxx::GameState::MapState)
       .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })

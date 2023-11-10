@@ -5,8 +5,7 @@
 
 class ActorStrategyMap : public ActorStrategy {
  public:
-  virtual bool doKey(EAction action) override;
-  bool operator()(EAction action) { return doKey(action); }
+  virtual std::optional<std::shared_ptr<Command>> doKey(EAction action) override;
 };
 
 #endif  // _Map

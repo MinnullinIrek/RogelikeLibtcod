@@ -40,7 +40,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none, left, right, up, down, inventory, map };
+enum class EAction { none, left, right, up, down, inventory, map, undo };
 
 enum class ItemType {
   simple,
@@ -63,6 +63,7 @@ struct Coord {
   Coord del(float d) const;
   std::string toString() const;
   Distance length() const;
+  Coord revert() const;
   int x;
   int y;
 };

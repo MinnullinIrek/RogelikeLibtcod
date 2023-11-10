@@ -16,8 +16,9 @@ class Publisher {
  public:
   virtual ~Publisher(){};
 
+  // todo to private friend Connection
   void setConnection(std::weak_ptr<Connections> connection, PublisherKey publisherNum);
-  PublisherKey getPublisherKey();
+  PublisherKey getPublisherKey();  // todo to private friend Connection
   void emit();
 
  protected:

@@ -5,7 +5,7 @@
 
 class ActorStrategyInventory : public ActorStrategy {
  public:
-  virtual bool doKey(EAction action) override;
+  virtual std::optional<std::shared_ptr<Command>> doKey(EAction action) override;
 };
 
 #endif  // INVENTORY
