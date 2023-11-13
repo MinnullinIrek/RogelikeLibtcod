@@ -6,6 +6,7 @@
 
 #include "../char_types.h"
 #include "../header.h"
+#include "../utils/subscriber.h"
 
 using SubKey = int;
 
@@ -32,7 +33,7 @@ class Char {
   SubKey m_lastKey = 0;
 };
 
-class Chars final {
+class Chars final : public Publisher  {
  public:
   Chars();
   ~Chars();

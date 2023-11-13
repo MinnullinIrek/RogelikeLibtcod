@@ -179,8 +179,6 @@ void prepareFsm() {
 
   gameStruct.gameFsm = gamefsm;
 
-  void* f = gamefsm;
-
   gamefsm->state().set(fsm_cxx::GameState::Initial).as_initial().build();
 
   gamefsm->step_by(events::ToBegin{});
@@ -235,10 +233,9 @@ int main(int /*argc*/, char** /*argv*/) {
     mainWindow->addWindow(EMainWindows::einventory, inventoryWindow);
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
-    auto connector = Connector::instance();
-    connector.connect(gameStruct.hero->getMover(), mapWindow);
+    gameStruct.hero->getMover()->addSubscriber(mapWindow);
 
-    connector.connect(bag, inventoryWindow);
+    bag->addSubscriber(inventoryWindow);
     bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
@@ -263,7 +260,8 @@ int main(int /*argc*/, char** /*argv*/) {
         Color{0, 0, 255},
         Rectangle{{40, 10}, {60, 15}},
         false);
-    connector.connect(gameStruct.hero->getMover(), infoWindow);
+    gameStruct.hero->getMover()->addSubscriber(infoWindow);
+
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
 
     gameStruct.visualiser->setMap(gameStruct.map);
