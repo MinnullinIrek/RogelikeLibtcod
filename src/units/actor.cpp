@@ -24,17 +24,10 @@ void Actor::doKey(EAction action) {
 
   bool isFsm = false;
   if (m_fsmStrategy) {
-    auto command = m_fsmStrategy->doKey(action);
-    if (command) {
-      gameStruct.m_invoker.setCommand(command.value());
-      isFsm = true;
-    }
+    isFsm = m_fsmStrategy->executeKey(action);
   }
   if (!isFsm && m_currentStrategy) {
-    auto command = m_currentStrategy->doKey(action);
-    if (command) {
-      gameStruct.m_invoker.setCommand(command.value());
-    }
+    auto command = m_currentStrategy->executeKey(action);
   }
   gameStruct.m_invoker.run();
 }
