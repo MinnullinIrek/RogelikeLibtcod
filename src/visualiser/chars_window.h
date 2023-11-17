@@ -1,7 +1,7 @@
 #ifndef CHARS_WINDOW_H
 #define CHARS_WINDOW_H
 
-#include <list>
+#include <vector>
 
 #include "../utils/subscriber.h"
 #include "iwindow.h"
@@ -15,7 +15,8 @@ class CharsWindow : public IWindow, public Subscriber {
 
  private:
   Text m_headerLeft;
-  std::list<Text> m_chars;
+  std::vector<std::string> m_charName;
+  std::vector<std::string> m_charValue;
 
   Text m_itemDescription;
 };

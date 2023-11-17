@@ -1,7 +1,5 @@
 #include "actor_strategy_fsm.h"
 
-
-
 #include "../fsm/fsm_cxx.hh"
 #include "../game_struct.h"
 #include "../utils/fsm.h"
@@ -18,6 +16,9 @@ std::optional<std::shared_ptr<Command>> ActorStrategyFsm::doKey(EAction action) 
       break;
     case EAction::map:
       command = std::make_shared<Command>([]() { gameStruct.gameFsm->step_by(events::ToMap{}); });
+      break;
+    case EAction::charAction:
+      command = std::make_shared<Command>([]() { gameStruct.gameFsm->step_by(events::ToChar{}); });
       break;
     default:
       break;

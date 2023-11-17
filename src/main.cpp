@@ -23,15 +23,18 @@
 #include "maps/map.h"
 #include "units/IUnit.h"
 #include "units/actor.h"
+#include "units/actor_strategy_char.h"
 #include "units/actor_strategy_fsm.h"
 #include "units/actor_strategy_inventory.h"
 #include "units/actor_strategy_map.h"
+#include "units/chars.h"
 #include "units/interactor.h"
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
 #include "utils/gamefsm.h"
 #include "utils/subscriber.h"
+#include "visualiser/chars_window.h"
 #include "visualiser/inventory_window.h"
 #include "visualiser/main_window.h"
 #include "visualiser/map_window.h"
@@ -89,6 +92,11 @@ void initMapState() {
 void initInventoryState() {
   gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::InventoryState).get());
   mainWindow->setCurrent(EMainWindows::einventory);
+}
+
+void initCharState() {
+  gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::CharState).get());
+  mainWindow->setCurrent(EMainWindows::echars);
 }
 
 void prepareFsm() {
@@ -156,18 +164,47 @@ void prepareFsm() {
         std::cout << "          .. <closed -> opened> exiting" << '\n';
       })
       .build();
+  gamefsm->transition()
+      .set(fsm_cxx::GameState::MapState, events::ToChar{}, fsm_cxx::GameState::CharState)
+      .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
+      .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> entering" << '\n';
+        initCharState();
+      })
+      .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> exiting" << '\n';
+      })
+      .build();
+  gamefsm->transition()
+      .set(fsm_cxx::GameState::CharState, events::ToChar{}, fsm_cxx::GameState::MapState)
+      .guard([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const& p) -> bool { return p._ok; })
+      .entry_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> entering" << '\n';
+        initMapState();
+      })
+      .exit_action([](FSM::Event const&, FSM::Context&, FSM::State const&, FSM::Payload const&) {
+        std::cout << "          .. <closed -> opened> exiting" << '\n';
+      })
+      .build();
 
   {
     // fsm_cxx::GameState::MapState;
-    ActorStrategy* strategyMove = new ActorStrategyMap();
+    // ActorStrategy* strategyMove = new ActorStrategyMap();
     gameStruct.m_strategies[fsm_cxx::GameState::MapState] = std::make_unique<ActorStrategyMap>();
   }
   {
     // fsm_cxx::GameState::InventoryState;
-    ActorStrategy* strategyMove = new ActorStrategyInventory();
+    // ActorStrategy* strategyMove = new ActorStrategyInventory();
 
     gameStruct.m_strategies[fsm_cxx::GameState::InventoryState] = std::make_unique<ActorStrategyInventory>();
   }
+  {
+    // fsm_cxx::GameState::CharState;
+    // ActorStrategy* strategyChar = new ActorStrategyChar();
+
+    gameStruct.m_strategies[fsm_cxx::GameState::CharState] = std::make_unique<ActorStrategyChar>();
+  }
+
   {
     // ActorStrategy* strategyFsm = new ActorStrategyFsm();
 
@@ -263,6 +300,13 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
 
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
+
+    auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
+    auto chars = gameStruct.hero->getChars();
+    mainWindow->addWindow(EMainWindows::echars, charWindow);
+
+    std::static_pointer_cast<Publisher>(chars)->addSubscriber(charWindow);
+    chars->emit();
 
     gameStruct.visualiser->setMap(gameStruct.map);
     // gameStruct.visualiser->setInfo(info);  // todo remove

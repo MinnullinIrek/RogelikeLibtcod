@@ -12,7 +12,7 @@ using Setting = float;
 using Count = int;
 using Description = std::string;
 using Distance = float;
-
+#define translate
 // using Identifier = char;
 struct Color {
   uint8_t r, g, b;
@@ -40,7 +40,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none, left, right, up, down, inventory, map, undo };
+enum class EAction { none, left, right, up, down, inventory, map, undo, charAction };
 
 enum class ItemType {
   simple,

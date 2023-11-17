@@ -18,6 +18,9 @@ struct events {
   struct ToMap : public fsm_cxx::event_type<ToMap> {
     virtual ~ToMap() {}
   };
+  struct ToChar : public fsm_cxx::event_type<ToChar> {
+    virtual ~ToChar() {}
+  };
   struct ToInventory : public fsm_cxx::event_type<ToInventory> {
     virtual ~ToInventory() {}
   };
@@ -26,6 +29,6 @@ struct events {
   };
 };
 
-static fsm_cxx::machine_t<fsm_cxx::GameState> *gamefsm;
+static fsm_cxx::machine_t<fsm_cxx::GameState>* gamefsm;
 
 #endif  // GAMEFSM_H

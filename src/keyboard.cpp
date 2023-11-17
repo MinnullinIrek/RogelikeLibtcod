@@ -16,7 +16,7 @@ Keyboard::~Keyboard() {}
 void Keyboard::setActor(std::shared_ptr<Actor> actor) { m_actor = actor; }
 
 void Keyboard::setKey(int key, bool down) {
-  //pushKeys(key, down);
+  // pushKeys(key, down);
   if (!down) {
     return;
   }
@@ -44,6 +44,9 @@ void Keyboard::setKey(int key, bool down) {
       if (m_lastKeys == SDLK_LCTRL) {
         action = EAction::undo;
       }
+      break;
+    case SDLK_c:
+      action = EAction::charAction;
       break;
     default:
       break;
