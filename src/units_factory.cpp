@@ -37,3 +37,16 @@ std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
 
   return hero;
 }
+
+std::shared_ptr<IUnit> UnitsFactory::createEnemy(std::shared_ptr<Map> map) {
+  auto unit = std::make_shared<Unit>('E', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
+  unit->createChars();
+  auto chars = unit->getChars();
+
+  for (int i = static_cast<int>(ECharTypes::strength); i < static_cast<int>(ECharTypes::count); ++i) {
+    chars->setValue(i, CharType(10));
+  }
+
+  auto bag = unit->getBag();
+  return unit;
+}

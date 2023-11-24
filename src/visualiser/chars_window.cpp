@@ -30,6 +30,11 @@ void CharsWindow::notify(std::weak_ptr<Publisher> publisher) {
       m_charName.emplace_back(charNames[i]);
       m_charValue.emplace_back(std::to_string(chars->getValue(i)));
     }
-
+    /*m_charName.emplace_back("-----------------");
+    m_charValue.emplace_back("---");
+    for (int i = static_cast<int>(ECharTypes::count); i < static_cast<int>(EDamageType::count); ++i) {
+      m_charName.emplace_back(charNames[i]);
+      m_charValue.emplace_back(std::to_string(chars->getValue(i)));
+    }*/
   }
 }

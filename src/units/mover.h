@@ -30,7 +30,7 @@ class SimpleMover : public IMover {
 
   virtual void moveInDirection(const Coord& coord) override;
   virtual const Coord& getCoord() const override;
-
+  //virtual void move(std::shared_ptr<Unit> unit, std::shared_ptr<Cell> cell);
   void setCoord(const Coord& currentPos) override;
 
  protected:

@@ -259,6 +259,9 @@ int main(int /*argc*/, char** /*argv*/) {
 
     MagicConsts::instance().readJson();
     initGameStruct();
+    auto enemy = gameStruct.unitsFactory->createEnemy(gameStruct.map);
+    gameStruct.map->setUnit(enemy, {5, 5});
+
     mainWindow = std::make_shared<MainWindow>(Rectangle{{1, 1}, {30, 30}});
     prepareFsm();
     // std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove

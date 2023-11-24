@@ -17,27 +17,26 @@
 #include "maps/map.h"
 #include "maps/room.h"
 #include "unit_types.h"
+#include "units/IUnit.h"
 #include "units_factory.h"
 #include "utils/random.h"
 #include "visualiser/visualiser.h"
-#include "units/IUnit.h"
+
 
 using namespace std::chrono_literals;
-
-
 
 MapGenerator::MapGenerator(std::weak_ptr<UnitsFactory> unitFactory) : m_unitFactory(unitFactory) {}
 
 MapGenerator::~MapGenerator() {}
 
 std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
-  //const auto wallsCount = static_cast<int>(size.x * size.y * RROOM_PERCENT);
+  // const auto wallsCount = static_cast<int>(size.x * size.y * RROOM_PERCENT);
   auto unitFactory = m_unitFactory.lock();
   assert(unitFactory);
 
-  //const int roomCellCount = 10;
+  // const int roomCellCount = 10;
 
-  //const int delivereCount = size.x * size.y / roomCellCount;
+  // const int delivereCount = size.x * size.y / roomCellCount;
 
   auto rooms = delivereMap(size);
 
@@ -50,11 +49,13 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
   }
 
   for (const auto& room : rooms) {
-    auto coords =  room.getAllCoords(false);
+    auto coords = room.getAllCoords(false);
     for (const auto& cd : coords) {
       map->setUnit(nullptr, cd);
     }
   }
+
+  // unitFactory->createEnemy(); //todo create enemy
 
   return map;
 }
@@ -133,7 +134,6 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
   m_visualizer->show();
   std::this_thread::sleep_for(1000ms);
 
-
   return rooms;
 }
 
@@ -163,7 +163,6 @@ void MapGenerator::findNeighbors(std::list<RoomStart>& rooms) {
   }
 }
 
-
 void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
   rooms;
 
@@ -174,7 +173,7 @@ void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
   for (;; ++it) {
     for (auto neighbor = it->m_neighbors.begin(); neighbor != it->m_neighbors.end(); ++neighbor) {
       auto corridorCoords = findWays(*it, **neighbor);
-      //assert(!corridorCoords.empty());
+      // assert(!corridorCoords.empty());
       if (corridorCoords.empty()) {
         continue;
       }
@@ -184,7 +183,6 @@ void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
       auto roomCor = RoomStart(std::array<Coord, 2>{coords.first, coords.second});
       roomCor.m_innerBorders = roomCor.m_borders;
       rooms.push_back(roomCor);
-
     }
 
     if (it == last) {
@@ -193,9 +191,7 @@ void MapGenerator::makeCorridor(std::list<RoomStart>& rooms) {
   }
 }
 
-std::vector<std::pair<Coord, Coord>> MapGenerator::findWays(
-    const RoomStart& room1, const RoomStart& room2)
-{
+std::vector<std::pair<Coord, Coord>> MapGenerator::findWays(const RoomStart& room1, const RoomStart& room2) {
   std::vector<std::pair<Coord, Coord>> corridors;
   const auto xL1 = room1.m_innerBorders[0].x;
   const auto xR1 = room1.m_innerBorders[1].x;

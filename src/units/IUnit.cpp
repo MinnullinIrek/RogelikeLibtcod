@@ -9,9 +9,15 @@
 #include "chars.h"
 #include "interactor.h"
 #include "mover.h"
+#include "effect.h"
 
 IUnit::IUnit() : m_type(EUnitTypes::none) {}
-IUnit::IUnit(Identifier id, EUnitTypes uType) : m_id(id), m_type(uType) {}
+IUnit::IUnit(Identifier id, EUnitTypes uType) : m_id(id), m_type(uType) {
+  TestEffect* effect = new TestEffect();
+  effect->m_attacker = weak_from_this();
+  
+  m_effectProtoType.reset((Effect*)effect);
+}
 void IUnit::createChars() { m_chars = std::make_shared<Chars>(); }
 IUnit::~IUnit() {}
 void IUnit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
@@ -20,6 +26,10 @@ std::shared_ptr<Interactor> IUnit::getInteractor() { return m_currentInteractor;
 std::shared_ptr<Chars> IUnit::getChars() { return m_chars; }
 
 Identifier IUnit::toChar() const { return m_id; }
+std::unique_ptr<Effect> IUnit::getEffect() { return m_effectProtoType->clone(); }
+
+void IUnit::acceptEffect(std::unique_ptr<Effect> effect) { effect->visit(weak_from_this()); }
+
 
 Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover)
     : IUnit(id, EUnitTypes::none), m_mover(mover), m_bag(std::make_shared<Bag>()) {}

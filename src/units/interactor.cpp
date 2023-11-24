@@ -6,6 +6,7 @@
 #include "../maps/cell.h"
 #include "../unit_types.h"
 #include "../units/IUnit.h"
+#include "../units/effect.h"
 
 Interactor::Interactor(/* args */) {}
 
@@ -27,4 +28,6 @@ void Interactor::interact(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> u
 
 void Interactor::attack(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> unit2) {
 
-  printf("attack not ready"); }
+  unit2->acceptEffect(unit1->getEffect());
+  printf("attack result not ready");
+}

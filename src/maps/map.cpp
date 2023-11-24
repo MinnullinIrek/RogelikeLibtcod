@@ -4,6 +4,7 @@
 
 #include "../units/IUnit.h"
 #include "../units/interactor.h"
+#include "../units/mover.h"
 #include "cell.h"
 
 Map::Map(){};
@@ -58,6 +59,11 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
       interactor->interact(unit1, unit2);
 
     } else {
+      auto unit = std::dynamic_pointer_cast<Unit>(unit1);
+      /*if (unit) {
+        auto mover = unit->getMover();
+        mover->move(unit, cell2);
+      }*/
       cell2->setUnit(unit1);
       cell1->setUnit(nullptr);
       result = true;

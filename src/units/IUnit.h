@@ -13,8 +13,10 @@ class IMover;
 class Chars;
 class Interactor;
 class BodyParts;
+class Effect;
+//class Prototype;
 
-class IUnit : public ToChar {
+class IUnit : public ToChar, public std::enable_shared_from_this<IUnit> {
  public:
   IUnit();
   IUnit(Identifier id, EUnitTypes uType = EUnitTypes::none);
@@ -29,6 +31,11 @@ class IUnit : public ToChar {
   std::shared_ptr<Interactor> getInteractor();
   void setBodyParts(std::shared_ptr<BodyParts> bp);
   std::shared_ptr<BodyParts> getBodyParts();
+  std::unique_ptr<Effect> getEffect();
+  void acceptEffect(std::unique_ptr<Effect> effect);
+
+ public:
+  std::shared_ptr<Effect> m_effectProtoType;
 
  protected:
   Identifier m_id;
