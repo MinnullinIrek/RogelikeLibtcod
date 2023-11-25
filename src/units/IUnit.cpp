@@ -31,7 +31,7 @@ std::unique_ptr<Effect> IUnit::getEffect() { return m_effectProtoType->clone(); 
 void IUnit::acceptEffect(std::unique_ptr<Effect> effect) { effect->visit(weak_from_this()); }
 
 
-Unit::Unit(const Identifier& id, std::shared_ptr<IMover> mover)
+Unit::Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover)
     : IUnit(id, EUnitTypes::none), m_mover(mover), m_bag(std::make_shared<Bag>()) {}
 Unit::Unit() : IUnit() {}
 
@@ -39,9 +39,9 @@ Unit::Unit() : IUnit() {}
 
 Description Unit::toString() const { return Description("decription"); }
 
-std::shared_ptr<IMover> Unit::getMover() { return m_mover; }
+std::shared_ptr<MoverInterface> Unit::getMover() { return m_mover; }
 
-void Unit::setMover(std::shared_ptr<IMover> mover) { m_mover = mover; }
+void Unit::setMover(std::shared_ptr<MoverInterface> mover) { m_mover = mover; }
 
 void IUnit::setBodyParts(std::shared_ptr<BodyParts> bp) { m_bodyParts = bp; }
 
@@ -100,3 +100,33 @@ void Unit::lookAround(bool isEyeOpened) {
 const std::unordered_map<Coord, bool, KeyHasher>& Unit::getWatchingCoords() const { return m_watchingCoords; }
 
 std::shared_ptr<Bag> Unit::getBag() { return m_bag; }
+
+void Unit::moveInDirection(const Coord& coord) {
+  if (m_mover) {
+    m_mover->moveInDirection(coord);
+  }
+}
+
+void Unit::setCoord(const Coord& currentPos) {
+  if (m_mover) {
+    m_mover->setCoord(currentPos);
+  }
+}
+const Coord& Unit::getCoord() const {
+  if (m_mover) {
+    return m_mover->getCoord();
+  }
+  return {0, 0};
+}
+
+std::weak_ptr<Map> Unit::getMap() {
+  if (m_mover) {
+    return m_mover->getMap();
+  }
+  return std::shared_ptr<Map> (nullptr);
+}
+void Unit::changeMap(std::weak_ptr<Map> map) {
+  if (m_mover) {
+    m_mover->changeMap(map);
+  }
+}

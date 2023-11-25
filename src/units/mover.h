@@ -5,18 +5,16 @@
 
 #include "../header.h"
 #include "../utils/subscriber.h"
+#include "mover_interface.h"
 
 class Map;
 class Cell;
 
-class IMover : public Publisher {
+class IMover : public MoverInterface {
  public:
   IMover(std::weak_ptr<Map> map);
-  virtual void moveInDirection(const Coord& coord) = 0;
   void changeMap(std::weak_ptr<Map> map);
-  virtual void setCoord(const Coord& currentPos) = 0;
   void innerMove(std::shared_ptr<Cell> cell1, std::shared_ptr<Cell> cell2);
-  virtual const Coord& getCoord() const = 0;
   std::weak_ptr<Map> getMap();
 
  protected:
@@ -30,7 +28,7 @@ class SimpleMover : public IMover {
 
   virtual void moveInDirection(const Coord& coord) override;
   virtual const Coord& getCoord() const override;
-  //virtual void move(std::shared_ptr<Unit> unit, std::shared_ptr<Cell> cell);
+  // virtual void move(std::shared_ptr<Unit> unit, std::shared_ptr<Cell> cell);
   void setCoord(const Coord& currentPos) override;
 
  protected:
