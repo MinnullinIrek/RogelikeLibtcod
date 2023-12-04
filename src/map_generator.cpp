@@ -22,7 +22,6 @@
 #include "utils/random.h"
 #include "visualiser/visualiser.h"
 
-
 using namespace std::chrono_literals;
 
 MapGenerator::MapGenerator(std::weak_ptr<UnitsFactory> unitFactory) : m_unitFactory(unitFactory) {}
@@ -44,7 +43,7 @@ std::shared_ptr<Map> MapGenerator::generateRandomMap(const Coord& size) {
 
   for (int x = 0; x < size.x; ++x) {
     for (int y = 0; y < size.y; ++y) {
-      map->setUnit(std::make_shared<IUnit>('#', EUnitTypes::wall), Coord(x, y));
+      map->setUnit(std::shared_ptr<IUnit>(new Unit('#', nullptr, EUnitTypes::wall)), Coord(x, y));
     }
   }
 

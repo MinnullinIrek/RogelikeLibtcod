@@ -18,7 +18,7 @@ void Interactor::interact(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> u
   assert(unit1);
 
   if (unit2) {
-    if (unit2->m_type == EUnitTypes::wall) {
+    if (unit2->getType() == EUnitTypes::wall) {
       return;
     } else {
       attack(unit1, unit2);
@@ -27,7 +27,6 @@ void Interactor::interact(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> u
 }
 
 void Interactor::attack(std::shared_ptr<IUnit> unit1, std::shared_ptr<IUnit> unit2) {
-
   unit2->acceptEffect(unit1->getEffect());
   printf("attack result not ready");
 }

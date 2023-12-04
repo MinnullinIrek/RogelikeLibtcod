@@ -90,10 +90,12 @@ struct KeyHasher {
 };
 
 class ToChar {
+ public:
   virtual Identifier toChar() const = 0;
 };
 
 class ToString {
+ public:
   virtual Description toString() const = 0;
 };
 

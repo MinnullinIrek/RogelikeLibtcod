@@ -10,6 +10,7 @@ class Command;
 class ActorStrategy {
  public:
   bool executeKey(EAction action);
+  virtual ~ActorStrategy() = default;
 
  protected:
   virtual std::optional<std::shared_ptr<Command>> doKey(EAction action) = 0;

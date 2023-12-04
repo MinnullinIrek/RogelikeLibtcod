@@ -1,13 +1,16 @@
 #include "effect.h"
 
 #include "IUnit.h"
+#include "assert.h"
 #include "chars.h"
+
 
 Effect::~Effect() {}
 
 TestEffect::~TestEffect() {}
 void TestEffect::visit(std::weak_ptr<IUnit> unit) {
   auto locked = unit.lock();
+  assert(locked);
   auto attacker = std::static_pointer_cast<Unit>(locked);
   auto chars = attacker->getChars();
 

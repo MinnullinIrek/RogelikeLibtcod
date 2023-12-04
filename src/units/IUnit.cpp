@@ -7,32 +7,43 @@
 #include "../utils/consts_reader.h"
 #include "algorithm"
 #include "chars.h"
+#include "effect.h"
 #include "interactor.h"
 #include "mover.h"
-#include "effect.h"
 
-IUnit::IUnit() : m_type(EUnitTypes::none) {}
-IUnit::IUnit(Identifier id, EUnitTypes uType) : m_id(id), m_type(uType) {
-  TestEffect* effect = new TestEffect();
-  effect->m_attacker = weak_from_this();
-  
-  m_effectProtoType.reset((Effect*)effect);
+IUnit::IUnit() {
+  // TestEffect* effect = new TestEffect();
+  // effect->m_attacker = weak_from_this();
+
+  // m_effectProtoType.reset((Effect*)effect);
 }
-void IUnit::createChars() { m_chars = std::make_shared<Chars>(); }
+void Unit::createChars() { m_chars = std::make_shared<Chars>(); }
 IUnit::~IUnit() {}
 void IUnit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
 std::shared_ptr<Interactor> IUnit::getInteractor() { return m_currentInteractor; }
 
-std::shared_ptr<Chars> IUnit::getChars() { return m_chars; }
+std::shared_ptr<Chars> Unit::getChars() { return m_chars; }
 
-Identifier IUnit::toChar() const { return m_id; }
-std::unique_ptr<Effect> IUnit::getEffect() { return m_effectProtoType->clone(); }
+Identifier Unit::toChar() const { return m_id; }
+std::unique_ptr<Effect> Unit::getEffect() { return m_effectProtoType->clone(); }
 
-void IUnit::acceptEffect(std::unique_ptr<Effect> effect) { effect->visit(weak_from_this()); }
+void Unit::acceptEffect(std::unique_ptr<Effect> effect) {
+  effect->visit(std::dynamic_pointer_cast<IUnit>(shared_from_this()));
+}
+
+Unit::Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover, EUnitTypes type)
+    : IUnit(), m_id(id), m_type(type), m_mover(mover), m_bag(std::make_shared<Bag>()) {
+
+  
+}
+
+void Unit::createTestEffect() {
+  TestEffect* effect = new TestEffect();
+  effect->m_attacker = std::dynamic_pointer_cast<IUnit>(shared_from_this());
+  m_effectProtoType.reset((Effect*)effect);
+}
 
 
-Unit::Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover)
-    : IUnit(id, EUnitTypes::none), m_mover(mover), m_bag(std::make_shared<Bag>()) {}
 Unit::Unit() : IUnit() {}
 
 // Identifier Unit::toChar() const { return m_id; }
@@ -43,9 +54,9 @@ std::shared_ptr<MoverInterface> Unit::getMover() { return m_mover; }
 
 void Unit::setMover(std::shared_ptr<MoverInterface> mover) { m_mover = mover; }
 
-void IUnit::setBodyParts(std::shared_ptr<BodyParts> bp) { m_bodyParts = bp; }
+void Unit::setBodyParts(std::shared_ptr<BodyParts> bp) { m_bodyParts = bp; }
 
-std::shared_ptr<BodyParts> IUnit::getBodyParts() { return m_bodyParts; }
+std::shared_ptr<BodyParts> Unit::getBodyParts() { return m_bodyParts; }
 
 void Unit::lookAround(bool isEyeOpened) {
   if (isEyeOpened) {
@@ -123,10 +134,12 @@ std::weak_ptr<Map> Unit::getMap() {
   if (m_mover) {
     return m_mover->getMap();
   }
-  return std::shared_ptr<Map> (nullptr);
+  return std::shared_ptr<Map>(nullptr);
 }
 void Unit::changeMap(std::weak_ptr<Map> map) {
   if (m_mover) {
     m_mover->changeMap(map);
   }
 }
+
+EUnitTypes Unit::getType() { return m_type; }

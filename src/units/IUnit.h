@@ -17,38 +17,34 @@ class BodyParts;
 class Effect;
 // class Prototype;
 
-class IUnit : public ToChar, public std::enable_shared_from_this<IUnit> {
+class IUnit : public ToChar {
  public:
   IUnit();
-  IUnit(Identifier id, EUnitTypes uType = EUnitTypes::none);
+  virtual EUnitTypes getType() = 0;
   virtual ~IUnit();
 
-  virtual Identifier toChar() const override;
-  EUnitTypes m_type = EUnitTypes::none;
+  // virtual Identifier toChar() const override;
 
-  void createChars();
-  std::shared_ptr<Chars> getChars();
-  void IUnit::setInteractor(std::shared_ptr<Interactor> interactor);
+  virtual void createChars() = 0;
+  virtual std::shared_ptr<Chars> getChars() = 0;
+  void setInteractor(std::shared_ptr<Interactor> interactor);
   std::shared_ptr<Interactor> getInteractor();
-  void setBodyParts(std::shared_ptr<BodyParts> bp);
-  std::shared_ptr<BodyParts> getBodyParts();
-  std::unique_ptr<Effect> getEffect();
-  void acceptEffect(std::unique_ptr<Effect> effect);
+  virtual void setBodyParts(std::shared_ptr<BodyParts> bp) = 0;
+  virtual std::shared_ptr<BodyParts> getBodyParts() = 0;
+  virtual std::unique_ptr<Effect> getEffect() = 0;
+  virtual void acceptEffect(std::unique_ptr<Effect> effect) = 0;
 
  public:
-  std::shared_ptr<Effect> m_effectProtoType;
-
  protected:
-  Identifier m_id;
-  std::shared_ptr<Chars> m_chars;
   std::shared_ptr<Interactor> m_currentInteractor;
-  std::shared_ptr<BodyParts> m_bodyParts;
 };
 
 class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ {
  public:
-  Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover);
+  Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover, EUnitTypes type = EUnitTypes::enemy);
   Unit();
+  EUnitTypes getType() override;
+
   Description toString() const override;
   virtual std::shared_ptr<MoverInterface> getMover();
   virtual void setMover(std::shared_ptr<MoverInterface> mover);
@@ -61,11 +57,25 @@ class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ 
   const Coord& getCoord() const override;
   std::weak_ptr<Map> getMap() override;
   void changeMap(std::weak_ptr<Map> map) override;
+  virtual Identifier toChar() const override;
+  void acceptEffect(std::unique_ptr<Effect> effect) override;
+  std::unique_ptr<Effect> getEffect() override;
+  void createChars();
+  std::shared_ptr<Chars> getChars();
+  void setBodyParts(std::shared_ptr<BodyParts> bp);
+  std::shared_ptr<BodyParts> getBodyParts();
+  void createTestEffect();
+ public:
+  std::shared_ptr<Effect> m_effectProtoType;
+  EUnitTypes m_type = EUnitTypes::none;
 
  protected:
+  Identifier m_id;
   std::shared_ptr<Bag> m_bag;
   std::shared_ptr<MoverInterface> m_mover;
   std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
+  std::shared_ptr<Chars> m_chars;
+  std::shared_ptr<BodyParts> m_bodyParts;
 };
 
 #endif

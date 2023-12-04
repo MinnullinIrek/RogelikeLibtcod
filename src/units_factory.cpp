@@ -11,13 +11,14 @@ UnitsFactory::UnitsFactory(/* args */) {}
 UnitsFactory::~UnitsFactory() {}
 
 std::shared_ptr<IUnit> UnitsFactory::createWall() {
-  static std::shared_ptr<IUnit> staticWall = std::make_shared<IUnit>('#', EUnitTypes::wall);
+  static std::shared_ptr<IUnit> staticWall = std::shared_ptr<IUnit>(new Unit('#', nullptr, EUnitTypes::wall));
   return staticWall;
 }
 
 std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
   auto hero = std::make_shared<Unit>('@', std::static_pointer_cast<IMover>(std::make_shared<SimpleMover>(map)));
   hero->createChars();
+  hero->createTestEffect();
   auto chars = hero->getChars();
 
   for (int i = static_cast<int>(ECharTypes::strength); i < static_cast<int>(ECharTypes::count); ++i) {
@@ -48,5 +49,6 @@ std::shared_ptr<IUnit> UnitsFactory::createEnemy(std::shared_ptr<Map> map) {
   }
 
   auto bag = unit->getBag();
+  
   return unit;
 }
