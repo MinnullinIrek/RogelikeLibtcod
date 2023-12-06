@@ -3,12 +3,31 @@
 #include <cstdarg>
 #include <format>
 #include <string>
+#include <filesystem>
 
-EventLogger::EventLogger(std::string&& fileName) : m_fileName(fileName) {
-  // todo create or check file existing
+
+EventLogger::EventLogger(std::string&& fileName) : m_fileName(fileName),
+  m_exit(false) {
+    m_file.open("test.txt",std::ios::out);
+    m_writingThread = std::thread(&EventLogger::write, this);
 }
 
-EventLogger::~EventLogger() {}
+EventLogger::~EventLogger() {m_file.close();}
+
+void EventLogger::write() {
+  while(true){
+    if (!m_messages.empty()) {
+      const auto& message = m_messages.front();
+      m_file << message.source<< ":" << message.text << "\n";
+      m_messages.pop_front();
+    } else {
+      if(m_exit) {
+        std::unique_lock<std::mutex> lk(m_mutex);
+        m_cv.wait(lk);
+      }
+    }
+  }
+}
 
 // void EventLogger::log(std::string_view source, std::string_view format, ...) {
   // std::format(format, ...);
