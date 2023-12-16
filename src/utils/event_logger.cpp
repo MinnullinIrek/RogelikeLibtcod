@@ -20,12 +20,16 @@ void EventLogger::write() {
       m_messages.pop_front();
     } else {
       if (m_exit) {
+        break;
+      } else {
         std::unique_lock<std::mutex> lk(m_mutex);
         m_cv.wait(lk);
       }
     }
   }
 }
+
+void EventLogger::turn_off() { m_writingThread.join(); }
 
 // void EventLogger::log(std::string_view source, std::string_view format, ...) {
 // std::format(format, ...);

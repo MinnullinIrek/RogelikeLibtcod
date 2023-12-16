@@ -2,9 +2,9 @@
 
 #include <algorithm>
 
-Char::Char(CharType startValue) : m_value(startValue) {}
-Char::Char(const Char& ch) : m_value(ch.getValue()), m_subscribers(ch.m_subscribers) {}
-Char::Char(const Char&& ch) : m_value(ch.getValue()), m_subscribers(std::move(ch.m_subscribers)) {}
+Char::Char(CharType startValue) : Publisher(), m_value(startValue) {}
+Char::Char(const Char& ch) : m_value(ch.getValue()) {}
+Char::Char(const Char&& ch) : m_value(ch.getValue()) {}
 
 Char::~Char() {}
 
@@ -14,16 +14,8 @@ Char::operator CharType() const { return getValue(); }
 
 void Char::setValue(const CharType& ch) {
   m_value = ch;
-  std::for_each(std::begin(m_subscribers), std::end(m_subscribers), [ch](auto& sub) { sub.second(ch); });
+  emit();
 }
-
-SubKey Char::addSubscriber(const std::function<void(CharType)>& sub) {
-  ++m_lastKey;
-  m_subscribers.emplace(m_lastKey, sub);
-  return m_lastKey;
-}
-
-void Char::removeSubscriber(SubKey key) { m_subscribers.erase(key); }
 
 bool operator==(const Char& lhs, const Char& rhs) { return lhs.getValue() == rhs.getValue(); }
 bool operator!=(const Char& lhs, const Char& rhs) { return lhs.getValue() != rhs.getValue(); }
@@ -39,19 +31,12 @@ Char& Char::operator-=(const Char& rhs) {
   return *this;
 }
 
-Chars::Chars() {}
-Chars::~Chars() {}
 void Chars::setValue(int chType, CharType value) {
   if (m_chars.find(static_cast<int>(chType)) != std::end(m_chars)) {
-    m_chars.at(static_cast<int>(chType)).setValue(value);
+    m_chars.at(static_cast<int>(chType))->setValue(value);
   } else {
-    auto ch = Char(value);
-    m_chars.insert(std::make_pair(static_cast<int>(chType), ch));
+    m_chars.insert(std::make_pair(static_cast<int>(chType), std::make_shared<Char>(value)));
   }
 }
 
-CharType Chars::getValue(int chType) { return m_chars.at(static_cast<int>(chType)).getValue(); }
-SubKey Chars::addSubscriber(int chType, const std::function<void(CharType)>& sub) {
-  return m_chars.at(static_cast<int>(chType)).addSubscriber(sub);
-}
-void Chars::removeSubscriber(int chType, SubKey key) { m_chars.at(static_cast<int>(chType)).removeSubscriber(key); }
+CharType Chars::getValue(int chType) { return m_chars.at(static_cast<int>(chType))->getValue(); }

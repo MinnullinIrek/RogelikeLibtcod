@@ -8,9 +8,7 @@
 #include "../header.h"
 #include "../utils/subscriber.h"
 
-using SubKey = int;
-
-class Char {
+class Char : public Publisher {
  public:
   Char(CharType startValue);
   Char(const Char& ch);
@@ -18,8 +16,6 @@ class Char {
 
   ~Char();
 
-  SubKey addSubscriber(const std::function<void(CharType)>& sub);
-  void removeSubscriber(SubKey key);
   void setValue(const CharType& ch);
   CharType getValue() const;
 
@@ -29,21 +25,17 @@ class Char {
 
  private:
   CharType m_value = 0;
-  std::unordered_map<SubKey, std::function<void(CharType)>> m_subscribers;
-  SubKey m_lastKey = 0;
 };
 
-class Chars final : public Publisher  {
+class Chars final : public Publisher {
  public:
-  Chars();
-  ~Chars();
+  Chars() = default;
+  ~Chars() = default;
   void setValue(int chType, CharType value);
   CharType getValue(int chType);
-  SubKey addSubscriber(int chType, const std::function<void(CharType)>& sub);
-  void removeSubscriber(int chType, SubKey key);
 
  private:
-  std::unordered_map<int, Char> m_chars;
+  std::unordered_map<int, std::shared_ptr<Char>> m_chars;
 };
 
 #endif

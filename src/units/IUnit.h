@@ -27,16 +27,12 @@ class IUnit : public ToChar {
 
   virtual void createChars() = 0;
   virtual std::shared_ptr<Chars> getChars() = 0;
-  void setInteractor(std::shared_ptr<Interactor> interactor);
-  std::shared_ptr<Interactor> getInteractor();
+  virtual void setInteractor(std::shared_ptr<Interactor> interactor) = 0;
+  virtual std::shared_ptr<Interactor> getInteractor() = 0;
   virtual void setBodyParts(std::shared_ptr<BodyParts> bp) = 0;
   virtual std::shared_ptr<BodyParts> getBodyParts() = 0;
   virtual std::unique_ptr<Effect> getEffect() = 0;
   virtual void acceptEffect(std::unique_ptr<Effect> effect) = 0;
-
- public:
- protected:
-  std::shared_ptr<Interactor> m_currentInteractor;
 };
 
 class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ {
@@ -65,6 +61,9 @@ class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ 
   void setBodyParts(std::shared_ptr<BodyParts> bp);
   std::shared_ptr<BodyParts> getBodyParts();
   void createTestEffect();
+  void setInteractor(std::shared_ptr<Interactor> interactor) override;
+  std::shared_ptr<Interactor> getInteractor() override;
+
  public:
   std::shared_ptr<Effect> m_effectProtoType;
   EUnitTypes m_type = EUnitTypes::none;
@@ -76,6 +75,7 @@ class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ 
   std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
   std::shared_ptr<Chars> m_chars;
   std::shared_ptr<BodyParts> m_bodyParts;
+  std::shared_ptr<Interactor> m_currentInteractor;
 };
 
 #endif

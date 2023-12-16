@@ -8,7 +8,6 @@
 #include <string_view>
 #include <thread>
 
-
 struct Message {
   std::string source;
   std::string text;
@@ -20,7 +19,8 @@ class EventLogger {
   ~EventLogger();
   template <typename Arg, typename... Args>
   void log(std::string_view source, const Arg& arg, const Args&... args) {
-    m_messages.push_back({source, std::format(arg, args...)}) cv.notify_one();
+    m_messages.push_back({source, std::format(arg, args...)});
+    cv.notify_one();
   }
 
   void write();

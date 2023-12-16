@@ -184,7 +184,7 @@ void ItemsFactory::readJson() {
 
     nlohmann::json jsonMain = jsonMain1.begin().value();
     // s = jsonMain.dump();
-    for (auto& iter = jsonMain.begin(); iter != jsonMain.end(); ++iter) {
+    for (auto iter = jsonMain.begin(); iter != jsonMain.end(); ++iter) {
       auto& sv = iter.value();
       WeaponStruct str;
 
@@ -201,7 +201,7 @@ void ItemsFactory::readJson() {
       }
 
       if (sv.contains("ranged")) {
-        for (auto& iterRanged = sv["ranged"].begin(); iterRanged != sv["ranged"].end(); ++iterRanged) {
+        for (auto iterRanged = sv["ranged"].begin(); iterRanged != sv["ranged"].end(); ++iterRanged) {
           auto rang = iterRanged.value().get<std::string>();
           if (m_rangedClose.find(rang) == m_rangedClose.end()) {
             throw std::string("m_rangedClose doesn't contains key ") + rang;
@@ -213,9 +213,9 @@ void ItemsFactory::readJson() {
       }
 
       if (sv.contains("wearingSlots")) {
-        for (auto& iterSlots = sv["wearingSlots"].begin(); iterSlots != sv["wearingSlots"].end(); ++iterSlots) {
+        for (auto iterSlots = sv["wearingSlots"].begin(); iterSlots != sv["wearingSlots"].end(); ++iterSlots) {
           std::vector<EWearingSlot> slots;
-          for (auto& iterSlot = iterSlots->begin(); iterSlot != iterSlots->end(); ++iterSlot) {
+          for (auto iterSlot = iterSlots->begin(); iterSlot != iterSlots->end(); ++iterSlot) {
             auto rang = iterSlot.value().get<std::string>();
             if (m_slots.find(rang) == m_slots.end()) {
               throw std::string("m_rangedClose doesn't contains key ") + rang;
@@ -230,7 +230,7 @@ void ItemsFactory::readJson() {
 
       // str.m_chars;
       if (sv.contains("chars")) {
-        for (auto& iterChar = sv["chars"].begin(); iterChar != sv["chars"].end(); ++iterChar) {
+        for (auto iterChar = sv["chars"].begin(); iterChar != sv["chars"].end(); ++iterChar) {
           for (const auto& chVal : {"name", "value"}) {
             if (!iterChar.value().contains(chVal)) {
               throw std::string("weapon [chars][") + chVal + "] doesn't exist in weapon.json weapon name =" + str.name;
@@ -240,9 +240,8 @@ void ItemsFactory::readJson() {
           ESetting sett = m_settings[name];
           std::shared_ptr<Chars> charVal = std::make_shared<Chars>();
 
-          for (auto& iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
+          for (auto iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
             auto& ch = iterCh.value();
-            auto s = iterCh->dump();
             auto& key = ch.begin().key();
             auto val = ch.begin().value().get<CharType>();
             if (m_chars.find(key) == m_chars.end()) {

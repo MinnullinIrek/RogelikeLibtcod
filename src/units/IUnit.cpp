@@ -19,9 +19,8 @@ IUnit::IUnit() {
 }
 void Unit::createChars() { m_chars = std::make_shared<Chars>(); }
 IUnit::~IUnit() {}
-void IUnit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
-std::shared_ptr<Interactor> IUnit::getInteractor() { return m_currentInteractor; }
-
+void Unit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
+std::shared_ptr<Interactor> Unit::getInteractor() { return m_currentInteractor; }
 std::shared_ptr<Chars> Unit::getChars() { return m_chars; }
 
 Identifier Unit::toChar() const { return m_id; }
@@ -32,17 +31,13 @@ void Unit::acceptEffect(std::unique_ptr<Effect> effect) {
 }
 
 Unit::Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover, EUnitTypes type)
-    : IUnit(), m_id(id), m_type(type), m_mover(mover), m_bag(std::make_shared<Bag>()) {
-
-  
-}
+    : IUnit(), m_id(id), m_type(type), m_mover(mover), m_bag(std::make_shared<Bag>()) {}
 
 void Unit::createTestEffect() {
   TestEffect* effect = new TestEffect();
   effect->m_attacker = std::dynamic_pointer_cast<IUnit>(shared_from_this());
   m_effectProtoType.reset((Effect*)effect);
 }
-
 
 Unit::Unit() : IUnit() {}
 
