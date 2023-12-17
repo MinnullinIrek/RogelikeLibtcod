@@ -1,13 +1,17 @@
 #ifndef IUNIT_H
 #define IUNIT_H
 
+#include <functional>
 #include <memory>
 #include <unordered_map>
 #include <vector>
 
+#include "../char_types.h"
 #include "../header.h"
 #include "../unit_types.h"
 #include "mover_interface.h"
+
+using CharSubscriber = std::function<void(CharValueType)>;
 
 class Bag;
 class MoverInterface;
@@ -15,9 +19,10 @@ class Chars;
 class Interactor;
 class BodyParts;
 class Effect;
+class CorpsDeleter;
 // class Prototype;
 
-class IUnit : public ToChar {
+class IUnit : public ToChar, public MoverInterface /*decorator*/ {
  public:
   IUnit();
   virtual EUnitTypes getType() = 0;
@@ -33,12 +38,14 @@ class IUnit : public ToChar {
   virtual std::shared_ptr<BodyParts> getBodyParts() = 0;
   virtual std::unique_ptr<Effect> getEffect() = 0;
   virtual void acceptEffect(std::unique_ptr<Effect> effect) = 0;
+  virtual void die() = 0;
 };
 
-class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ {
+class Unit : public IUnit, public ToString, public Subscriber {
  public:
   Unit(const Identifier& id, std::shared_ptr<MoverInterface> mover, EUnitTypes type = EUnitTypes::enemy);
   Unit();
+  ~Unit();
   EUnitTypes getType() override;
 
   Description toString() const override;
@@ -63,6 +70,11 @@ class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ 
   void createTestEffect();
   void setInteractor(std::shared_ptr<Interactor> interactor) override;
   std::shared_ptr<Interactor> getInteractor() override;
+  void die() override;
+  //--Subscriber
+  void notify(std::weak_ptr<Publisher> publisher) override;
+  void setCharSubscriber(int charType, CharSubscriber&& charSub);
+  void setCorpsDeleter(std::shared_ptr<CorpsDeleter> deleter);
 
  public:
   std::shared_ptr<Effect> m_effectProtoType;
@@ -76,6 +88,8 @@ class Unit : public IUnit, public ToString, public MoverInterface /*decorator*/ 
   std::shared_ptr<Chars> m_chars;
   std::shared_ptr<BodyParts> m_bodyParts;
   std::shared_ptr<Interactor> m_currentInteractor;
+  std::unordered_map<int, CharSubscriber> m_charSubscribers;
+  std::weak_ptr<CorpsDeleter> m_corpsDeleter;
 };
 
 #endif

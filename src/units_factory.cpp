@@ -1,12 +1,13 @@
 #include "units_factory.h"
 
 #include "Bag.h"
+#include "helpers/corps_deleter.h"
 #include "items/IItems.h"
 #include "units/IUnit.h"
 #include "units/chars.h"
 #include "units/mover.h"
 
-UnitsFactory::UnitsFactory(/* args */) {}
+UnitsFactory::UnitsFactory(/* args */) : m_corpsDeleter(std::make_shared<CorpsDeleter>()) {}
 
 UnitsFactory::~UnitsFactory() {}
 
@@ -22,7 +23,7 @@ std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
   auto chars = hero->getChars();
 
   for (int i = static_cast<int>(ECharTypes::strength); i < static_cast<int>(ECharTypes::count); ++i) {
-    chars->setValue(i, CharType(10));
+    chars->setValue(i, CharValueType(10));
   }
 
   auto bag = hero->getBag();
@@ -45,10 +46,17 @@ std::shared_ptr<IUnit> UnitsFactory::createEnemy(std::shared_ptr<Map> map) {
   auto chars = unit->getChars();
 
   for (int i = static_cast<int>(ECharTypes::strength); i < static_cast<int>(ECharTypes::count); ++i) {
-    chars->setValue(i, CharType(10));
+    chars->setValue(i, CharValueType(10));
   }
 
-  auto bag = unit->getBag();
-  
+  // auto hp = chars->getValue(static_cast<int>(ECharTypes::hp));
+  unit->setCharSubscriber(static_cast<int>(ECharTypes::hp), [unit](auto val) {
+    if (val <= 0) {
+      unit->die();
+    }
+  });
+  unit->setCorpsDeleter(m_corpsDeleter);
+  chars->getChar(static_cast<int>(ECharTypes::hp))->addSubscriber(unit);
+
   return unit;
 }

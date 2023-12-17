@@ -27,9 +27,9 @@ void SimpleMover::moveInDirection(const Coord& coord) {
 }
 
 void SimpleMover::setCoord(const Coord& currentPos) { m_currentPos = currentPos; }
-//void SimpleMover::move(std::shared_ptr<Unit> unit, std::shared_ptr<Cell> cell) {
-  //if (unit->upTime(distance)) {
-  //}
+// void SimpleMover::move(std::shared_ptr<Unit> unit, std::shared_ptr<Cell> cell) {
+// if (unit->upTime(distance)) {
+// }
 //}
 
 // IMover::~IMover() {}

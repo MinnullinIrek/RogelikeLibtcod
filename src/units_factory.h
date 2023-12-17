@@ -6,6 +6,7 @@
 #include "unit_types.h"
 class IUnit;
 class Map;
+class CorpsDeleter;
 // class Unit;
 class UnitsFactory {
  public:
@@ -17,6 +18,7 @@ class UnitsFactory {
   std::shared_ptr<IUnit> createEnemy(std::shared_ptr<Map> map);
 
  private:
+  std::shared_ptr<CorpsDeleter> m_corpsDeleter;
 };
 
 #endif

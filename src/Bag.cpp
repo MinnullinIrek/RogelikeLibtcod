@@ -9,18 +9,7 @@
 Bag::Bag() : m_selected(m_items.end()) {}
 Bag::~Bag() {}
 void Bag::putItem(std::shared_ptr<IItems> item, Count count) {
-  auto wasEmpty = m_items.empty();
-  assert(count >= 0);
-  assert(item);
-
-  if (contains(item)) {
-    m_items.at(item) += count;
-  } else {
-    m_items.insert(std::make_pair(item, count));
-  }
-  if (wasEmpty && (!m_items.empty())) {
-    m_selected = m_items.begin();
-  }
+  putInsert(item, count);
   emit();
 }
 
@@ -80,4 +69,26 @@ std::list<Text> Bag::showBag(Count count) {
     bagList.emplace_back(Text(sbag, Color{255, 255, 255}, Color{0, 0, 0}));
   }
   return bagList;
+}
+
+void Bag::putItem(std::shared_ptr<Bag> bag) {
+  for (const auto& itemCount : bag->m_items) {
+    putInsert(itemCount.first, itemCount.second);
+  }
+  emit();
+}
+
+void Bag::putInsert(std::shared_ptr<IItems> item, Count count) {
+  auto wasEmpty = m_items.empty();
+  assert(count >= 0);
+  assert(item);
+
+  if (contains(item)) {
+    m_items.at(item) += count;
+  } else {
+    m_items.insert(std::make_pair(item, count));
+  }
+  if (wasEmpty && (!m_items.empty())) {
+    m_selected = m_items.begin();
+  }
 }

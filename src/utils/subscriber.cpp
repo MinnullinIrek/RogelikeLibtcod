@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-
 struct Subscriber::Impl {
   Impl() : key(count) { ++count; }
   static unsigned int count;  // todo check overflow
@@ -51,3 +50,5 @@ void Publisher::checkZompies() {
     ++it;
   }
 }
+
+Publisher::Publisher(Publisher&& publisher) : m_subscribers(std::move(publisher.m_subscribers)) {}

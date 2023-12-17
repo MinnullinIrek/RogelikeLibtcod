@@ -4,7 +4,8 @@
 
 #include "../items/IItems.h"
 
-Bodypart::Bodypart(const std::string& name, float percent, CharType hp) : m_name(name), m_percent(percent), m_hp(hp) {}
+Bodypart::Bodypart(const std::string& name, float percent, CharValueType hp)
+    : m_name(name), m_percent(percent), m_hp(hp) {}
 Bodypart::~Bodypart() {}
 std::string Bodypart::toString() const { return m_name; }
 void Bodypart::setItem(std::weak_ptr<WearingItem> item) {

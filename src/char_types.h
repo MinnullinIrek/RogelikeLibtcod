@@ -1,7 +1,7 @@
 #ifndef CHAR_TYPES_H
 #define CHAR_TYPES_H
 
-using CharType = float;
+using CharValueType = float;
 
 enum class ESetting {
   baseChar,

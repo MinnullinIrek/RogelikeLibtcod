@@ -11,7 +11,13 @@ Identifier Cell::toChar() const {
   }
   return notSeen;
 }
-void Cell::setUnit(std::shared_ptr<IUnit> unit) { m_unit = unit; }
+void Cell::setUnit(std::shared_ptr<IUnit> unit) {
+  if (unit) {
+    m_unit = unit;
+  } else {
+    m_unit.reset();
+  }
+}
 Cell::~Cell() {}
 std::shared_ptr<IUnit> Cell::getUnit() { return m_unit; }
 std::shared_ptr<Bag> Cell::getBag() { return m_bag; }

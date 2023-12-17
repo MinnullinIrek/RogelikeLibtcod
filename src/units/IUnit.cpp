@@ -2,6 +2,7 @@
 
 #include "../Bag.h"
 #include "../header.h"
+#include "../helpers/corps_deleter.h"
 #include "../maps/cell.h"
 #include "../maps/map.h"
 #include "../utils/consts_reader.h"
@@ -18,7 +19,15 @@ IUnit::IUnit() {
   // m_effectProtoType.reset((Effect*)effect);
 }
 void Unit::createChars() { m_chars = std::make_shared<Chars>(); }
-IUnit::~IUnit() {}
+IUnit::~IUnit() {
+  int i = 0;
+  ++i;
+}
+
+Unit::~Unit() {
+  int i = 0;
+  ++i;
+}
 void Unit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
 std::shared_ptr<Interactor> Unit::getInteractor() { return m_currentInteractor; }
 std::shared_ptr<Chars> Unit::getChars() { return m_chars; }
@@ -122,7 +131,7 @@ const Coord& Unit::getCoord() const {
   if (m_mover) {
     return m_mover->getCoord();
   }
-  return {0, 0};
+  return Coord{0, 0};
 }
 
 std::weak_ptr<Map> Unit::getMap() {
@@ -138,3 +147,26 @@ void Unit::changeMap(std::weak_ptr<Map> map) {
 }
 
 EUnitTypes Unit::getType() { return m_type; }
+
+void Unit::notify(std::weak_ptr<Publisher> publisher) {
+  auto locked = publisher.lock();
+  if (locked) {
+    auto charVal = std::dynamic_pointer_cast<Char>(locked);
+    if (charVal) {
+      if (m_charSubscribers.find(charVal->m_charType) != m_charSubscribers.end()) {
+        m_charSubscribers.at(charVal->m_charType)(charVal->getValue());
+      }
+    }
+  }
+}
+
+void Unit::setCharSubscriber(int charType, CharSubscriber&& charSub) { m_charSubscribers[charType] = charSub; }
+
+void Unit::die() {
+  auto corpsDeleter = m_corpsDeleter.lock();
+  if (corpsDeleter) {
+    corpsDeleter->removeCorps(std::dynamic_pointer_cast<Unit>(shared_from_this()));
+  }
+}
+
+void Unit::setCorpsDeleter(std::shared_ptr<CorpsDeleter> deleter) { m_corpsDeleter = deleter; }

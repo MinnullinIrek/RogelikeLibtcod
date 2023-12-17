@@ -10,29 +10,33 @@
 
 class Char : public Publisher {
  public:
-  Char(CharType startValue);
+  Char(int charType, CharValueType startValue);
   Char(const Char& ch);
-  Char(const Char&& ch);
+  Char(Char&& ch) noexcept;
 
-  ~Char();
+  ~Char() = default;
 
-  void setValue(const CharType& ch);
-  CharType getValue() const;
+  void setValue(const CharValueType& ch);
+  CharValueType getValue() const;
 
   Char& operator-=(const Char& rhs);
   Char& operator+=(const Char& rhs);
-  operator CharType() const;
+  operator CharValueType() const;
+
+ public:
+  const int m_charType;
 
  private:
-  CharType m_value = 0;
+  CharValueType m_value = 0;
 };
 
 class Chars final : public Publisher {
  public:
   Chars() = default;
   ~Chars() = default;
-  void setValue(int chType, CharType value);
-  CharType getValue(int chType);
+  virtual void setValue(int chType, CharValueType value);
+  CharValueType getValue(int chType);
+  std::shared_ptr<Char> getChar(int chType);
 
  private:
   std::unordered_map<int, std::shared_ptr<Char>> m_chars;

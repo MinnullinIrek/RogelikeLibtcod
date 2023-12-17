@@ -243,7 +243,7 @@ void ItemsFactory::readJson() {
           for (auto iterCh = iterChar.value()["value"].begin(); iterCh != iterChar.value()["value"].end(); ++iterCh) {
             auto& ch = iterCh.value();
             auto& key = ch.begin().key();
-            auto val = ch.begin().value().get<CharType>();
+            auto val = ch.begin().value().get<CharValueType>();
             if (m_chars.find(key) == m_chars.end()) {
               throw std::string("m_rangedClose doesn't contains key ") + key;
             }

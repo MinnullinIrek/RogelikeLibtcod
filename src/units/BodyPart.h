@@ -11,7 +11,7 @@ class WearingItem;
 
 class Bodypart : public ToString {
  public:
-  Bodypart(const std::string& name, float percent, CharType hp);
+  Bodypart(const std::string& name, float percent, CharValueType hp);
   ~Bodypart();
   std::string toString() const override;
   void setItem(std::weak_ptr<WearingItem> item);
@@ -20,7 +20,7 @@ class Bodypart : public ToString {
   const std::map<EArmorItemTypes, std::weak_ptr<WearingItem>>& getArmour();
   const std::string m_name;
   float m_percent;
-  CharType m_hp;
+  CharValueType m_hp;
 
  private:
   std::map<EArmorItemTypes, std::weak_ptr<WearingItem>> m_items;

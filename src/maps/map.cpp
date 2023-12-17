@@ -83,6 +83,9 @@ void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
 
   // eror assert
   m_cells.at(coord)->setUnit(unit);
+  if (unit) {
+    unit->setCoord(coord);
+  }
 }
 
 std::shared_ptr<Cell> Map::getCell(const Coord& cd) const {

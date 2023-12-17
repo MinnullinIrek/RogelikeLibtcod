@@ -13,6 +13,8 @@ using SubscriberKey = unsigned int;
 
 class Publisher : public std::enable_shared_from_this<Publisher> {
  public:
+  Publisher() = default;
+  Publisher(Publisher&& publisher);
   virtual ~Publisher(){};
 
   // todo to private friend Connection
@@ -20,9 +22,9 @@ class Publisher : public std::enable_shared_from_this<Publisher> {
   void addSubscriber(std::weak_ptr<Subscriber> subscriber);
   void removeSubscriber(std::weak_ptr<Subscriber> subscriber);
 
- private:
+ protected:
   void checkZompies();
-  PublisherKey m_publisherKey = 0;
+  // PublisherKey m_publisherKey = 0;
   std::unordered_map<SubscriberKey, std::weak_ptr<Subscriber>> m_subscribers;
 };
 
@@ -38,7 +40,5 @@ class Subscriber {
   friend Publisher;
   Impl* m_impl;
 };
-
-
 
 #endif  // SUBSCRIBER_H

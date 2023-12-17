@@ -5,8 +5,9 @@
 #include <unordered_map>
 
 // #include "units/actor.h"
-#include "utils/gamefsm.h"
+#include "units/actor_strategy.h"
 #include "units/invoker.h"
+#include "utils/gamefsm.h"
 
 class Visualiser;
 class Keyboard;
@@ -15,7 +16,7 @@ class Map;
 class UnitsFactory;
 class MapGenerator;
 class Actor;
-class ActorStrategy;
+// class ActorStrategy;
 
 struct GameStruct {
   static GameStruct& instance() {
@@ -35,6 +36,6 @@ struct GameStruct {
   Invoker m_invoker;
 };
 
-//static GameStruct gameStruct;
+// static GameStruct gameStruct;
 #define gameStruct GameStruct::instance()
 #endif  // GAME_STRUCT_H
