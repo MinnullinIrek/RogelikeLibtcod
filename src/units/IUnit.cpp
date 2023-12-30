@@ -19,15 +19,9 @@ IUnit::IUnit() {
   // m_effectProtoType.reset((Effect*)effect);
 }
 void Unit::createChars() { m_chars = std::make_shared<Chars>(); }
-IUnit::~IUnit() {
-  int i = 0;
-  ++i;
-}
+IUnit::~IUnit() {}
 
-Unit::~Unit() {
-  int i = 0;
-  ++i;
-}
+Unit::~Unit() {}
 void Unit::setInteractor(std::shared_ptr<Interactor> interactor) { m_currentInteractor = interactor; }
 std::shared_ptr<Interactor> Unit::getInteractor() { return m_currentInteractor; }
 std::shared_ptr<Chars> Unit::getChars() { return m_chars; }
