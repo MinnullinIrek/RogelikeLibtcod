@@ -105,9 +105,4 @@ TEST(header_test, subscriber) {
     EXPECT_CALL(((*sb2)), notify(_)).Times(0);
     pb->emit();
   }
-
-  {
-
-  }
-
 }

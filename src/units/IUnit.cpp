@@ -12,6 +12,8 @@
 #include "interactor.h"
 #include "mover.h"
 
+const Coord zeroCoord = Coord{0, 0};
+
 IUnit::IUnit() {
   // TestEffect* effect = new TestEffect();
   // effect->m_attacker = weak_from_this();
@@ -125,7 +127,7 @@ const Coord& Unit::getCoord() const {
   if (m_mover) {
     return m_mover->getCoord();
   }
-  return Coord{0, 0};
+  return zeroCoord;
 }
 
 std::weak_ptr<Map> Unit::getMap() {

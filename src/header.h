@@ -12,6 +12,8 @@ using Setting = float;
 using Count = int;
 using Description = std::string;
 using Distance = float;
+using TimeType = float;
+
 #define translate
 // using Identifier = char;
 struct Color {

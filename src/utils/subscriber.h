@@ -29,9 +29,13 @@ class Publisher : public std::enable_shared_from_this<Publisher> {
 };
 
 class Subscriber {
+  friend Publisher;
+
  public:
   Subscriber();
   virtual ~Subscriber();
+
+ protected:
   virtual void notify(std::weak_ptr<Publisher> publisher) = 0;
 
  private:

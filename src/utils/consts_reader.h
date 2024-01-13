@@ -19,5 +19,6 @@ class MagicConsts {
 };
 
 #define SF MagicConsts::instance().getValue
+#define SI (int)MagicConsts::instance().getValue
 
 #endif

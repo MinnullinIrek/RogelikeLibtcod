@@ -50,8 +50,10 @@ std::shared_ptr<IUnit> UnitsFactory::createEnemy(std::shared_ptr<Map> map) {
   }
 
   // auto hp = chars->getValue(static_cast<int>(ECharTypes::hp));
-  unit->setCharSubscriber(static_cast<int>(ECharTypes::hp), [unit](auto val) {
-    if (val <= 0) {
+  std::weak_ptr wUnit = unit;
+  unit->setCharSubscriber(static_cast<int>(ECharTypes::hp), [wUnit](auto val) {
+    auto unit = wUnit.lock();
+    if (unit && val <= 0) {
       unit->die();
     }
   });
