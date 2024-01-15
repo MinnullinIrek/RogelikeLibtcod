@@ -7,7 +7,7 @@ struct CoordSymb {
   Symbol s;
 }
 
-class Effect {
+class VisualEffect {
  public:
   void showEfect();
 
