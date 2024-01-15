@@ -48,6 +48,14 @@ void Keyboard::setKey(int key, bool down) {
     case SDLK_c:
       action = EAction::charAction;
       break;
+    case SDLK_b:
+      if (m_lastKeys == SDLK_LCTRL) {
+        // Albert
+        // Effect::instancse().showEffect();
+        action = EAction::effect;
+      }
+      break;
+
     default:
       break;
   }
