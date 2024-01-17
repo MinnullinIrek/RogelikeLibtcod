@@ -32,9 +32,11 @@
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
+#include "utils/game_log.h"
 #include "utils/gamefsm.h"
 #include "utils/subscriber.h"
 #include "visualiser/chars_window.h"
+#include "visualiser/game_log_window.h"
 #include "visualiser/inventory_window.h"
 #include "visualiser/main_window.h"
 #include "visualiser/map_window.h"
@@ -235,6 +237,8 @@ void initGameStruct() {
 
   gameStruct.actor = std::make_shared<Actor>();
   gameStruct.keyboard = std::make_shared<Keyboard>(gameStruct.actor);
+  gameStruct.gameLog =
+      std::make_shared<GameLog>([](int) { return std::list<GameLogMessage>{}; }, [](GameLogMessage&&) {});
 }
 
 /// Main program entry point.
@@ -303,14 +307,19 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
 
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
-
-    auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
-    auto chars = gameStruct.hero->getChars();
-    mainWindow->addWindow(EMainWindows::echars, charWindow);
-
-    std::static_pointer_cast<Publisher>(chars)->addSubscriber(charWindow);
-    chars->emit();
-
+    {
+      auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
+      auto chars = gameStruct.hero->getChars();
+      mainWindow->addWindow(EMainWindows::echars, charWindow);
+      std::static_pointer_cast<Publisher>(chars)->addSubscriber(charWindow);
+      chars->emit();
+    }
+    {
+      auto gameLogWindow = std::make_shared<GameLogWindow>(Rectangle{{1, 20}, {30, 50}});
+      gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(gameLogWindow));
+      gameStruct.gameLog->addSubscriber(gameLogWindow);
+      gameStruct.gameLog->emit();
+    }
     gameStruct.visualiser->setMap(gameStruct.map);
     // gameStruct.visualiser->setInfo(info);  // todo remove
     gameStruct.hero->lookAround(true);

@@ -3,6 +3,7 @@
 
 #include <list>
 
+#include "../utils/game_log_message.h"
 #include "../utils/subscriber.h"
 #include "iwindow.h"
 
@@ -17,7 +18,7 @@ class GameLogWindow : public IWindow, public Subscriber {
 
  private:
   Text m_headerLeft;
-  std::list<Text> m_itemsLeft;
+  std::vector<GameLogMessage> m_messages;
 
   Text m_itemDescription;
 };

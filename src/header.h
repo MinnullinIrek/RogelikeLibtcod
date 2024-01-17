@@ -42,7 +42,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none, left, right, up, down, inventory, map, undo, charAction };
+enum class EAction { none, left, right, up, down, inventory, map, undo, charAction, effect };
 
 enum class ItemType {
   simple,
@@ -112,5 +112,7 @@ struct Text {
   Color m_color;
   Color m_bgColor;
 };
+
+std::string timeToString(TimeType /*timeValue*/);
 
 #endif

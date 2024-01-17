@@ -22,3 +22,5 @@ std::string Coord::toString() const { return std::string("[") + std::to_string(x
 Distance Coord::length() const { return static_cast<Distance>(sqrt(x * x + y * y)); }
 
 Coord Coord::revert() const { return {-x, -y}; }
+
+std::string timeToString(TimeType /*timeValue*/) { return "100 : 10:00"; }

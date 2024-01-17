@@ -16,6 +16,7 @@ class Map;
 class UnitsFactory;
 class MapGenerator;
 class Actor;
+class GameLog;
 // class ActorStrategy;
 
 struct GameStruct {
@@ -30,6 +31,7 @@ struct GameStruct {
   std::shared_ptr<UnitsFactory> unitsFactory;
   std::shared_ptr<MapGenerator> mapGenerator;
   std::shared_ptr<Actor> actor;
+  std::shared_ptr<GameLog> gameLog;
   std::unordered_map<fsm_cxx::GameState, std::unique_ptr<ActorStrategy>> m_strategies;
   std::unique_ptr<ActorStrategy> m_strategyFsm = nullptr;
   fsm_cxx::machine_t<fsm_cxx::GameState>* gameFsm;

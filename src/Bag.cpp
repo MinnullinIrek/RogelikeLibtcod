@@ -47,7 +47,7 @@ bool Bag::contains(std::shared_ptr<IItems> item) { return m_items.find(item) != 
 std::list<Text> Bag::showBag(Count count) {
   auto size = m_items.size();
   Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
-  Count toEnd = m_items.size() - toStart - 1;
+  Count toEnd = static_cast<Count>(m_items.size() - toStart - 1);
 
   if (size > count) {
     if (toStart > toEnd) {
