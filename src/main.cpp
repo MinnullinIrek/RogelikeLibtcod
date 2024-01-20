@@ -11,6 +11,7 @@
 #include <libtcod.hpp>
 #include <limits>
 
+
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
@@ -21,6 +22,7 @@
 #include "keyboard.h"
 #include "map_generator.h"
 #include "maps/map.h"
+#include "render.h"
 #include "units/IUnit.h"
 #include "units/actor.h"
 #include "units/actor_strategy_char.h"
@@ -44,6 +46,8 @@
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
 
+Render* r;
+
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
 
@@ -60,6 +64,7 @@ void main_loop() {
 
   // tcod::print(g_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
   gameStruct.visualiser->showMap();
+  r->render();
   // g_context.present(g_console);
 
   // Handle input.
@@ -82,6 +87,7 @@ void main_loop() {
     if (repaint) {
       gameStruct.visualiser->showMap();
     }
+    r->render();
   }
 }
 
@@ -244,6 +250,7 @@ void initGameStruct() {
 /// Main program entry point.
 int main(int /*argc*/, char** /*argv*/) {
   try {
+    r = new Render();
     // auto params = TCOD_ContextParams{};
     // params.tcod_version = TCOD_COMPILEDVERSION;
     // params.argc = argc;

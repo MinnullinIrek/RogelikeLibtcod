@@ -7,19 +7,20 @@
 #include <memory>
 
 #include "../header.h"
+#include "visualiser_interface.h"
 
 class Map;
 class Info;
 class Tab;
 class IWindow;
 
-class Visualiser {
+class Visualiser : public VisualiserInterface {
  public:
   Visualiser(const Coord& windowSize);
   ~Visualiser();
   void setMap(std::shared_ptr<Map> map);
   void setInfo(std::shared_ptr<Info> info);
-  void showMap() const;
+  void showMap() const override;
   void showInfo() const;
   // Coord getLeftUpCd(const Coord& center) const;
   //  void setConsole(tcod::Console& console);
@@ -31,7 +32,7 @@ class Visualiser {
   // void addTab(std::shared_ptr<Tab> tab, std::string_view name);
   void showAgain();
   std::shared_ptr<Tab> createTab(std::string_view name);
-  void addWindow(std::shared_ptr<IWindow> window);
+  void addWindow(std::shared_ptr<IWindow> window) override;
 
  protected:
   void showId(std::array<int, 2>&& cd, const Identifier& id) const;
