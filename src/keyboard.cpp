@@ -6,9 +6,9 @@
 // #include "../SDL/include/SDL_keyboard.h"
 #include <SDL_keycode.h>
 
-
 #include "header.h"
 #include "units/actor.h"
+#include "utils/visualEffect.h"
 
 Keyboard::Keyboard(std::shared_ptr<Actor> actor) : m_actor(actor) {}
 
@@ -50,11 +50,24 @@ void Keyboard::setKey(int key, bool down) {
       action = EAction::charAction;
       break;
     case SDLK_b:
-      if (m_lastKeys == SDLK_LCTRL) {
+      // if (m_lastKeys == SDLK_LCTRL)
+      {
         // Albert
         // Effect::instancse().showEffect();
-        //action = EAction::effect;
+        // action = EAction::effect;
+        EffectMaker effect;
+        // std::vector<std::vector<CoordSymbol>>
+        // эффект в две стороны расходятся звездочки
 
+        effect.m_effect = {
+            {CoordSymbol(Coord{6, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{5, 13}, Identifier('*')), CoordSymbol(Coord{7, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{4, 13}, Identifier('*')), CoordSymbol(Coord{8, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{3, 13}, Identifier('*')), CoordSymbol(Coord{9, 13}, Identifier('*'))},
+
+        };
+        VisualEffect visual;
+        visual.showEffect(effect);
       }
       break;
 

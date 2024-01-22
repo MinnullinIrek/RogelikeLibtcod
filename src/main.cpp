@@ -67,7 +67,7 @@ void main_loop() {
   SDL_WaitEvent(nullptr);
 #endif
   while (SDL_WaitEvent(&event)) {
-    bool repaint = false;
+    bool repaint = true;
     switch (event.type) {
       case SDL_QUIT:
         std::exit(EXIT_SUCCESS);
