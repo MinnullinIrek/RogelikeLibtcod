@@ -96,7 +96,7 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
 
       m_visualizer->showCoords(coords, r, g, b);
     }
-    m_visualizer->show();
+    m_visualizer->showBuffer();
     // std::this_thread::sleep_for(5000ms);
   }
 
@@ -114,7 +114,7 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
 
     m_visualizer->showCoords(coords, r, g, b);
   }
-  m_visualizer->show();
+  m_visualizer->showBuffer();
   // std::this_thread::sleep_for(5000ms);
 
   findNeighbors(rooms);
@@ -130,13 +130,16 @@ std::list<RoomStart> MapGenerator::delivereMap(const Coord& size) {
 
     m_visualizer->showCoords(coords, r, g, b);
   }
-  m_visualizer->show();
+  m_visualizer->showBuffer();
   std::this_thread::sleep_for(1000ms);
 
   return rooms;
 }
 
-void MapGenerator::setVisualiser(std::shared_ptr<Visualiser> visualiser) { m_visualizer = visualiser; }
+void MapGenerator::setVisualiser(std::shared_ptr<VisualiserInterface> visualiser) {
+  m_visualizer = std::dynamic_pointer_cast<Visualiser>(visualiser);
+  assert(m_visualizer);
+}
 
 void MapGenerator::findNeighbors(std::list<RoomStart>& rooms) {
   for (auto it = rooms.begin(); it != rooms.end(); ++it) {
@@ -147,14 +150,14 @@ void MapGenerator::findNeighbors(std::list<RoomStart>& rooms) {
     auto b = random<unsigned int>(0, 255);
 
     m_visualizer->showCoords(it->getAllCoords(false), r, g, b);
-    m_visualizer->show();
+    m_visualizer->showBuffer();
     // std::this_thread::sleep_for(1000ms);
 
     for (; j != rooms.end(); ++j) {
       if (j->isNeighbor(*it)) {
         it->m_neighbors.push_back(&(*j));
         m_visualizer->showCoords(j->getAllCoords(false), r, g, b);
-        m_visualizer->show();
+        m_visualizer->showBuffer();
         // std::this_thread::sleep_for(1000ms);
       }
     }

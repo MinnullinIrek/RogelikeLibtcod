@@ -8,6 +8,10 @@
 #include "unit_types.h"
 #include "units_factory.h"
 
+enum class EWindowType { ascii = 1, pictures = 2 };
+
+// int APP_TYPE = static_cast<int>(EWindowType::ascii) | static_cast<int>(EWindowType::pictures);
+
 using Setting = float;
 using Count = int;
 using Description = std::string;

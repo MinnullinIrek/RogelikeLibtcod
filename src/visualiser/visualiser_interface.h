@@ -6,7 +6,7 @@ class IWindow;
 
 class VisualiserInterface {
  public:
-  virtual void showMap() const = 0;
+  virtual void show() const = 0;
   virtual void addWindow(std::shared_ptr<IWindow> window) = 0;
 };
 

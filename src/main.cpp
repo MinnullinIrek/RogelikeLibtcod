@@ -11,7 +11,6 @@
 #include <libtcod.hpp>
 #include <limits>
 
-
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
@@ -43,6 +42,8 @@
 #include "visualiser/main_window.h"
 #include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
+#include "visualiser/visualiser_container.h"
+#include "visualiser/visualiser_image.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
 
@@ -63,7 +64,7 @@ void main_loop() {
   // auto startPos(10, 10);
 
   // tcod::print(g_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
-  gameStruct.visualiser->showMap();
+  gameStruct.visualiser->show();
   r->render();
   // g_context.present(g_console);
 
@@ -85,7 +86,7 @@ void main_loop() {
         break;
     }
     if (repaint) {
-      gameStruct.visualiser->showMap();
+      gameStruct.visualiser->show();
     }
     r->render();
   }
@@ -233,9 +234,16 @@ void prepareFsm() {
 void initGameStruct() {
   gameStruct.unitsFactory = std::make_shared<UnitsFactory>();
   gameStruct.mapGenerator = std::make_shared<MapGenerator>(gameStruct.unitsFactory);
-
-  gameStruct.visualiser = std::make_shared<Visualiser>(Coord(50, 50));
-  gameStruct.mapGenerator->setVisualiser(gameStruct.visualiser);
+  auto visualiserContainer = std::make_shared<VisualiserContainer>();
+  gameStruct.visualiser = visualiserContainer;
+  // if (APP_TYPE & static_cast<int>(EWindowType::ascii))
+  {
+    auto asciiVisualiser = std::make_shared<Visualiser>(Coord(50, 50));
+    gameStruct.mapGenerator->setVisualiser(asciiVisualiser);
+    visualiserContainer->addVisualiser(asciiVisualiser);
+  }
+  // if (APP_TYPE & static_cast<int>(EWindowType::pictures))
+  { visualiserContainer->addVisualiser(std::make_shared<VisualiserImage>(Coord(50, 50))); }
   gameStruct.map = gameStruct.mapGenerator->generateRandomMap({50, 50});
   gameStruct.hero = std::static_pointer_cast<Unit>(gameStruct.unitsFactory->createHero(gameStruct.map));
   gameStruct.hero->setInteractor(std::make_shared<Interactor>());
@@ -327,7 +335,6 @@ int main(int /*argc*/, char** /*argv*/) {
       gameStruct.gameLog->addSubscriber(gameLogWindow);
       gameStruct.gameLog->emit();
     }
-    gameStruct.visualiser->setMap(gameStruct.map);
     // gameStruct.visualiser->setInfo(info);  // todo remove
     gameStruct.hero->lookAround(true);
     // fsm_cxx::test_state_meta();

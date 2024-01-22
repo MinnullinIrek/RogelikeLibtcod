@@ -14,6 +14,7 @@
 
 class Map;
 class UnitsFactory;
+class VisualiserInterface;
 class Visualiser;
 
 class MapGenerator {
@@ -21,7 +22,7 @@ class MapGenerator {
   MapGenerator(std::weak_ptr<UnitsFactory> unitFactory);
   ~MapGenerator();
   std::shared_ptr<Map> generateRandomMap(const Coord& size);
-  void setVisualiser(std::shared_ptr<Visualiser> visualiser);
+  void setVisualiser(std::shared_ptr<VisualiserInterface> visualiser);
 
  private:
   std::list<RoomStart> delivereMap(const Coord& size);

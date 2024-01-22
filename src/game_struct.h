@@ -9,7 +9,7 @@
 #include "units/invoker.h"
 #include "utils/gamefsm.h"
 
-class Visualiser;
+class VisualiserInterface;
 class Keyboard;
 class Unit;
 class Map;
@@ -24,7 +24,7 @@ struct GameStruct {
     static GameStruct gameStr;
     return gameStr;
   }
-  std::shared_ptr<Visualiser> visualiser;
+  std::shared_ptr<VisualiserInterface> visualiser;
   std::shared_ptr<Keyboard> keyboard;
   std::shared_ptr<Unit> hero;
   std::shared_ptr<Map> map;

@@ -45,15 +45,6 @@ Visualiser::Visualiser(const Coord& windowSize) : m_windowSize(windowSize), m_ce
 
 Visualiser::~Visualiser() {}
 
-void Visualiser::setMap(std::shared_ptr<Map> map) {
-  m_map = map;
-
-  auto tab = createTab("map");
-  // auto nameKey = tab->addWindow(std::make_shared<Window>("map"));
-
-  // auto mapWindow = std::m
-}
-
 std::shared_ptr<Tab> Visualiser::createTab(std::string_view name) {
   static auto showLambda = [this](Text&& text, const Coord& cd) {
     tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
@@ -63,7 +54,7 @@ std::shared_ptr<Tab> Visualiser::createTab(std::string_view name) {
   return tab;
 }
 
-void Visualiser::showMap() const {
+void Visualiser::show() const {
   m_console.clear();
 
   static auto showLamb = [this](Text&& text, const Coord& cd) {
@@ -74,15 +65,7 @@ void Visualiser::showMap() const {
     win->show(showLamb, {0, 0});
   }
 
-  // showBorder();
-  // showInfo();
   m_context.present(m_console);
-}
-
-void Visualiser::showInfo() const {
-  assert(m_info);
-  auto text = m_info->getText();
-  tcod::print(m_console, {40, 10}, text, TCOD_ColorRGB{255, 255, 255}, TCOD_ColorRGB{0, 0, 255});
 }
 
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
@@ -111,8 +94,6 @@ void Visualiser::showBorder() const {
   }
 }
 
-void Visualiser::setInfo(std::shared_ptr<Info> info) { m_info = info; }
-
 void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b) {
   static std::string ch = "a";
   for (auto cd : coords) {
@@ -130,17 +111,7 @@ void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned in
 }
 
 void Visualiser::clear() { m_console.clear(); }
-void Visualiser::show() { m_context.present(m_console); }
-
-void Visualiser::showAgain() {
-  static auto showLambda = [this](Text&& text, const Coord& cd) {
-    tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
-  };
-
-  if (m_currentTab) {
-    m_currentTab->show(showLambda, {0, 0});
-  }
-}
+void Visualiser::showBuffer() { m_context.present(m_console); }
 
 TCOD_ColorRGB Visualiser::convertColor(const Color& color) const { return TCOD_ColorRGB{color.r, color.g, color.b}; }
 

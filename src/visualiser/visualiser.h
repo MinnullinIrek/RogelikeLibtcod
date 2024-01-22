@@ -9,29 +9,17 @@
 #include "../header.h"
 #include "visualiser_interface.h"
 
-class Map;
-class Info;
 class Tab;
 class IWindow;
+class MapGenerator;
 
 class Visualiser : public VisualiserInterface {
+  friend MapGenerator;
+
  public:
   Visualiser(const Coord& windowSize);
   ~Visualiser();
-  void setMap(std::shared_ptr<Map> map);
-  void setInfo(std::shared_ptr<Info> info);
-  void showMap() const override;
-  void showInfo() const;
-  // Coord getLeftUpCd(const Coord& center) const;
-  //  void setConsole(tcod::Console& console);
-  void showBorder() const;
-  void showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b);
-  void clear();
-  void show();
-
-  // void addTab(std::shared_ptr<Tab> tab, std::string_view name);
-  void showAgain();
-  std::shared_ptr<Tab> createTab(std::string_view name);
+  void show() const override;
   void addWindow(std::shared_ptr<IWindow> window) override;
 
  protected:
@@ -39,9 +27,15 @@ class Visualiser : public VisualiserInterface {
   TCOD_ColorRGB convertColor(const Color& color) const;
 
  private:
+  void clear();
+  void showBorder() const;
+  void showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b);
+
+  void showBuffer();
+  std::shared_ptr<Tab> createTab(std::string_view name);
+
+ private:
   Coord m_windowSize;
-  std::shared_ptr<Map> m_map;
-  std::shared_ptr<Info> m_info;
 
   mutable tcod::Console m_console;
   mutable tcod::Context m_context;
