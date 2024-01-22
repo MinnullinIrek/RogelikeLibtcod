@@ -77,7 +77,7 @@ void main_loop() {
         repaint = true;
         break;
     }
-    if (repaint) {
+    if (true) {
       gameStruct.visualiser->showMap();
     }
   }
@@ -274,6 +274,8 @@ int main(int /*argc*/, char** /*argv*/) {
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
     gameStruct.hero->getMover()->addSubscriber(mapWindow);
+    /// Albert
+    // gameStruct.visualEffects->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
     bag->emit();

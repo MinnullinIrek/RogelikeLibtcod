@@ -34,6 +34,8 @@ struct GameStruct {
   std::unique_ptr<ActorStrategy> m_strategyFsm = nullptr;
   fsm_cxx::machine_t<fsm_cxx::GameState>* gameFsm;
   Invoker m_invoker;
+  /// Albert
+  // добавить shared_ptr<VisualEffects>
 };
 
 // static GameStruct gameStruct;

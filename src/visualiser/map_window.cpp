@@ -20,42 +20,50 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
   if (locked) {
     auto mover = std::dynamic_pointer_cast<IMover>(locked);
     if (mover) {
-      auto map = mover->getMap().lock();
-      if (map) {
-        //
-        auto heroCoord = mover->getCoord();
+      if (mover) {
+        auto map = mover->getMap().lock();
+        if (map) {
+          //
+          auto heroCoord = mover->getCoord();
 
-        auto cell = map->getCell(heroCoord);
-        auto h = cell->getUnit();
-        auto hero = std::dynamic_pointer_cast<Unit>(h);
-        //auto& w = hero->getWatchingCoords();
+          auto cell = map->getCell(heroCoord);
+          auto h = cell->getUnit();
+          auto hero = std::dynamic_pointer_cast<Unit>(h);
+          // auto& w = hero->getWatchingCoords();
 
-        auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
-        auto size = map->getSize();
+          auto& watchingCoords =
+              std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
+          auto size = map->getSize();
 
-        Coord windowSize = {m_rectangle.rd.x - m_rectangle.lu.x, m_rectangle.rd.x - m_rectangle.lu.y};
+          Coord windowSize = {m_rectangle.rd.x - m_rectangle.lu.x, m_rectangle.rd.x - m_rectangle.lu.y};
 
-        Coord mapStart{0, 0};
-        mapStart.x = std::max((heroCoord.x - (windowSize.x) / 2), 0);
-        mapStart.y = std::max((heroCoord.y - (windowSize.y) / 2), 0);
+          Coord mapStart{0, 0};
+          mapStart.x = std::max((heroCoord.x - (windowSize.x) / 2), 0);
+          mapStart.y = std::max((heroCoord.y - (windowSize.y) / 2), 0);
 
-        auto startPos = m_rectangle.lu;
-        auto endPos = m_rectangle.lu + mapStart + windowSize - Coord{startPos.x, startPos.y};
+          auto startPos = m_rectangle.lu;
+          auto endPos = m_rectangle.lu + mapStart + windowSize - Coord{startPos.x, startPos.y};
 
-        m_cells.clear();
-        for (auto x = mapStart.x; x < endPos.x; ++x) {
-          for (auto y = mapStart.y; y < endPos.y; ++y) {
-            Coord cd = {x, y};
-            auto id = map->getIdentifier(cd);
-            if (watchingCoords.find(cd) == watchingCoords.end()) {
-              static Color gray = {125, 125, 125};
-              id.color = gray;
+          m_cells.clear();
+          for (auto x = mapStart.x; x < endPos.x; ++x) {
+            for (auto y = mapStart.y; y < endPos.y; ++y) {
+              Coord cd = {x, y};
+              auto id = map->getIdentifier(cd);
+              if (watchingCoords.find(cd) == watchingCoords.end()) {
+                static Color gray = {125, 125, 125};
+                id.color = gray;
+              }
+              m_cells[{x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}] = id;
             }
-            m_cells[{x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}] = id;
           }
         }
-      } else {
-        throw("MapWindow::notify no map");
+
+      } /*mover*/ else {
+        /// Albert
+        // auto visualEffects = std::dynamic_pointer_cast<VisualEffects>(locked);
+        // for (auto& effect : visualEffects->m_currentEffect) {
+        // m_cells[effect.cd] = effect.id;
+        // }
       }
     } else {
       throw("MapWindow::notify publisher not mover");

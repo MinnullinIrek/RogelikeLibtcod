@@ -53,8 +53,6 @@ void Keyboard::setKey(int key, bool down) {
       // if (m_lastKeys == SDLK_LCTRL)
       {
         // Albert
-        // Effect::instancse().showEffect();
-        // action = EAction::effect;
         EffectMaker effect;
         // std::vector<std::vector<CoordSymbol>>
         // эффект в две стороны расходятся звездочки
@@ -66,8 +64,7 @@ void Keyboard::setKey(int key, bool down) {
             {CoordSymbol(Coord{3, 13}, Identifier('*')), CoordSymbol(Coord{9, 13}, Identifier('*'))},
 
         };
-        VisualEffect visual;
-        visual.showEffect(effect);
+        gameStructs.visualEffect->showEffect(effect);
       }
       break;
 
