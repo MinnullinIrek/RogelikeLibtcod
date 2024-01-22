@@ -6,6 +6,7 @@
 // #include "../SDL/include/SDL_keyboard.h"
 #include <SDL_keycode.h>
 
+
 #include "header.h"
 #include "units/actor.h"
 
@@ -52,7 +53,8 @@ void Keyboard::setKey(int key, bool down) {
       if (m_lastKeys == SDLK_LCTRL) {
         // Albert
         // Effect::instancse().showEffect();
-        action = EAction::effect;
+        //action = EAction::effect;
+
       }
       break;
 

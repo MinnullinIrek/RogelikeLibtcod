@@ -8,6 +8,8 @@
 #include "unit_types.h"
 #include "units_factory.h"
 
+
+
 using Setting = float;
 using Count = int;
 using Description = std::string;
@@ -52,6 +54,14 @@ enum class ItemType {
 enum class UnitType {
   simple,
 };
+
+enum class DirectionMove{
+  Right,
+  Left,
+  Up,
+  Down
+};
+
 
 struct Coord {
   Coord() : x(-1), y(-1){};
@@ -113,4 +123,11 @@ struct Text {
   Color m_bgColor;
 };
 
+
+struct MoverCoord{
+   Identifier symbol;
+   Coord cd;
+   DirectionMove dirSym;
+   int quantityMove;
+};
 #endif
