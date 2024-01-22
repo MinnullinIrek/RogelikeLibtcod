@@ -4,11 +4,13 @@
 #include <chrono>
 #include <thread>
 
+#include "consts_reader.h"
 #include "../game_struct.h"
 #include "../maps/cell.h"
 #include "../maps/map.h"
 #include "../units/IUnit.h"
 #include "../visualiser/visualiser.h"
+
 
 /*
 Identifier EffectMaker::effectLoop() {
@@ -56,7 +58,8 @@ Identifier EffectMaker::effectLoop() {
 }
 */
 
-void VisualEffect::showEffect(EffectMaker effect) {
+void VisualEffect::showEffect(const EffectMaker& effect) {
+  int effectDuration = SF("effectDuration") * 1000;
   for (auto vectCoordSymbol : effect.m_effect) {
     /// проявляем эффект
     for (auto coordSymbol : vectCoordSymbol) {
@@ -70,7 +73,7 @@ void VisualEffect::showEffect(EffectMaker effect) {
     // todo
     /// пауза на 0.3 секунд
     // брать из json SF(...)
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    std::this_thread::sleep_for(std::chrono::milliseconds(effectDuration));
     /// прячем эффект
     for (auto coordSymbol : vectCoordSymbol) {
       auto cell = gameStruct.map->getCell(coordSymbol.cd);

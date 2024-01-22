@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+
 #include "../header.h"
 
 // не совсем наверное правильно в этом классе производить рассчеты
@@ -61,13 +62,12 @@ class VisualEffect {
   // либо по универсальной ссылке
   /// void showEffect(EffectMaker&& effect);
   // здесь наверное лучше по универсальной ссылке: void showEffect(EffectMaker&& effect);
-  void showEffect(EffectMaker effect);
+  void showEffect(const EffectMaker& effect);
 
  private:
   // сейчас не надо хранить карту внутри.
   //  сделаем по другому
   //  std::shared_ptr<Map> m_map;
-
   // todo не надо называть переменные null ))
   // m_id будет лучше
   // Identifier null;
