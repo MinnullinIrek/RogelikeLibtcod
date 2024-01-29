@@ -9,6 +9,7 @@
 #include "header.h"
 #include "units/actor.h"
 #include "utils/visualEffect.h"
+#include "game_struct.h"
 
 Keyboard::Keyboard(std::shared_ptr<Actor> actor) : m_actor(actor) {}
 
@@ -64,7 +65,7 @@ void Keyboard::setKey(int key, bool down) {
             {CoordSymbol(Coord{3, 13}, Identifier('*')), CoordSymbol(Coord{9, 13}, Identifier('*'))},
 
         };
-        gameStructs.visualEffect->showEffect(effect);
+        gameStruct.vEffect->showEffect(effect);
       }
       break;
 

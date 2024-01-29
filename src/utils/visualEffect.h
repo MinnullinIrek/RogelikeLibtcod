@@ -21,7 +21,8 @@ class VisualEffect : public Publisher {
   void showEffect(const EffectMaker& effect);
   void setCurrentState(std::vector<std::vector<CoordSymbol>>::const_iterator state);
 
- public:
+  void showWindowEffect();
+
   std::vector<std::vector<CoordSymbol>>::const_iterator m_currentState;
 };
 

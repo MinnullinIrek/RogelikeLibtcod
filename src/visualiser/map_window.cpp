@@ -1,11 +1,17 @@
 #include "map_window.h"
 
 #include <cstdlib>
+#include <vector>
+#include <memory>
 
 #include "../maps/cell.h"
 #include "../maps/map.h"
 #include "../units/IUnit.h"
 #include "../units/mover.h"
+#include "../game_struct.h"
+#include "../utils/visualEffect.h"
+#include "visualiser.h"
+#include "../utils/consts_reader.h"
 
 MapWindow::MapWindow(const Rectangle& r) : IWindow(r) {}
 
@@ -58,16 +64,27 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
           }
         }
 
-      } /*mover*/ else {
-        /// Albert
-        // auto visualEffects = std::dynamic_pointer_cast<VisualEffects>(locked);
-        // for (auto& effect : visualEffects->m_currentEffect) {
-        // m_cells[effect.cd] = effect.id;
-        // }
       }
+
     } else {
-      throw("MapWindow::notify publisher not mover");
-    }
+
+    /// Albert
+         auto visualEffects = std::dynamic_pointer_cast<VisualEffect>(locked);
+      for(int i = 0; i < visualEffects->m_currentState->size() - 1; i++){
+
+        for (auto& effect : visualEffects->m_currentState[i]) {
+           m_cells[effect.cd] = effect.id;
+         }
+         //gameStruct.visualiser->showMap();
+         //std::this_thread::sleep_for(std::chrono::milliseconds(300));
+        //visualEffects->setCurrentState();
+        visualEffects->showWindowEffect();
+
+        for(auto& effect : visualEffects->m_currentState[i]){
+            m_cells[effect.cd] = gameStruct.map->getCell(effect.cd)->toChar();
+        }
+      }
+         }
   } else {
     throw("MapWindow::notify empty publisher");
   }

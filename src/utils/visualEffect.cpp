@@ -15,7 +15,7 @@ void VisualEffect::showEffect(const EffectMaker& effect) {
   for (std::vector<std::vector<CoordSymbol>>::const_iterator it = effect.m_effect.begin(); it != effect.m_effect.end();
        ++it) {
     /// проявляем эффект
-      
+
     setCurrentState(it);
   }
   gameStruct.visualiser->showMap();
@@ -28,4 +28,12 @@ void VisualEffect::setCurrentState(std::vector<std::vector<CoordSymbol>>::const_
   gameStruct.visualiser->showMap();
 
   std::this_thread::sleep_for(std::chrono::milliseconds(SI("effectDuration")));
+}
+
+void VisualEffect::showWindowEffect(){
+  //emit();
+
+  gameStruct.visualiser->showMap();
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(300));
 }
