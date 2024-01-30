@@ -55,8 +55,7 @@ void Keyboard::setKey(int key, bool down) {
       // if (m_lastKeys == SDLK_LCTRL)
       {
         EffectMaker effect;
-        // std::vector<std::vector<CoordSymbol>>
-        // эффект в две стороны расходятся звездочки
+
 
         effect.m_effect = {
             {CoordSymbol(Coord{6, 13}, Identifier('*'))},

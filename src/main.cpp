@@ -41,6 +41,7 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
+#include "utils/visualEffect.h"
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;

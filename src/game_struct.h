@@ -8,10 +8,10 @@
 #include "units/actor_strategy.h"
 #include "units/invoker.h"
 #include "utils/gamefsm.h"
-#include "utils/visualEffect.h"  ///Albert закоментировать
 
 
-// class VisualEffects;    ///Albert раскоментировать
+
+class VisualEffect;
 class Visualiser;
 class Keyboard;
 class Unit;

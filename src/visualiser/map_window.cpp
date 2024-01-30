@@ -61,23 +61,14 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         }
       }
     } else {
-      /// Albert
+
       auto visualEffects = std::dynamic_pointer_cast<VisualEffect>(locked);
-      for (int i = 0; i < visualEffects->m_currentState->size() - 1;
-           i++) {  /// Albert for(const auto& cadr: visualEffects->m_currentState)
-        for (auto& effect :
-             visualEffects
-                 ->m_currentState[i]) {  // visualEffects->m_currentState[i] ->cadr;auto& effect -> const auto& effect
+
+      for (int i = 0; i < visualEffects->m_currentState->size() - 1; i++) {
+        for (auto& effect : visualEffects->m_currentState[i]) {
           m_cells[effect.cd] = effect.id;
         }
-        // visualEffects->showWindowEffect();  ///Albert перенести в VisualEffects::
 
-        /// Albert очистка устаревшего кадра эффекта:
-        /// слишком мудрено (надо использовать уже существующие функции gamestruct.hero->mover()->emit();)
-        /// очистку перенести в VisualEffects
-        // for (auto& effect : visualEffects->m_currentState[i]) {
-        //   m_cells[effect.cd] = gameStruct.map->getCell(effect.cd)->toChar();
-        // }
       }
     }
   } else {
