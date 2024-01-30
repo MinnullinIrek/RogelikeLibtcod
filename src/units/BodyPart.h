@@ -5,11 +5,12 @@
 
 #include "../eitems.h"
 #include "../header.h"
+#include "../utils/subscriber.h"
 #include "chars.h"
 
 class WearingItem;
 
-class Bodypart : public ToString {
+class Bodypart : public ToString, public Publisher {
  public:
   Bodypart(const std::string& name, float percent, CharValueType hp);
   ~Bodypart();
@@ -18,13 +19,17 @@ class Bodypart : public ToString {
   void removeItem(std::weak_ptr<WearingItem> item);
   std::weak_ptr<WearingItem> getWeapon();
   const std::map<EArmorItemTypes, std::weak_ptr<WearingItem>>& getArmour();
-  const std::string m_name;
-  float m_percent;
-  CharValueType m_hp;
+  float getPercent();
+  CharValueType getHp();
+  void setHp(CharValueType hp);
 
  private:
   std::map<EArmorItemTypes, std::weak_ptr<WearingItem>> m_items;
   std::weak_ptr<WearingItem> m_weapon;
+
+  const std::string m_name;
+  float m_percent;
+  CharValueType m_hp;
 };
 
 class BodyParts {
