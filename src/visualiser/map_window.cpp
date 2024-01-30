@@ -63,8 +63,11 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
     } else {
       /// Albert
       auto visualEffects = std::dynamic_pointer_cast<VisualEffect>(locked);
-      for (int i = 0; i < visualEffects->m_currentState->size() - 1; i++) {  /// Albert
-        for (auto& effect : visualEffects->m_currentState[i]) {
+      for (int i = 0; i < visualEffects->m_currentState->size() - 1;
+           i++) {  /// Albert for(const auto& cadr: visualEffects->m_currentState)
+        for (auto& effect :
+             visualEffects
+                 ->m_currentState[i]) {  // visualEffects->m_currentState[i] ->cadr;auto& effect -> const auto& effect
           m_cells[effect.cd] = effect.id;
         }
         // visualEffects->showWindowEffect();  ///Albert перенести в VisualEffects::
