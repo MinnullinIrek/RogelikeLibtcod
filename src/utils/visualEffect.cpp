@@ -17,23 +17,20 @@ void VisualEffect::showEffect(const EffectMaker& effect) {
     /// проявляем эффект
 
     setCurrentState(it);
+    // gameStruct.hero->getMover()->emit(); // Albert раскоментировать прячем устаревший кадр эффектов
   }
-  gameStruct.visualiser->showMap();
 }
 
 void VisualEffect::setCurrentState(std::vector<std::vector<CoordSymbol>>::const_iterator state) {
   m_currentState = state;
-  //gameStruct.hero->getMover()->emit();
   emit();
   gameStruct.visualiser->showMap();
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(SI("effectDuration")));
+  std::this_thread::sleep_for(std::chrono::milliseconds(SI("effectDuration")));  // 300ms => 0.3sek
 }
 
-void VisualEffect::showWindowEffect(){
-  //emit();
+void VisualEffect::showWindowEffect() {  /// ALbert удалить функцию
+  // emit();
 
   gameStruct.visualiser->showMap();
-
   std::this_thread::sleep_for(std::chrono::milliseconds(300));
 }

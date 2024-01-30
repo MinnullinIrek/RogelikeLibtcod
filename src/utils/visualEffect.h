@@ -2,9 +2,10 @@
 #define VISUALEFFECT_H
 #include <memory>
 #include <vector>
-#include "../utils/subscriber.h"
 
 #include "../header.h"
+#include "../utils/subscriber.h"
+
 
 struct CoordSymbol {
   CoordSymbol(Coord&& coord, Identifier&& ident) : cd(coord), id(ident) {}
@@ -21,7 +22,7 @@ class VisualEffect : public Publisher {
   void showEffect(const EffectMaker& effect);
   void setCurrentState(std::vector<std::vector<CoordSymbol>>::const_iterator state);
 
-  void showWindowEffect();
+  void showWindowEffect();  /// ALbert удалить
 
   std::vector<std::vector<CoordSymbol>>::const_iterator m_currentState;
 };

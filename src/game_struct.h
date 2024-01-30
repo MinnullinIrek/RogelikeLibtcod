@@ -8,9 +8,10 @@
 #include "units/actor_strategy.h"
 #include "units/invoker.h"
 #include "utils/gamefsm.h"
-#include "utils/visualEffect.h"
+#include "utils/visualEffect.h"  ///Albert закоментировать
 
-//class VisualEffects;
+
+// class VisualEffects;    ///Albert раскоментировать
 class Visualiser;
 class Keyboard;
 class Unit;
@@ -37,8 +38,6 @@ struct GameStruct {
   fsm_cxx::machine_t<fsm_cxx::GameState>* gameFsm;
   Invoker m_invoker;
   std::shared_ptr<VisualEffect> vEffect;
-  /// Albert
-  // добавить shared_ptr<VisualEffect>
 };
 
 // static GameStruct gameStruct;

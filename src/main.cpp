@@ -274,7 +274,6 @@ int main(int /*argc*/, char** /*argv*/) {
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
     gameStruct.hero->getMover()->addSubscriber(mapWindow);
-    /// Albert
 
     gameStruct.vEffect = std::shared_ptr<VisualEffect>(new VisualEffect);
     gameStruct.vEffect->addSubscriber(mapWindow);

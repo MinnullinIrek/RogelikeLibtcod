@@ -6,10 +6,11 @@
 // #include "../SDL/include/SDL_keyboard.h"
 #include <SDL_keycode.h>
 
+#include "game_struct.h"
 #include "header.h"
 #include "units/actor.h"
 #include "utils/visualEffect.h"
-#include "game_struct.h"
+
 
 Keyboard::Keyboard(std::shared_ptr<Actor> actor) : m_actor(actor) {}
 
@@ -53,7 +54,6 @@ void Keyboard::setKey(int key, bool down) {
     case SDLK_b:
       // if (m_lastKeys == SDLK_LCTRL)
       {
-        // Albert
         EffectMaker effect;
         // std::vector<std::vector<CoordSymbol>>
         // эффект в две стороны расходятся звездочки
