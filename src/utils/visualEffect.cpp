@@ -12,13 +12,16 @@
 #include "consts_reader.h"
 
 void VisualEffect::showEffect(const EffectMaker& effect) {
+  fut = std::async(std::launch::deferred ,[this,&effect](){
   for (std::vector<std::vector<CoordSymbol>>::const_iterator it = effect.m_effect.begin(); it != effect.m_effect.end();
        ++it) {
     /// проявляем эффект
 
     setCurrentState(it);
     gameStruct.hero->getMover()->emit();
+    fut.get();
   }
+  });
 }
 
 void VisualEffect::setCurrentState(std::vector<std::vector<CoordSymbol>>::const_iterator state) {
