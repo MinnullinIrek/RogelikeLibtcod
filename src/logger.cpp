@@ -11,7 +11,7 @@
 
 #endif
 
- void Logger::log(std::string_view filename, std::string_view function, int line, char* format, ...){
+ void Logger::log(std::string_view filename, std::string_view function, int line, const char* format, ...){
  char* sMessage = nullptr;
  size_t nLength;
  va_list args;
