@@ -1,9 +1,6 @@
 #include "Bag.h"
-
 #include <assert.h>
-
 #include <algorithm>
-
 #include "items/IItems.h"
 
 Bag::Bag() : m_selected(m_items.end()) {}
@@ -49,15 +46,16 @@ std::list<Text> Bag::showBag(Count count) {
   Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
   Count toEnd = static_cast<Count>(m_items.size() - toStart - 1);
 
-  if (size > count) {
+  if (static_cast<Count>(size) > count) {
     if (toStart > toEnd) {
       toStart = std::min(toStart, count / 2);
-      toEnd = count - toStart;
+      toEnd = count - static_cast<Count>(toStart);
     }
   }
   std::list<Text> bagList;
 
-  auto it = m_selected;
+  // auto it = m_selected;
+  auto it = m_items.end();
   for (auto i = toStart; i > 0; --i) {
     --it;
   };

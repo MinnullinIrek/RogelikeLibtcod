@@ -16,7 +16,7 @@ void MainWindow::show(const std::function<void(Text&&, const Coord&)>& visualiza
   currentWindow->show(visualizator, parentCd);
   // LOG("\nMainWindow::show end");
 }
-void MainWindow::notify(std::weak_ptr<Publisher> publisher) {}
+void MainWindow::notify(std::weak_ptr<Publisher> /*publisher*/) {}
 void MainWindow::addWindow(EMainWindows eWindowType, std::shared_ptr<IWindow> window) {
   m_windows[eWindowType] = window;
 }

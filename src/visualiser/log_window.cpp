@@ -4,6 +4,6 @@
 
 LogWindow::LogWindow(const Rectangle& rect) : IWindow(rect) {}
 
-void LogWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {}
+void LogWindow::show(const std::function<void(Text&&, const Coord&)>& /*visualizator*/, const Coord& /*parentCd*/) {}
 
-void LogWindow::notify(std::weak_ptr<Publisher> publisher) {}
+void LogWindow::notify(std::weak_ptr<Publisher> /*publisher*/) {}

@@ -2,7 +2,7 @@
 #define EVENT_LOGGER_H
 
 #include <condition_variable>
-#include <format>
+#include "../../fmt/include/fmt/format.h"
 #include <fstream>
 #include <list>
 #include <string_view>
@@ -19,8 +19,8 @@ class EventLogger {
   ~EventLogger();
   template <typename Arg, typename... Args>
   void log(std::string_view source, const Arg& arg, const Args&... args) {
-    m_messages.push_back({source, std::format(arg, args...)});
-    cv.notify_one();
+    m_messages.push_back({source, fmt::format(arg, args...)});
+    m_cv.notify_one();
   }
 
   void write();

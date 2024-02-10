@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <unordered_map>
+#include <map>
 
 #include "header.h"
 #include "utils/subscriber.h"
@@ -25,8 +25,8 @@ class Bag : public Publisher {
  private:
   void putInsert(std::shared_ptr<IItems> item, Count count);
   bool contains(std::shared_ptr<IItems> item);
-  std::unordered_map<std::shared_ptr<IItems>, Count> m_items;
-  std::unordered_map<std::shared_ptr<IItems>, Count>::iterator m_selected;
+  std::map<std::shared_ptr<IItems>, Count> m_items;
+  std::map<std::shared_ptr<IItems>, Count>::iterator m_selected;
 };
 
 #endif

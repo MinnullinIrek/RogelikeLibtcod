@@ -4,7 +4,7 @@
 #include <string_view>
 
 struct Logger {
- static void log(std::string_view filename, std::string_view function, int line, const char* format, ...);
+ static void log(std::string_view filename, std::string_view function, int line, char* format, ...);
 };
 
 #define LOG(format, ...) Logger::log(__FILE__, __FUNCTION__, __LINE__, format, __VA_ARGS__);

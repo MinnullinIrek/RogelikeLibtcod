@@ -22,7 +22,7 @@ void MagicConsts::readJson() {
     } catch (...) {
       std::cerr << "exception on reading " << fName << std::endl;
     }
-    for (auto& iter = jsonMain1.begin(); iter != jsonMain1.end(); ++iter) {
+    for (auto iter = jsonMain1.begin(); iter != jsonMain1.end(); ++iter) {
       m_consts[iter.key()] = iter.value().get<float>();
     }
   } else {

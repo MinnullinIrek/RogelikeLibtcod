@@ -2,7 +2,8 @@
 
 #include <cstdarg>
 #include <filesystem>
-#include <format>
+//#include <format>
+// #include "fmt/format.h"
 #include <string>
 
 EventLogger::EventLogger(std::string&& fileName) : m_fileName(fileName), m_exit(false) {

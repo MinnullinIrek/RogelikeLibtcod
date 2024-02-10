@@ -31,8 +31,6 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         //auto& w = hero->getWatchingCoords();
 
         auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
-        auto size = map->getSize();
-
         Coord windowSize = {m_rectangle.rd.x - m_rectangle.lu.x, m_rectangle.rd.x - m_rectangle.lu.y};
 
         Coord mapStart{0, 0};

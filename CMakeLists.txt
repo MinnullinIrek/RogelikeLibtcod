@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.21)
 
-
+set( CMAKE_CXX_COMPILER "/usr/bin/g++" )
+set( CMAKE_C_COMPILER "/pathto/gcc" )
+set(CMAKE_CXX_STANDARD 20)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE
@@ -24,7 +26,7 @@ file(
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 # Ensure the C++17 standard is available.
-target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 
 # Enforce UTF-8 encoding on MSVC.
 if (MSVC)
@@ -63,7 +65,7 @@ target_link_libraries(
 
 
 #
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ")
 
 
 

@@ -10,7 +10,7 @@ Window::Window(
     const Color& bgColor,
     const Rectangle& rect,
     bool needDeliver)
-    : m_text(text), m_color(color), m_bgColor(bgColor), IWindow(rect), m_updater(updater), m_needDeliver(needDeliver) {}
+    : IWindow(rect), m_text(text), m_color(color), m_bgColor(bgColor), m_updater(updater), m_needDeliver(needDeliver) {}
 
 void Window::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
   auto texts = getText(0);
@@ -24,13 +24,13 @@ Window::~Window() {}
 std::vector<std::string> Window::deliver() {
   std::vector<std::string> delivered;
   if (m_needDeliver) {
-    const int length = m_rectangle.rd.x - m_rectangle.lu.x;
+    const auto length = m_rectangle.rd.x - m_rectangle.lu.x;
 
     for (int i = 0;;) {
-      int iRight = __min(length, static_cast<int>(m_text.length()) - i);
+      int iRight = std::min(length, static_cast<int>(m_text.length()) - i);
 
       delivered.push_back(m_text.substr(i, iRight));
-      if (i >= m_text.length()) {
+      if (i >= static_cast<int>(m_text.length())) {
         break;
       } else {
         i += iRight;
@@ -47,14 +47,14 @@ std::vector<std::string> Window::getText(int start) {
   std::vector<std::string> finalTexts;
   auto texts = deliver();
   const int length = m_rectangle.rd.y - m_rectangle.lu.y;
-  if (texts.size() <= length) {
+  if (static_cast<int>(texts.size()) <= length) {
     start = 0;
   }
-  assert(start < texts.size());
+  assert(start < static_cast<int>(texts.size()));
 
   m_start = start;
 
-  for (int i = start; i < __min(length + start, texts.size() + start); ++i) {
+  for (int i = start; i < std::min(static_cast<int>(length + start), static_cast<int>(texts.size() + start)); ++i) {
     finalTexts.push_back(texts.at(i));
   }
   return finalTexts;
