@@ -21,6 +21,7 @@ struct EffectMaker {
 class VisualEffect : public Publisher {
  public:
   void showEffect(const EffectMaker& effect);
+  void effectStart(const EffectMaker& effect);
   void setCurrentState(std::vector<std::vector<CoordSymbol>>::const_iterator state);
   std::future<void> fut;
   std::vector<std::vector<CoordSymbol>>::const_iterator m_currentState;

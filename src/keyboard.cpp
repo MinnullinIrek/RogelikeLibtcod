@@ -6,6 +6,7 @@
 // #include "../SDL/include/SDL_keyboard.h"
 #include <SDL_keycode.h>
 
+
 #include "game_struct.h"
 #include "header.h"
 #include "units/actor.h"
@@ -64,7 +65,8 @@ void Keyboard::setKey(int key, bool down) {
             {CoordSymbol(Coord{3, 13}, Identifier('*')), CoordSymbol(Coord{9, 13}, Identifier('*'))},
 
         };
-        gameStruct.vEffect->showEffect(effect);
+        gameStruct.vEffect->effectStart(effect);
+
       }
       break;
 
