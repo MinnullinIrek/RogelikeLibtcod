@@ -43,6 +43,7 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
+#include "utils/visualEffect.h"
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
@@ -69,7 +70,7 @@ void main_loop() {
   SDL_WaitEvent(nullptr);
 #endif
   while (SDL_WaitEvent(&event)) {
-    bool repaint = false;
+    bool repaint = true;
     switch (event.type) {
       case SDL_QUIT:
         std::exit(EXIT_SUCCESS);
@@ -79,7 +80,7 @@ void main_loop() {
         repaint = true;
         break;
     }
-    if (repaint) {
+    if (true) {
       gameStruct.visualiser->showMap();
     }
   }
@@ -278,6 +279,9 @@ int main(int /*argc*/, char** /*argv*/) {
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
     gameStruct.hero->getMover()->addSubscriber(mapWindow);
+
+    gameStruct.vEffect = std::shared_ptr<VisualEffect>(new VisualEffect);
+    gameStruct.vEffect->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
     bag->emit();

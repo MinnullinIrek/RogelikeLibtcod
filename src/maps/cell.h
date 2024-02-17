@@ -18,6 +18,7 @@ class Cell : public ToChar {
   std::shared_ptr<Bag> getBag();
   bool isWall() const;
   void setSeen(bool isSeen);
+  void setEffect(bool hasEffect, const Identifier& identifier);
 
  protected:
   Coord m_coord;
@@ -25,6 +26,9 @@ class Cell : public ToChar {
   std::shared_ptr<IUnit> m_unit;
   Identifier m_id;
   bool m_isSeen = false;
+
+  bool m_hasEffect = false;
+  Identifier m_effectIdentifier;
 };
 
 #endif

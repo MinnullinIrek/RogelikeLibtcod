@@ -1,5 +1,6 @@
 {
   "visibilityMagic":0.8,
   "enemyInCells" : 10,
-  "gameLogBufferCount": 10
+  "gameLogBufferCount": 10,
+  "effectDuration": 300
 }

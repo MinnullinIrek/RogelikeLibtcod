@@ -1,11 +1,17 @@
 #include "map_window.h"
 
 #include <cstdlib>
+#include <memory>
+#include <vector>
 
+#include "../game_struct.h"
 #include "../maps/cell.h"
 #include "../maps/map.h"
 #include "../units/IUnit.h"
 #include "../units/mover.h"
+#include "../utils/consts_reader.h"
+#include "../utils/visualEffect.h"
+#include "visualiser.h"
 
 MapWindow::MapWindow(const Rectangle& r) : IWindow(r) {}
 
@@ -22,13 +28,12 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
     if (mover) {
       auto map = mover->getMap().lock();
       if (map) {
-        //
         auto heroCoord = mover->getCoord();
 
         auto cell = map->getCell(heroCoord);
         auto h = cell->getUnit();
         auto hero = std::dynamic_pointer_cast<Unit>(h);
-        //auto& w = hero->getWatchingCoords();
+        // auto& w = hero->getWatchingCoords();
 
         auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
         Coord windowSize = {m_rectangle.rd.x - m_rectangle.lu.x, m_rectangle.rd.x - m_rectangle.lu.y};
@@ -52,11 +57,17 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
             m_cells[{x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}] = id;
           }
         }
-      } else {
-        throw("MapWindow::notify no map");
       }
     } else {
-      throw("MapWindow::notify publisher not mover");
+
+      auto visualEffects = std::dynamic_pointer_cast<VisualEffect>(locked);
+
+      for (int i = 0; i < visualEffects->m_currentState->size() - 1; i++) {
+        for (auto& effect : visualEffects->m_currentState[i]) {
+          m_cells[effect.cd] = effect.id;
+        }
+
+      }
     }
   } else {
     throw("MapWindow::notify empty publisher");

@@ -53,6 +53,8 @@ enum class UnitType {
   simple,
 };
 
+enum class DirectionMove { Right, Left, Up, Down };
+
 struct Coord {
   Coord() : x(-1), y(-1){};
   Coord(int _x, int _y) : x(_x), y(_y){};
@@ -115,4 +117,10 @@ struct Text {
 
 std::string timeToString(TimeType /*timeValue*/);
 
+struct MoverCoord {
+  Identifier symbol;
+  Coord cd;
+  DirectionMove dirSym;
+  int quantityMove;
+};
 #endif

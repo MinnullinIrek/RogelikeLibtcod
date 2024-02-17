@@ -6,8 +6,12 @@
 // #include "../SDL/include/SDL_keyboard.h"
 #include <SDL_keycode.h>
 
+
+#include "game_struct.h"
 #include "header.h"
 #include "units/actor.h"
+#include "utils/visualEffect.h"
+
 
 Keyboard::Keyboard(std::shared_ptr<Actor> actor) : m_actor(actor) {}
 
@@ -48,6 +52,24 @@ void Keyboard::setKey(int key, bool down) {
     case SDLK_c:
       action = EAction::charAction;
       break;
+    case SDLK_b:
+      // if (m_lastKeys == SDLK_LCTRL)
+      {
+        EffectMaker effect;
+
+
+        effect.m_effect = {
+            {CoordSymbol(Coord{6, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{5, 13}, Identifier('*')), CoordSymbol(Coord{7, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{4, 13}, Identifier('*')), CoordSymbol(Coord{8, 13}, Identifier('*'))},
+            {CoordSymbol(Coord{3, 13}, Identifier('*')), CoordSymbol(Coord{9, 13}, Identifier('*'))},
+
+        };
+        gameStruct.vEffect->effectStart(effect);
+
+      }
+      break;
+
     default:
       break;
   }

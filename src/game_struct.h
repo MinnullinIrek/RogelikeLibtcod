@@ -9,6 +9,9 @@
 #include "units/invoker.h"
 #include "utils/gamefsm.h"
 
+
+
+class VisualEffect;
 class Visualiser;
 class Keyboard;
 class Unit;
@@ -36,6 +39,7 @@ struct GameStruct {
   std::unique_ptr<ActorStrategy> m_strategyFsm = nullptr;
   fsm_cxx::machine_t<fsm_cxx::GameState>* gameFsm;
   Invoker m_invoker;
+  std::shared_ptr<VisualEffect> vEffect;
 };
 
 // static GameStruct gameStruct;
