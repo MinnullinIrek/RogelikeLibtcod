@@ -1,11 +1,12 @@
 #ifndef VISUALEFFECT_H
 #define VISUALEFFECT_H
+#include <future>
 #include <memory>
 #include <vector>
 
 #include "../header.h"
 #include "../utils/subscriber.h"
-#include <future>
+
 
 struct CoordSymbol {
   CoordSymbol(Coord&& coord, Identifier&& ident) : cd(coord), id(ident) {}
@@ -15,7 +16,7 @@ struct CoordSymbol {
 
 struct EffectMaker {
   std::vector<std::vector<CoordSymbol>> m_effect;
-  std::launch laun = std::launch::deferred;
+  std::launch m_asyncType = std::launch::deferred;
 };
 
 class VisualEffect : public Publisher {
