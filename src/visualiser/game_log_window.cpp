@@ -14,7 +14,7 @@ const std::string semicolon = ":";
 
 GameLogWindow::GameLogWindow(const Rectangle& rect) : IWindow(rect) {}
 
-void GameLogWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+void GameLogWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
   Text text{"", Color{255, 255, 255}, Color{0, 0, 0}};
   Coord cd = m_rectangle.lu + parentCd + Coord{0, 0};
 

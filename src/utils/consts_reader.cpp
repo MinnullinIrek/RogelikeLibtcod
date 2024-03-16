@@ -22,7 +22,8 @@ void MagicConsts::readJson() {
     } catch (...) {
       std::cerr << "exception on reading " << fName << std::endl;
     }
-    for (auto& iter = jsonMain1.begin(); iter != jsonMain1.end(); ++iter) {
+    auto jsonVec = jsonMain1["chars"];
+    for (auto& iter = jsonVec.begin(); iter != jsonVec.end(); ++iter) {
       m_consts[iter.key()] = iter.value().get<float>();
     }
   } else {
@@ -31,3 +32,28 @@ void MagicConsts::readJson() {
 }
 
 float MagicConsts::getValue(std::string&& name) { return m_consts.at(name); }
+
+/*
+void readConsoleSymbols() {
+  std::string fName = "../resources/console_symbols.json";
+  std::ifstream fileStream(fName);
+  if (!fileStream.is_open()) {
+    fName = "resources/console_symbols.json";
+    fileStream.open(fName);
+  }
+
+  if (fileStream.is_open()) {
+    nlohmann::json jsonMain1;
+    try {
+      fileStream >> jsonMain1;
+    } catch (...) {
+      std::cerr << "exception on reading " << fName << std::endl;
+    }
+    for (auto& iter = jsonMain1.begin(); iter != jsonMain1.end(); ++iter) {
+      m_consts[iter.key()] = iter.value().get<float>();
+    }
+  } else {
+    throw "file not open fName = " + fName;
+  }
+}
+*/

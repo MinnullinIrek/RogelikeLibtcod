@@ -78,7 +78,7 @@ bool Map::moveUnitFromTo(const Coord& currentPos, const Coord& nextPos) {
 void Map::setUnit(std::shared_ptr<IUnit> unit, const Coord& coord) {
   // assert(isExisted(coord));
   if (!isExisted(coord)) {
-    throw std::string("can't set unit to map") + unit->toChar().symbol + "to coord = " + coord.toString();
+    throw std::string("can't set unit to map") + std::to_string(unit->toChar().code) + "to coord = " + coord.toString();
   }
 
   // eror assert

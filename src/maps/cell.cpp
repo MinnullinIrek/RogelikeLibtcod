@@ -3,6 +3,7 @@
 #include "../Bag.h"
 #include "../header.h"
 #include "../units/IUnit.h"
+#include "../visualiser/IdentefierContainer.h"
 
 Cell::Cell() : m_id(emptyID), m_bag(std::make_shared<Bag>()) {}
 Identifier Cell::toChar() const {

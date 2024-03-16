@@ -9,7 +9,9 @@
 #include "units_factory.h"
 
 enum class EWindowType { ascii = 1, pictures = 2 };
-
+#define ISCONSOLE 1
+#define ISVISUALISED 2
+#define CURRENTBUILD 3
 // int APP_TYPE = static_cast<int>(EWindowType::ascii) | static_cast<int>(EWindowType::pictures);
 
 using Setting = float;
@@ -24,25 +26,32 @@ struct Color {
   uint8_t r, g, b;
 };
 struct Identifier {
-  Identifier() {}
-  Identifier(char symbol) : symbol(symbol){};
-  // Identifier(const std::initializer_list<uint8_t>& color, const std::initializer_list<uint8_t>& bgColor, char symbol)
-  //     : color(color),
-  //       bgColor(bgColor),
-  //       symbol(symbol){
+  Identifier(int code = 0, const std::string& debugDescription = "") : code(code), debugDescription(debugDescription) {}
+  int code = 0;
+  std::string debugDescription;
+  operator int() { return code; }
+  bool isShadowed = false;
+};
 
-  //       };
+struct ConsoleIdentifier {
+  ConsoleIdentifier(char symbol = 'N', const Color& color = {255, 255, 255}, const Color& bgColor = {0, 0, 0})
+      : symbol(symbol), color(color), bgColor(bgColor){};
 
+  //Text toText() const { return Text(symbol, color, bgColor); }
   Color color = {255, 255, 255};
   Color bgColor = {0, 0, 0};
   char symbol = 'N';
 };
 
+struct VisIdentifier {
+  std::string path;
+};
+
 constexpr Count MAXMAPSIZE = 1000;
-const Identifier emptyID = '.';
-const Identifier notSeen = ' ';
-const Identifier BORDER_VERT = '*';
-const Identifier BORDER_HOR = '*';
+const Identifier emptyID(1);
+const Identifier notSeen(2);
+const Identifier BORDER_VERT(3);
+const Identifier BORDER_HOR(4);
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
@@ -109,8 +118,10 @@ struct Text {
   Text() : m_text(""), m_color({255, 255, 255}), m_bgColor({0, 0, 0}) {}
   Text(std::string_view text, const Color& color, const Color& bgColor)
       : m_text(text), m_color(color), m_bgColor(bgColor){};
+  Text(char symbol, const Color& color, const Color& bgColor)
+      : m_text(std::to_string(symbol)), m_color(color), m_bgColor(bgColor){};
 
-  Text(const Identifier& id) : m_text(" "), m_color(id.color), m_bgColor(id.bgColor) { m_text[0] = id.symbol; }
+  // Text(const Identifier& id) : m_text(" "), m_color(id.color), m_bgColor(id.bgColor) { m_text[0] = id.symbol; }
 
   std::string m_text;
   Color m_color;

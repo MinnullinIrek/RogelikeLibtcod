@@ -14,7 +14,7 @@ class Render {
  public:
   Render();
   ~Render();
-  void render();
+  void show();
   // static SDL_Renderer* renderer;
 
  private:

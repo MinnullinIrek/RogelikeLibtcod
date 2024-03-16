@@ -8,7 +8,7 @@
 
 CharsWindow::CharsWindow(const Rectangle& rect) : IWindow(rect) {}
 
-void CharsWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+void CharsWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
   Coord cd = parentCd + Coord{1, 3};
   std::for_each(std::begin(m_charName), std::end(m_charName), [&cd, &visualizator](const auto& text) {
     visualizator(Text(text, {255, 255, 255}, {0, 0, 0}), cd);

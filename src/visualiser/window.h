@@ -30,7 +30,7 @@ class Window : public IWindow, public Subscriber {
   Color m_color;
   Color m_bgColor;
 
-  virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
+  virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const override;
 
   void notify(std::weak_ptr<Publisher> publisher) override;
 

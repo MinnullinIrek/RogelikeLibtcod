@@ -47,7 +47,7 @@
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
 
-Render* r;
+Render* renderVis;
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
@@ -65,7 +65,7 @@ void main_loop() {
 
   // tcod::print(g_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
   gameStruct.visualiser->show();
-  r->render();
+  renderVis->show();
   // g_context.present(g_console);
 
   // Handle input.
@@ -88,7 +88,7 @@ void main_loop() {
     if (repaint) {
       gameStruct.visualiser->show();
     }
-    r->render();
+    renderVis->show();
   }
 }
 
@@ -236,14 +236,17 @@ void initGameStruct() {
   gameStruct.mapGenerator = std::make_shared<MapGenerator>(gameStruct.unitsFactory);
   auto visualiserContainer = std::make_shared<VisualiserContainer>();
   gameStruct.visualiser = visualiserContainer;
-  // if (APP_TYPE & static_cast<int>(EWindowType::ascii))
+#ifdef ISCONSOLE
   {
-    auto asciiVisualiser = std::make_shared<Visualiser>(Coord(50, 50));
+    auto asciiVisualiser = std::make_shared<Visualiser>(Coord(50, 50), createIdContainer());
     gameStruct.mapGenerator->setVisualiser(asciiVisualiser);
     visualiserContainer->addVisualiser(asciiVisualiser);
   }
-  // if (APP_TYPE & static_cast<int>(EWindowType::pictures))
+#endif
+// if (APP_TYPE & static_cast<int>(EWindowType::pictures))
+#ifdef ISVISUALISED
   { visualiserContainer->addVisualiser(std::make_shared<VisualiserImage>(Coord(50, 50))); }
+#endif
   gameStruct.map = gameStruct.mapGenerator->generateRandomMap({50, 50});
   gameStruct.hero = std::static_pointer_cast<Unit>(gameStruct.unitsFactory->createHero(gameStruct.map));
   gameStruct.hero->setInteractor(std::make_shared<Interactor>());
@@ -258,7 +261,7 @@ void initGameStruct() {
 /// Main program entry point.
 int main(int /*argc*/, char** /*argv*/) {
   try {
-    r = new Render();
+    renderVis = new Render();
     // auto params = TCOD_ContextParams{};
     // params.tcod_version = TCOD_COMPILEDVERSION;
     // params.argc = argc;

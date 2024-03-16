@@ -32,7 +32,7 @@ Render::Render() {
   result = TextureManager::loadTexture(textureFilePath.c_str());
 }
 
-void Render::render() {
+void Render::show() {
   SDL_SetRenderDrawColor(renderer, 21, 21, 21, 255);
   SDL_RenderClear(renderer);
   SDL_Rect projectile{10, 10, 10, 10};

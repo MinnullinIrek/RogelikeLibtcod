@@ -23,7 +23,7 @@ class Tab : /*public Shower,*/ public IWindow {
 
  public:  // overrided
   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator,
-    const Coord& parentCd) override;
+    const Coord& parentCd) const override;
 
  private:
   void printWindow(std::shared_ptr<Window> window, const Coord& cdParent,

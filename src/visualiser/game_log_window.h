@@ -11,7 +11,7 @@ class GameLogWindow : public IWindow, public Subscriber {
  public:
   const std::string name = "gamelogwindow";
   GameLogWindow(const Rectangle& rect);
-  void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd);
+  void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const;
 
  private:
   void notify(std::weak_ptr<Publisher> gameLog) override;

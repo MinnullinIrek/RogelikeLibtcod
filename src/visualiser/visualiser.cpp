@@ -24,7 +24,8 @@ auto get_data_dir() -> std::filesystem::path {
   return root_directory / "data";
 };
 
-Visualiser::Visualiser(const Coord& windowSize) : m_windowSize(windowSize), m_center({10, 10}) {
+Visualiser::Visualiser(const Coord& windowSize, IdentifierContainer<ConsoleIdentifier>&& idContainer)
+    : m_windowSize(windowSize), m_center({10, 10}), m_idContainer(idContainer) {
   auto params = TCOD_ContextParams{};
   params.tcod_version = TCOD_COMPILEDVERSION;
   // params.argc = 0;
@@ -69,27 +70,33 @@ void Visualiser::show() const {
 }
 
 void Visualiser::showId(std::array<int, 2>&& cd, const Identifier& id) const {
+
   static std::string s = " ";
-  s[0] = id.symbol;
-  // uint8_t r, g, b;
-  tcod::print(
-      m_console,
-      cd,
-      s,
-      TCOD_ColorRGB{id.color.r, id.color.g, id.color.b},
-      TCOD_ColorRGB{id.bgColor.r, id.bgColor.g, id.bgColor.b});
+  //IdentifierContainer<ConsoleIdentifier> idContainer;
+  //idContainer.get
+  m_idContainer;
+  //const auto& consoleIdentefier =
+    //m_idContainer.get(id);
+  //s[0] = consoleIdentefier.symbol;  // id.symbol;
+  //// uint8_t r, g, b;
+  //tcod::print(
+  //    m_console,
+  //    cd,
+  //    s,
+  //    TCOD_ColorRGB{consoleIdentefier.color.r, consoleIdentefier.color.g, consoleIdentefier.color.b},
+  //    TCOD_ColorRGB{consoleIdentefier.bgColor.r, consoleIdentefier.bgColor.g, consoleIdentefier.bgColor.b});
 }
 
 void Visualiser::showBorder() const {
   for (auto x : {m_center.x - 1, m_center.x + m_windowSize.x}) {
     for (auto y = m_center.y - 1; y < m_center.y + m_windowSize.y + 1; ++y) {
-      showId({x, y}, BORDER_VERT);
+      showId({x, y}, '*');
     }
   }
 
   for (auto y : {m_center.y - 1, m_center.y + m_windowSize.y}) {
     for (auto x = m_center.x; x < m_center.x + m_windowSize.x; ++x) {
-      showId({x, y}, BORDER_HOR);
+      showId({x, y}, '*');
     }
   }
 }

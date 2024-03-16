@@ -32,7 +32,7 @@ std::shared_ptr<IWindow> Tab::getWindow(WindowKey key, bool pop) {
   return ret;
 }
 
-void Tab::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+void Tab::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
   for (auto& iwindow : m_windows) {
     auto tab = std::dynamic_pointer_cast<Tab>(iwindow.second);
     if (tab) {

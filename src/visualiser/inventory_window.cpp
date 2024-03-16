@@ -8,7 +8,7 @@
 
 InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {}
 
-void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
   Text text{"", Color{255, 255, 255}, Color{0, 0, 0}};
   auto start = m_itemsLeft.begin();
   Coord cd = parentCd + Coord{5, 3};

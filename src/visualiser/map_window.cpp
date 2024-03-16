@@ -7,12 +7,14 @@
 #include "../units/IUnit.h"
 #include "../units/mover.h"
 
-MapWindow::MapWindow(const Rectangle& r) : IWindow(r) {}
+MapWindow::MapWindow(const Rectangle& r) : IWindow(r), m_idContainer(createIdContainer()) {}
 
-void MapWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
-  for (const auto& cdCell : m_cells) {
-    visualizator(cdCell.second, cdCell.first + parentCd);
-  }
+void MapWindow::show(const std::function<void(Text&&, const Coord&)>& /*visualizator*/, const Coord& /*parentCd*/) const {
+  //for (const auto& cdCell : m_cells) {
+    //auto id = (m_idContainer[cdCell.second.code]).toText();
+    //visualizator(std::move(id), cdCell.first + parentCd);
+    /// todo
+  //}
 }
 
 void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
@@ -28,7 +30,7 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         auto cell = map->getCell(heroCoord);
         auto h = cell->getUnit();
         auto hero = std::dynamic_pointer_cast<Unit>(h);
-        //auto& w = hero->getWatchingCoords();
+        // auto& w = hero->getWatchingCoords();
 
         auto& watchingCoords = std::dynamic_pointer_cast<Unit>(map->getCell(heroCoord)->getUnit())->getWatchingCoords();
         auto size = map->getSize();
@@ -48,8 +50,7 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
             Coord cd = {x, y};
             auto id = map->getIdentifier(cd);
             if (watchingCoords.find(cd) == watchingCoords.end()) {
-              static Color gray = {125, 125, 125};
-              id.color = gray;
+              id.isShadowed = true;
             }
             m_cells[{x + startPos.x - mapStart.x, y + startPos.y - mapStart.y}] = id;
           }

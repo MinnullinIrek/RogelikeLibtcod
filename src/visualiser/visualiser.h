@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "../header.h"
+#include "IdentefierContainer.h"
 #include "visualiser_interface.h"
 
 class Tab;
@@ -17,7 +18,7 @@ class Visualiser : public VisualiserInterface {
   friend MapGenerator;
 
  public:
-  Visualiser(const Coord& windowSize);
+  Visualiser(const Coord& windowSize, IdentifierContainer<ConsoleIdentifier>&& idContainer);
   ~Visualiser();
   void show() const override;
   void addWindow(std::shared_ptr<IWindow> window) override;
@@ -43,6 +44,7 @@ class Visualiser : public VisualiserInterface {
   std::list<std::shared_ptr<Tab>> m_tabs;
   std::shared_ptr<Tab> m_currentTab;
   std::vector<std::shared_ptr<IWindow>> m_windows;
+  IdentifierContainer<ConsoleIdentifier> m_idContainer;
 };
 
 #endif

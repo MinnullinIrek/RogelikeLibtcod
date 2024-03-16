@@ -18,6 +18,8 @@ class MagicConsts {
   std::unordered_map<std::string, float> m_consts;
 };
 
+void readConsoleSymbols();
+
 #define SF MagicConsts::instance().getValue
 #define SI (int)MagicConsts::instance().getValue
 

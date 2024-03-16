@@ -12,11 +12,12 @@ Window::Window(
     bool needDeliver)
     : m_text(text), m_color(color), m_bgColor(bgColor), IWindow(rect), m_updater(updater), m_needDeliver(needDeliver) {}
 
-void Window::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
-  auto texts = getText(0);
+void Window::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
+ /* auto texts = getText(0);
   for (const auto& text : texts) {
     visualizator(Text(text, m_color, m_bgColor), parentCd + m_rectangle.lu);
-  }
+  }*/
+  /// todo 
 }
 
 Window::~Window() {}

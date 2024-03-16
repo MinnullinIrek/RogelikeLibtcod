@@ -8,7 +8,7 @@ MainWindow::MainWindow(const Rectangle& rect) : IWindow(rect) {}
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+void MainWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) const {
   // LOG("\nMainWindow::show start [%d]", (int)m_currentWindowType);
   auto currentWindow = m_windows.at(m_currentWindowType);
   // LOG("\nMainWindow::show");
