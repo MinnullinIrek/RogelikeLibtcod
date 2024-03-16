@@ -15,6 +15,41 @@ using Distance = float;
 using TimeType = float;
 
 #define translate
+
+struct TcpBuffer final {
+  TcpBuffer() = default;
+  TcpBuffer(char* buf, int count) noexcept : m_buf(buf), m_count(count) {}
+  ~TcpBuffer() { clear(); }
+
+  void clear() noexcept {
+    if (m_buf) {
+      delete m_buf;
+      m_buf = nullptr;
+      m_count = 0;
+    }
+  }
+
+  void set(char* buf, int count) noexcept {
+    clear();
+    m_buf = buf;
+    m_count = count;
+  }
+
+  char* getBuf() { return m_buf; }
+
+  int size() { return m_count; }
+
+ private:
+  char* m_buf = nullptr;
+  int m_count = 0;
+};
+
+class Serializable {
+ public:
+  virtual TcpBuffer serialize() = 0;
+  virtual void deserialize(const TcpBuffer* buf) = 0;
+};
+
 // using Identifier = char;
 struct Color {
   uint8_t r, g, b;
