@@ -10,3 +10,6 @@
 [submodule "fmt"]
 	path = fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "Serializator"]
+	path = Serializator
+	url = https://github.com/MinnullinIrek/Serializator.git

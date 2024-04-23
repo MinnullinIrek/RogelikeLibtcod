@@ -6,7 +6,7 @@
 #include "../char_types.h"
 #include "../units/chars.h"
 
-CharsWindow::CharsWindow(const Rectangle& rect) : IWindow(rect) {}
+CharsWindow::CharsWindow(const RectangleS& rect) : IWindow(rect) {}
 
 void CharsWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
   Coord cd = parentCd + Coord{1, 3};

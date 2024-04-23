@@ -6,7 +6,7 @@
 #include "../Bag.h"
 #include "window.h"
 
-InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {}
+InventoryWindow::InventoryWindow(const RectangleS& rect) : IWindow(rect) {}
 
 void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
   Text text{"", Color{255, 255, 255}, Color{0, 0, 0}};

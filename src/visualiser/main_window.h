@@ -14,7 +14,7 @@ class MainWindow : public IWindow, public Subscriber {
   /* data */
  public:
   const std::string name = "mainwindow";
-  MainWindow(const Rectangle& rect);
+  MainWindow(const RectangleS& rect);
   ~MainWindow();
   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
   void notify(std::weak_ptr<Publisher> publisher) override;

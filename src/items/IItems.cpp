@@ -13,6 +13,15 @@ std::shared_ptr<Chars> IItems::getChars(ESetting setting) {
   return nullptr;
 }
 
+// TcpBuffer IItems::serialize() {
+//   // TcpBuffer buff;
+//   std::string m_name;
+//   std::string m_description;
+//   std::map<ESetting, std::shared_ptr<Chars>> m_chars;
+// }
+
+// void IItems::deserialize(const SerializeBuffer* buf) {}
+
 WearingItem::WearingItem(const WearingStruct& wstr) : IItems(wstr.name, wstr.description, wstr.m_chars) {}
 
 WearingItem::~WearingItem() {}
@@ -21,7 +30,7 @@ Armour::Armour(const ArmourStruct& str) : WearingItem(str) {}
 
 Armour::~Armour() {}
 
-Weapon::Weapon(const WeaponStruct& str) : WearingItem(str),
-  m_rangedClose(EWeaponRangedClose::melee), m_weaponSize(EWeaponSize::small) {}
+Weapon::Weapon(const WeaponStruct& str)
+    : WearingItem(str), m_rangedClose(EWeaponRangedClose::melee), m_weaponSize(EWeaponSize::small) {}
 
 Weapon::~Weapon() {}

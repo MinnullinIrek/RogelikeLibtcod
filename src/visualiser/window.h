@@ -18,7 +18,7 @@ class Window : public IWindow, public Subscriber {
       std::string_view text = "",
       const Color& color = {255, 255, 255},
       const Color& bgColor = {0, 0, 0},
-      const Rectangle& rect = {{0, 0}, {1, 0}},
+      const RectangleS& rect = {{0, 0}, {1, 0}},
       bool needDeliver = true);
 
   virtual ~Window();

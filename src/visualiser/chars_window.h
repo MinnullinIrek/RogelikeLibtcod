@@ -9,7 +9,7 @@
 class CharsWindow : public IWindow, public Subscriber {
  public:
   const std::string name = "charswindow";
-  CharsWindow(const Rectangle& rect);
+  CharsWindow(const RectangleS& rect);
   void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd);
   void notify(std::weak_ptr<Publisher> bag) override;
 

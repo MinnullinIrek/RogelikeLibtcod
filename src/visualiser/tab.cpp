@@ -4,8 +4,7 @@
 
 #include "window.h"
 
-Tab::Tab(std::string_view name, std::function<void(Text&& text, const Coord& cd)>&& shower,
-     const Rectangle& r )
+Tab::Tab(std::string_view name, std::function<void(Text&& text, const Coord& cd)>&& shower, const RectangleS& r)
     : IWindow(r), m_name(name), m_shower(shower) {
   m_rectangle.lu = {0, 0};
   m_rectangle.rd = {100, 100};

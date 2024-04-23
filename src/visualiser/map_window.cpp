@@ -13,7 +13,7 @@
 #include "../utils/visualEffect.h"
 #include "visualiser.h"
 
-MapWindow::MapWindow(const Rectangle& r) : IWindow(r) {}
+MapWindow::MapWindow(const RectangleS& r) : IWindow(r) {}
 
 void MapWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
   for (const auto& cdCell : m_cells) {
@@ -59,14 +59,12 @@ void MapWindow::notify(std::weak_ptr<Publisher> publisher) {
         }
       }
     } else {
-
       auto visualEffects = std::dynamic_pointer_cast<VisualEffect>(locked);
 
       for (int i = 0; i < visualEffects->m_currentState->size() - 1; i++) {
         for (auto& effect : visualEffects->m_currentState[i]) {
           m_cells[effect.cd] = effect.id;
         }
-
       }
     }
   } else {

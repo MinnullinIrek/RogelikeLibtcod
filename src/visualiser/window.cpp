@@ -8,7 +8,7 @@ Window::Window(
     std::string_view text,
     const Color& color,
     const Color& bgColor,
-    const Rectangle& rect,
+    const RectangleS& rect,
     bool needDeliver)
     : IWindow(rect), m_text(text), m_color(color), m_bgColor(bgColor), m_updater(updater), m_needDeliver(needDeliver) {}
 

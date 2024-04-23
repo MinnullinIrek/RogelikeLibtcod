@@ -1,0 +1,33 @@
+{
+  "chars": [
+  {
+    "id": 1,
+    "description": "emptyID",
+    "char":".",
+    "color":[255,255,255],
+    "bgcolor":[0,0,0]
+  },
+  {
+    "id": 2,
+    "description": "notSeen",
+    "char": " ",
+    "color":[0,0,0],
+    "bgcolor":[0,0,0]
+  },
+  {
+    "id": 3,
+    "description": "BORDER_VERT",
+    "char": "*",
+    "color":[255,255,255],
+    "bgcolor":[0,0,0]
+  },
+  {
+    "id": 4,
+    "description": "BORDER_HOR",
+    "char": "*",
+    "color":[255,255,255],
+    "bgcolor":[0,0,0]
+  }
+
+  ]
+}

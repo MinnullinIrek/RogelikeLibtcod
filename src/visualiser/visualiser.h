@@ -13,7 +13,7 @@ class Info;
 class Tab;
 class IWindow;
 
-class Visualiser {
+class Visualiser final : public Serializable {
  public:
   Visualiser(const Coord& windowSize);
   ~Visualiser();
@@ -21,17 +21,16 @@ class Visualiser {
   void setInfo(std::shared_ptr<Info> info);
   void showMap() const;
   void showInfo() const;
-  // Coord getLeftUpCd(const Coord& center) const;
-  //  void setConsole(tcod::Console& console);
   void showBorder() const;
   void showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b);
   void clear();
   void show();
 
-  // void addTab(std::shared_ptr<Tab> tab, std::string_view name);
   void showAgain();
   std::shared_ptr<Tab> createTab(std::string_view name);
   void addWindow(std::shared_ptr<IWindow> window);
+  SerializeBuffer serialize() override;
+  void deserialize(const SerializeBuffer* buf) override{};
 
  protected:
   void showId(std::array<int, 2>&& cd, const Identifier& id) const;

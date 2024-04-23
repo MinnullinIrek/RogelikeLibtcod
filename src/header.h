@@ -1,12 +1,17 @@
 #ifndef HEADER_H
 #define HEADER_H
 
+#include <assert.h>
+
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "unit_types.h"
 #include "units_factory.h"
+#include "utils/serialize_buffer.h"
 
 using Setting = float;
 using Count = int;
@@ -16,38 +21,10 @@ using TimeType = float;
 
 #define translate
 
-struct TcpBuffer final {
-  TcpBuffer() = default;
-  TcpBuffer(char* buf, int count) noexcept : m_buf(buf), m_count(count) {}
-  ~TcpBuffer() { clear(); }
-
-  void clear() noexcept {
-    if (m_buf) {
-      delete m_buf;
-      m_buf = nullptr;
-      m_count = 0;
-    }
-  }
-
-  void set(char* buf, int count) noexcept {
-    clear();
-    m_buf = buf;
-    m_count = count;
-  }
-
-  char* getBuf() { return m_buf; }
-
-  int size() { return m_count; }
-
- private:
-  char* m_buf = nullptr;
-  int m_count = 0;
-};
-
 class Serializable {
  public:
-  virtual TcpBuffer serialize() = 0;
-  virtual void deserialize(const TcpBuffer* buf) = 0;
+  virtual SerializeBuffer serialize() = 0;
+  virtual void deserialize(const SerializeBuffer* buf) = 0;
 };
 
 // using Identifier = char;
@@ -107,7 +84,7 @@ struct Coord {
   int y;
 };
 
-struct Rectangle {
+struct RectangleS {
   Coord lu;
   Coord rd;
   int width() const { return rd.x - lu.x; }

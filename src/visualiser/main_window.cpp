@@ -4,7 +4,7 @@
 
 #include "../logger.h"
 
-MainWindow::MainWindow(const Rectangle& rect) : IWindow(rect) {}
+MainWindow::MainWindow(const RectangleS& rect) : IWindow(rect) {}
 
 MainWindow::~MainWindow() {}
 

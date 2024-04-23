@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-LogWindow::LogWindow(const Rectangle& rect) : IWindow(rect) {}
+LogWindow::LogWindow(const RectangleS& rect) : IWindow(rect) {}
 
 void LogWindow::show(const std::function<void(Text&&, const Coord&)>& /*visualizator*/, const Coord& /*parentCd*/) {}
 

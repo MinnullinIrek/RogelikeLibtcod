@@ -5,14 +5,17 @@
 #include <memory>
 
 #include "asio.hpp"
+#include "serialize_buffer.h"
 
 class Channel_impl;
-class Serializable;
+// class Serializable;
 
 class Channel final {
  public:
-  Channel(int port, const std::string& ip = "127.0.0.1");
-  void send(std::shared_ptr<Serializable>, const std::function<void(int)>& err_func = nullptr);
+  Channel(int port = 2001, const std::string& ip = "127.0.0.1");
+  void send(std::shared_ptr<Serializable> object, const std::function<void(int)>& err_func = nullptr);
+  SerializeBuffer read();
+  ~Channel();
 
  private:
   std::unique_ptr<Channel_impl> impl;

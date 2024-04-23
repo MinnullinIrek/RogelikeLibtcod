@@ -9,8 +9,6 @@
 #include "units/invoker.h"
 #include "utils/gamefsm.h"
 
-
-
 class VisualEffect;
 class Visualiser;
 class Keyboard;

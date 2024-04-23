@@ -10,7 +10,7 @@
 class MapWindow : public IWindow, public Subscriber {
  public:
   const std::string name = "mapwindow";
-  MapWindow(const Rectangle& r);
+  MapWindow(const RectangleS& r);
   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
 
   void notify(std::weak_ptr<Publisher> publisher) override;

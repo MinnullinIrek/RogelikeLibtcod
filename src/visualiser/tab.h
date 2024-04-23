@@ -15,18 +15,21 @@ using WindowKey = int;
 
 class Tab : /*public Shower,*/ public IWindow {
  public:
-  Tab(std::string_view name, std::function<void(Text&& text, const Coord& cd)>&& shower, const Rectangle& r = {{0,0}, {0,0}});
+  Tab(std::string_view name,
+      std::function<void(Text&& text, const Coord& cd)>&& shower,
+      const RectangleS& r = {{0, 0}, {0, 0}});
   virtual ~Tab();
   std::string_view getName();
   WindowKey addWindow(std::shared_ptr<IWindow> window);
   std::shared_ptr<IWindow> getWindow(WindowKey key, bool pop = false);
 
  public:  // overrided
-  virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator,
-    const Coord& parentCd) override;
+  virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
 
  private:
-  void printWindow(std::shared_ptr<Window> window, const Coord& cdParent,
+  void printWindow(
+      std::shared_ptr<Window> window,
+      const Coord& cdParent,
       const std::function<void(Text&&, const Coord&)>& visualizator);
   // Rectangle m_rect;
   const std::string m_name;

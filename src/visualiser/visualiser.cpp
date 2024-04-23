@@ -79,6 +79,24 @@ void Visualiser::showMap() const {
   m_context.present(m_console);
 }
 
+SerializeBuffer Visualiser::serialize() {
+  SerializeBuffer buffer(1000);
+  static auto serializeLamb = [this, &buffer](Text&& text, const Coord& cd) {
+    tcod::print(m_console, {cd.x, cd.y}, text.m_text, convertColor(text.m_color), convertColor(text.m_bgColor));
+    buffer.serialize(cd.x);
+    buffer.serialize(cd.y);
+    for (const auto& col :
+         {text.m_color.r, text.m_color.g, text.m_color.b, text.m_bgColor.r, text.m_bgColor.g, text.m_bgColor.b}) {
+      buffer.serialize(col);
+    }
+  };
+
+  for (auto& win : m_windows) {
+    win->show(serializeLamb, {0, 0});
+  }
+  return buffer;
+}
+
 void Visualiser::showInfo() const {
   assert(m_info);
   auto text = m_info->getText();

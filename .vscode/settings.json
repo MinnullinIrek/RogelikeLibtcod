@@ -109,6 +109,17 @@
     "ranges": "cpp",
     "regex": "cpp",
     "span": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "queue": "cpp",
+    "typeindex": "cpp",
+    "bitset": "cpp",
+    "complex": "cpp",
+    "future": "cpp",
+    "source_location": "cpp",
+    "stack": "cpp",
+    "*.rh": "cpp",
+    "codecvt": "cpp",
+    "*.ipp": "cpp",
+    "coroutine": "cpp"
   }
 }

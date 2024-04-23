@@ -13,7 +13,8 @@
 
 class Chars;
 
-class IItems : public ToString {
+class IItems : public ToString  //, public Serializable
+{
  private:
   /* data */
  public:
@@ -24,6 +25,10 @@ class IItems : public ToString {
   virtual std::string toString() const override;
   void setChars(ESetting setting, std::shared_ptr<Chars> chars);
   std::shared_ptr<Chars> getChars(ESetting setting);
+
+  // Serializable
+  // virtual TcpBuffer serialize();
+  // virtual void deserialize(const SerializeBuffer* buf);
 
  protected:
   std::string m_name;

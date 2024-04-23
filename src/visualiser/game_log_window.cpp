@@ -12,7 +12,7 @@ const Color textColor = {125, 125, 125};
 const Color bgColor = {0, 0, 0};
 const std::string semicolon = ":";
 
-GameLogWindow::GameLogWindow(const Rectangle& rect) : IWindow(rect) {}
+GameLogWindow::GameLogWindow(const RectangleS& rect) : IWindow(rect) {}
 
 void GameLogWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
   Text text{"", Color{255, 255, 255}, Color{0, 0, 0}};

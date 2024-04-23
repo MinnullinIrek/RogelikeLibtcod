@@ -14,6 +14,7 @@
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
+
 #include "Bag.h"
 #include "game_struct.h"
 #include "info.h"
@@ -21,6 +22,7 @@
 #include "keyboard.h"
 #include "map_generator.h"
 #include "maps/map.h"
+#include "serializator.hpp"
 #include "units/IUnit.h"
 #include "units/actor.h"
 #include "units/actor_strategy_char.h"
@@ -31,10 +33,13 @@
 #include "units/interactor.h"
 #include "units/mover.h"
 #include "units_factory.h"
+#include "utils/channel.h"
 #include "utils/consts_reader.h"
 #include "utils/game_log.h"
 #include "utils/gamefsm.h"
+#include "utils/serialize_buffer.h"
 #include "utils/subscriber.h"
+#include "utils/visualEffect.h"
 #include "visualiser/chars_window.h"
 #include "visualiser/game_log_window.h"
 #include "visualiser/inventory_window.h"
@@ -43,7 +48,8 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
-#include "utils/visualEffect.h"
+
+Channel channel;
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
@@ -61,6 +67,7 @@ void main_loop() {
 
   // tcod::print(g_console, {0, 0}, "Hello World", TCOD_white, std::nullopt);
   gameStruct.visualiser->showMap();
+  channel.send(gameStruct.visualiser);
   // g_context.present(g_console);
 
   // Handle input.
@@ -82,6 +89,7 @@ void main_loop() {
     }
     if (true) {
       gameStruct.visualiser->showMap();
+      channel.send(gameStruct.visualiser);
     }
   }
 }
@@ -267,14 +275,14 @@ int main(int /*argc*/, char** /*argv*/) {
     auto enemy = gameStruct.unitsFactory->createEnemy(gameStruct.map);
     gameStruct.map->setUnit(enemy, {5, 5});
 
-    mainWindow = std::make_shared<MainWindow>(Rectangle{{1, 1}, {30, 30}});
+    mainWindow = std::make_shared<MainWindow>(RectangleS{{1, 1}, {30, 30}});
     prepareFsm();
     // std::shared_ptr<Info> info = std::make_shared<Info>();  // todo remove
     //  info->setHero(gameStruct.hero);  // todo remove
 
     auto bag = gameStruct.hero->getBag();
-    auto inventoryWindow = std::make_shared<InventoryWindow>(Rectangle{{1, 1}, {30, 30}});
-    auto mapWindow = std::make_shared<MapWindow>(Rectangle{{1, 1}, {30, 30}});
+    auto inventoryWindow = std::make_shared<InventoryWindow>(RectangleS{{1, 1}, {30, 30}});
+    auto mapWindow = std::make_shared<MapWindow>(RectangleS{{1, 1}, {30, 30}});
     mainWindow->addWindow(EMainWindows::einventory, inventoryWindow);
     mainWindow->addWindow(EMainWindows::emap, mapWindow);
 
@@ -306,20 +314,20 @@ int main(int /*argc*/, char** /*argv*/) {
         std::string_view(""),
         Color{255, 255, 255},
         Color{0, 0, 255},
-        Rectangle{{40, 10}, {60, 15}},
+        RectangleS{{40, 10}, {60, 15}},
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
 
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
     {
-      auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
+      auto charWindow = std::make_shared<CharsWindow>(RectangleS{{1, 1}, {30, 30}});
       auto chars = gameStruct.hero->getChars();
       mainWindow->addWindow(EMainWindows::echars, charWindow);
       std::static_pointer_cast<Publisher>(chars)->addSubscriber(charWindow);
       chars->emit();
     }
     {
-      auto gameLogWindow = std::make_shared<GameLogWindow>(Rectangle{{1, 20}, {30, 50}});
+      auto gameLogWindow = std::make_shared<GameLogWindow>(RectangleS{{1, 20}, {30, 50}});
       gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(gameLogWindow));
       gameStruct.gameLog->addSubscriber(gameLogWindow);
       gameStruct.gameLog->emit();

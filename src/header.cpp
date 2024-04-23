@@ -1,5 +1,7 @@
 #include "header.h"
 
+#include <assert.h>
+
 #include "utils/random.h"
 
 bool operator<(const Coord& c1, const Coord& c2) {

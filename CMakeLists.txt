@@ -39,7 +39,10 @@ if (MSVC)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 endif()
-target_include_directories(${PROJECT_NAME} PRIVATE ${json/single_include/nlohmann})
+target_include_directories(${PROJECT_NAME} PRIVATE
+    json/single_include/nlohmann,
+    Serializator
+)
 
 if (EMSCRIPTEN)
     # Attach data folder to Emscripten builds.
