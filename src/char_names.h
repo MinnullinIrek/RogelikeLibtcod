@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-std::vector<std::string> charNames = {
+inline const std::vector<std::string> charNames = {
 
     "strength", "constitution", "intelligence", "dexterity", "charisma", "wisdom", "perception",
 
