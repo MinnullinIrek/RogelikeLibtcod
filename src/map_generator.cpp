@@ -220,7 +220,9 @@ std::vector<std::pair<Coord, Coord>> MapGenerator::findWays(const RoomStart& roo
   const auto& cm21 = isHorizontal ? yU2 : xL2;
   const auto& cm22 = isHorizontal ? yD2 : xR2;
 
-  for (auto c = MAX(cm11, cm21); c <= MIN(cm12, cm22); ++c) {
+  const auto start = std::max(cm11, cm21);
+  const auto end = std::min(cm12, cm22);
+  for (auto c = start; c <= end; ++c) {
     commonVars.push_back(c);
   }
 

@@ -1,8 +1,8 @@
-cmake_minimum_required (VERSION 3.21)
+cmake_minimum_required(VERSION 3.21)
 
-set( CMAKE_CXX_COMPILER "/usr/bin/g++" )
-set( CMAKE_C_COMPILER "/pathto/gcc" )
 set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE
@@ -31,6 +31,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_23)
 # Enforce UTF-8 encoding on MSVC.
 if (MSVC)
     target_compile_options(${PROJECT_NAME} PRIVATE /utf-8)
+    add_compile_definitions(NOMINMAX WIN32_LEAN_AND_MEAN)
 endif()
 
 # Enable warnings recommended for new projects.
@@ -39,7 +40,7 @@ if (MSVC)
 else()
     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra)
 endif()
-target_include_directories(${PROJECT_NAME} PRIVATE ${json/single_include/nlohmann})
+target_include_directories(${PROJECT_NAME} PRIVATE "${PROJECT_SOURCE_DIR}/json/single_include")
 
 if (EMSCRIPTEN)
     # Attach data folder to Emscripten builds.
@@ -52,13 +53,10 @@ if (EMSCRIPTEN)
     )
 endif()
 
-find_package(SDL2 CONFIG REQUIRED)
 find_package(libtcod CONFIG REQUIRED)
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE
-        SDL2::SDL2
-        SDL2::SDL2main
         libtcod::libtcod
 )
 

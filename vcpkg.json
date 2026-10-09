@@ -12,7 +12,6 @@
         "unicode",
         "zlib"
       ]
-    },
-    "sdl2"
+    }
   ]
 }

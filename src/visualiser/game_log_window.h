@@ -1,7 +1,7 @@
 #ifndef GAME_LOG_WINDOW_H
 #define GAME_LOG_WINDOW_H
 
-#include <list>
+// #include <list>
 
 #include "../utils/game_log_message.h"
 #include "../utils/subscriber.h"

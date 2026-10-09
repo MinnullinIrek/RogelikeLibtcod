@@ -2,8 +2,17 @@
 #include <emscripten.h>
 #endif  // __EMSCRIPTEN__
 
-#include <SDL.h>
-#include <SDL_keycode.h>
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#undef min
+#undef max
+#undef append
+#endif
+
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_keycode.h>
 
 #include <cstdlib>
 #include <filesystem>
@@ -35,6 +44,7 @@
 #include "utils/game_log.h"
 #include "utils/gamefsm.h"
 #include "utils/subscriber.h"
+#include "utils/visualEffect.h"
 #include "visualiser/chars_window.h"
 #include "visualiser/game_log_window.h"
 #include "visualiser/inventory_window.h"
@@ -43,7 +53,6 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 #include "visualiser_fsm.h"
-#include "utils/visualEffect.h"
 
 std::shared_ptr<MainWindow> mainWindow;
 // GameStruct gameStruct;
@@ -72,11 +81,11 @@ void main_loop() {
   while (SDL_WaitEvent(&event)) {
     bool repaint = true;
     switch (event.type) {
-      case SDL_QUIT:
+      case SDL_EVENT_QUIT:
         std::exit(EXIT_SUCCESS);
         break;
-      case SDL_KEYDOWN:
-        gameStruct.keyboard->setKey(event.key.keysym.sym, true);
+      case SDL_EVENT_KEY_DOWN:
+        gameStruct.keyboard->setKey(event.key.key, true);
         repaint = true;
         break;
     }
@@ -293,7 +302,7 @@ int main(int /*argc*/, char** /*argv*/) {
           if (lockedPublisher) {
             auto mover = std::dynamic_pointer_cast<IMover>(lockedPublisher);
             if (mover) {
-              auto heroCd = mover->getCoord();
+              const auto& heroCd = mover->getCoord();
               text = "Info:\n___________\n";
               text += "pos: " + heroCd.toString();
               color = {255, 255, 255};
@@ -319,7 +328,7 @@ int main(int /*argc*/, char** /*argv*/) {
       chars->emit();
     }
     {
-      auto gameLogWindow = std::make_shared<GameLogWindow>(Rectangle{{1, 20}, {30, 50}});
+      auto gameLogWindow = std::make_shared<GameLogWindow>(Rectangle{{40, 20}, {71, 50}});
       gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(gameLogWindow));
       gameStruct.gameLog->addSubscriber(gameLogWindow);
       gameStruct.gameLog->emit();

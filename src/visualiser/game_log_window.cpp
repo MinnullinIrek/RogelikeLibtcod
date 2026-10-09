@@ -1,10 +1,8 @@
 #include "game_log_window.h"
 
-#include <algorithm>
-#include <iterator>
 
 #include "../utils/game_log.h"
-#include "window.h"
+//#include "window.h"
 
 const Color fromColor = {0, 0, 255};
 const Color semicolonColor = {125, 0, 0};
@@ -33,7 +31,7 @@ void GameLogWindow::notify(std::weak_ptr<Publisher> gameLog) {
   if (pgameLog) {
     auto log = std::dynamic_pointer_cast<GameLog>(pgameLog);
     m_messages.clear();
-    auto messages = log->getMessages();
-    m_messages.insert(m_messages.end(), messages.begin(), messages.end());
+    const auto& messages = log->getMessages();
+    m_messages.insert(m_messages.cend(), messages.cbegin(), messages.cend());
   }
 }

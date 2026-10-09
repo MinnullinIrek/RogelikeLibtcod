@@ -1,18 +1,25 @@
 #include "visualiser.h"
 
-#include <SDL.h>
-#include <assert.h>
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#undef min
+#undef max
+#undef append
+#endif
 
-#include <cstdlib>
+#include <SDL3/SDL_video.h>
+
+#include <cassert>
 #include <filesystem>
-#include <iostream>
 
 #include "../info.h"
 #include "../maps/map.h"
 #include "iwindow.h"
 #include "tab.h"
 
-auto get_data_dir() -> std::filesystem::path {
+static auto get_data_dir() -> std::filesystem::path {
   static auto root_directory = std::filesystem::path{"."};  // Begin at the working directory.
   while (!std::filesystem::exists(root_directory / "data")) {
     // If the current working directory is missing the data dir then it will assume it exists in any parent directory.
@@ -115,7 +122,7 @@ void Visualiser::setInfo(std::shared_ptr<Info> info) { m_info = info; }
 
 void Visualiser::showCoords(std::list<Coord> coords, unsigned int r, unsigned int g, unsigned int b) {
   static std::string ch = "a";
-  for (auto cd : coords) {
+  for (const auto& cd : coords) {
     tcod::print(
         m_console,
         {cd.x, cd.y},

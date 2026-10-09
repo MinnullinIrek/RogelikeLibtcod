@@ -4,14 +4,13 @@
 // #include <libtcod.hpp>
 // #include "SDL_keyboard.h"
 // #include "../SDL/include/SDL_keyboard.h"
-#include <SDL_keycode.h>
-
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_keycode.h>
 
 #include "game_struct.h"
 #include "header.h"
 #include "units/actor.h"
 #include "utils/visualEffect.h"
-
 
 Keyboard::Keyboard(std::shared_ptr<Actor> actor) : m_actor(actor) {}
 
@@ -38,25 +37,24 @@ void Keyboard::setKey(int key, bool down) {
     case SDLK_DOWN:
       action = EAction::down;
       break;
-    case SDLK_i:
+    case SDLK_I:
       action = EAction::inventory;
       break;
-    case SDLK_m:
+    case SDLK_M:
       action = EAction::map;
       break;
-    case SDLK_z:
+    case SDLK_Z:
       if (m_lastKeys == SDLK_LCTRL) {
         action = EAction::undo;
       }
       break;
-    case SDLK_c:
+    case SDLK_C:
       action = EAction::charAction;
       break;
-    case SDLK_b:
+    case SDLK_B:
       // if (m_lastKeys == SDLK_LCTRL)
       {
         EffectMaker effect;
-
 
         effect.m_effect = {
             {CoordSymbol(Coord{6, 13}, Identifier('*'))},
@@ -66,7 +64,6 @@ void Keyboard::setKey(int key, bool down) {
 
         };
         gameStruct.vEffect->effectStart(effect);
-
       }
       break;
 
