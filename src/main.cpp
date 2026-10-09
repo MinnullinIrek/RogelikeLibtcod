@@ -12,21 +12,16 @@
 #endif
 
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_keycode.h>
 
 #include <cstdlib>
-#include <filesystem>
 #include <iostream>
 #include <libtcod.hpp>
-#include <limits>
 
 #if defined(_MSC_VER)
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
 #include "Bag.h"
 #include "game_struct.h"
-#include "info.h"
-#include "items_factory.h"
 #include "keyboard.h"
 #include "map_generator.h"
 #include "maps/map.h"
@@ -52,18 +47,15 @@
 #include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
-#include "visualiser_fsm.h"
 
+std::unique_ptr<fsm_cxx::machine_t<fsm_cxx::GameState>> gamefsm;
 std::shared_ptr<MainWindow> mainWindow;
-// GameStruct gameStruct;
-
-/// Return the data directory.
 
 static tcod::Console g_console;  // The global console object.
 static tcod::Context g_context;  // The global libtcod context.
 
 /// Game loop.
-void main_loop() {
+static void main_loop() {
   // Rendering.
 
   // auto startPos(10, 10);
@@ -95,24 +87,23 @@ void main_loop() {
   }
 }
 
-void initMapState() {
+static void initMapState() {
   gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::MapState).get());
-  // gameStruct.actor->setStrategy(gameStruct.m_strategies[fsm_cxx::GameState::MapState].get());
   mainWindow->setCurrent(EMainWindows::emap);
 }
 
-void initInventoryState() {
+static void initInventoryState() {
   gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::InventoryState).get());
   mainWindow->setCurrent(EMainWindows::einventory);
 }
 
-void initCharState() {
+static void initCharState() {
   gameStruct.actor->setStrategy(gameStruct.m_strategies.at(fsm_cxx::GameState::CharState).get());
   mainWindow->setCurrent(EMainWindows::echars);
 }
 
-void prepareFsm() {
-  gamefsm = new fsm_cxx::machine_t<fsm_cxx::GameState>();
+static void prepareFsm() {
+  gamefsm = std::make_unique<fsm_cxx::machine_t<fsm_cxx::GameState>>();
   using FSM = fsm_cxx::machine_t<fsm_cxx::GameState>;  // decltype(*gamefsm);
   using States = fsm_cxx::GameState;
   // gamefsm;
@@ -226,7 +217,7 @@ void prepareFsm() {
 
   auto st = gamefsm->state();
 
-  gameStruct.gameFsm = gamefsm;
+  gameStruct.gameFsm = gamefsm.get();
 
   gamefsm->state().set(fsm_cxx::GameState::Initial).as_initial().build();
 
@@ -234,7 +225,7 @@ void prepareFsm() {
   // gamefsm->step_by(events::ToInventory{});
 }
 
-void initGameStruct() {
+static void initGameStruct() {
   gameStruct.unitsFactory = std::make_shared<UnitsFactory>();
   gameStruct.mapGenerator = std::make_shared<MapGenerator>(gameStruct.unitsFactory);
 

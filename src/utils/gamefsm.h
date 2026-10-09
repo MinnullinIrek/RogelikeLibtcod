@@ -1,5 +1,6 @@
 #ifndef GAMEFSM_H
 #define GAMEFSM_H
+#include <memory>
 
 #include "../fsm/fsm_cxx.hh"
 
@@ -29,6 +30,6 @@ struct events {
   };
 };
 
-static fsm_cxx::machine_t<fsm_cxx::GameState>* gamefsm;
+extern std::unique_ptr<fsm_cxx::machine_t<fsm_cxx::GameState>> gamefsm;
 
 #endif  // GAMEFSM_H
