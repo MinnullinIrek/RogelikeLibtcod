@@ -1,6 +1,9 @@
 #include "info.h"
 
+#include "char_names.h"
+#include "char_types.h"
 #include "units/IUnit.h"
+#include "units/chars.h"
 #include "units/mover.h"
 
 Info::Info(/* args */) {}
@@ -14,7 +17,13 @@ std::string Info::getText() {
   auto hero = m_mainHero.lock();
   if (hero) {
     auto& pos = hero->getMover()->getCoord();
-    text += "pos: " + pos.toString();
+    text += "pos: " + pos.toString() + "\n";
+    auto chars = hero->getChars();
+    if (chars) {
+      for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
+        text += charNames[i] + ": " + std::to_string(chars->getValue(i)) + "\n";
+      }
+    }
   }
   return text;
 }

@@ -21,6 +21,7 @@
 #pragma warning(disable : 4297)  // Allow "throw" in main().  Letting the compiler handle termination.
 #endif
 #include "Bag.h"
+#include "char_names.h"
 #include "game_struct.h"
 #include "keyboard.h"
 #include "map_generator.h"
@@ -288,14 +289,20 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
     auto infoWindow = std::make_shared<Window>(
-        [](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
+        [&hero = gameStruct.hero](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
           auto lockedPublisher = moverPub.lock();
           if (lockedPublisher) {
             auto mover = std::dynamic_pointer_cast<IMover>(lockedPublisher);
             if (mover) {
               const auto& heroCd = mover->getCoord();
               text = "Info:\n___________\n";
-              text += "pos: " + heroCd.toString();
+              text += "pos: " + heroCd.toString() + "\n";
+              auto chars = hero ? hero->getChars() : nullptr;
+              if (chars) {
+                for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
+                  text += charNames[i] + ": " + std::to_string(chars->getValue(i)) + "\n";
+                }
+              }
               color = {255, 255, 255};
               bkColor = {0, 0, 255};
               return 0;
