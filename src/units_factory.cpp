@@ -3,8 +3,8 @@
 #include "Bag.h"
 #include "helpers/corps_deleter.h"
 #include "items/IItems.h"
-#include "units/IUnit.h"
 #include "units/chars.h"
+#include "units/iunit.h"
 #include "units/mover.h"
 
 UnitsFactory::UnitsFactory(/* args */) : m_corpsDeleter(std::make_shared<CorpsDeleter>()) {}

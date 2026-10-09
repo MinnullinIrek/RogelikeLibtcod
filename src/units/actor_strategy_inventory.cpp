@@ -3,7 +3,6 @@
 #include "../Bag.h"
 #include "../game_struct.h"
 #include "../units/IUnit.h"
-#include "../units/mover.h"
 #include "command.h"
 
 std::optional<std::shared_ptr<Command>> ActorStrategyInventory::doKey(EAction action) {
