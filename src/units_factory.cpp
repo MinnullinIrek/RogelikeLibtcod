@@ -3,8 +3,8 @@
 #include "Bag.h"
 #include "helpers/corps_deleter.h"
 #include "items/IItems.h"
-#include "units/IUnit.h"
 #include "units/chars.h"
+#include "units/iunit.h"
 #include "units/mover.h"
 
 UnitsFactory::UnitsFactory(/* args */) : m_corpsDeleter(std::make_shared<CorpsDeleter>()) {}
@@ -33,8 +33,7 @@ std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
         std::make_shared<IItems>(
             "some stuff " + std::to_string(i),
             "some incredible stuff " + std::to_string(i),
-            std::map<ESetting, std::shared_ptr<Chars>>{}),
-        1);
+            std::map<ESetting, std::shared_ptr<Chars>>{}));
   }
 
   return hero;
