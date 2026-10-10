@@ -30,10 +30,19 @@ std::pair<std::weak_ptr<IItems>, Count> Bag::popItem(Count popCount) {
 
 void Bag::select(int next) {
   if (!m_items.empty()) {
-    if (next > 0 && m_selected != m_items.end()) {
-      ++m_selected;
-    } else if (next < 0 && m_selected != m_items.begin()) {
-      --m_selected;
+    // Если ничего не выделено (например, при первом открытии инвентаря),
+    // выделяем первую вещь сверху.
+    if (m_selected == m_items.end()) {
+      m_selected = m_items.begin();
+    } else if (next > 0) {
+      auto nextIt = std::next(m_selected);
+      if (nextIt != m_items.end()) {
+        ++m_selected;
+      }
+    } else if (next < 0) {
+      if (m_selected != m_items.begin()) {
+        --m_selected;
+      }
     }
   }
   emit();
@@ -42,19 +51,30 @@ void Bag::select(int next) {
 bool Bag::contains(std::shared_ptr<IItems> item) { return m_items.find(item) != m_items.end(); }
 
 std::list<Text> Bag::showBag(Count count) {
-  auto size = m_items.size();
-  Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
-  Count toEnd = static_cast<Count>(m_items.size() - toStart - 1);
+  std::list<Text> bagList;
+  if (m_items.empty()) {
+    return bagList;
+  }
+  // Выделение не должно теряться: если оно пустое (первое открытие инвентаря),
+  // выделяем первую вещь сверху.
+  if (m_selected == m_items.end()) {
+    m_selected = m_items.begin();
+  }
 
-  if (static_cast<Count>(size) > count) {
+  Count toStart = static_cast<Count>(std::distance(m_items.begin(), m_selected));
+  Count toEnd = static_cast<Count>(m_items.size()) - toStart - 1;
+
+  // В окно входит: toStart строк над выделенной + выделенная + toEnd строк под ней.
+  if (toStart + 1 + toEnd > count) {
     if (toStart > toEnd) {
-      toStart = std::min(toStart, count / 2);
-      toEnd = count - static_cast<Count>(toStart);
+      toStart = std::min(toStart, std::max(0, (count - 1) / 2));
+      toEnd = count - toStart - 1;
+    } else {
+      toEnd = std::min(toEnd, std::max(0, count - 2));
+      toStart = count - toEnd - 1;
     }
   }
-  std::list<Text> bagList;
 
-  // auto it = m_selected;
   auto it = m_items.end();
   for (auto i = toStart; i > 0; --i) {
     --it;
