@@ -3,30 +3,28 @@
 
 #include <memory>
 #include <string>
-#include <map>
+#include <vector>
 
 #include "header.h"
 #include "utils/subscriber.h"
 
-struct Item_Count;
 class IItems;
 
 class Bag : public Publisher {
  public:
   Bag();
   ~Bag();
-  void putItem(std::shared_ptr<IItems> item, Count count);
+  void putItem(std::shared_ptr<IItems> item);
   void putItem(std::shared_ptr<Bag> bag);
 
-  std::pair<std::weak_ptr<IItems>, Count> popItem(Count popCount);
+  std::weak_ptr<IItems> popItem();
   void select(int next);
   std::list<Text> showBag(Count count);
 
  private:
-  void putInsert(std::shared_ptr<IItems> item, Count count);
   bool contains(std::shared_ptr<IItems> item);
-  std::map<std::shared_ptr<IItems>, Count> m_items;
-  std::map<std::shared_ptr<IItems>, Count>::iterator m_selected;
+  std::vector<std::shared_ptr<IItems>> m_items;
+  int m_selected = -1;
 };
 
 #endif
