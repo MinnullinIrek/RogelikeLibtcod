@@ -90,6 +90,13 @@ std::list<Text> Bag::showBag(Count count) {
   return bagList;
 }
 
+std::shared_ptr<IItems> Bag::getSelected() const {
+  if (m_selected >= 0 && m_selected < static_cast<int>(m_items.size())) {
+    return m_items[m_selected];
+  }
+  return nullptr;
+}
+
 void Bag::putItem(std::shared_ptr<Bag> bag) {
   for (const auto& item : bag->m_items) {
     putItem(item);

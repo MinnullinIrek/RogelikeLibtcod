@@ -20,6 +20,8 @@ class Bag : public Publisher {
   std::weak_ptr<IItems> popItem();
   void select(int next);
   std::list<Text> showBag(Count count);
+  /// Возвращает выбранный сейчас предмет (или nullptr, если сумка пуста).
+  std::shared_ptr<IItems> getSelected() const;
 
  private:
   bool contains(std::shared_ptr<IItems> item);

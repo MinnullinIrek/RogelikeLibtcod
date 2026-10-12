@@ -22,6 +22,8 @@ class IItems : public ToString {
   IItems(std::string_view name, std::string_view description, const std::map<ESetting, std::shared_ptr<Chars>>& chars);
   virtual ~IItems();
   virtual std::string toString() const override;
+  /// Полное описание предмета (для окна описания).
+  std::string getDescription() const { return m_description; }
   void setChars(ESetting setting, std::shared_ptr<Chars> chars);
   std::shared_ptr<Chars> getChars(ESetting setting);
 
