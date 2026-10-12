@@ -1,8 +1,11 @@
 #ifndef Bag_H
 #define Bag_H
 
+#include <list>
+#include <map>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "header.h"
@@ -19,9 +22,11 @@ class Bag : public Publisher {
 
   std::weak_ptr<IItems> popItem();
   void select(int next);
-  std::list<Text> showBag(Count count);
-  /// Возвращает выбранный сейчас предмет (или nullptr, если сумка пуста).
-  std::shared_ptr<IItems> getSelected() const;
+  /// Описание выбранного предмета: имя, текст описания и характеристики.
+  using ItemDescription = std::map<std::string, std::string>;
+  /// Возвращает пару: список предметов для отображения и описание выбранного предмета
+  /// (пустая карта, если сумка пуста).
+  std::pair<std::list<Text>, ItemDescription> showBag(Count count);
 
  private:
   bool contains(std::shared_ptr<IItems> item);

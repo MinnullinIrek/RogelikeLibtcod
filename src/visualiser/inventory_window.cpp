@@ -2,12 +2,9 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 
 #include "../Bag.h"
-#include "../char_names.h"
-#include "../char_types.h"
-#include "../items/IItems.h"
-#include "../units/chars.h"
 // #include "window.h"
 
 InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {}
@@ -23,47 +20,25 @@ void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visu
 }
 
 std::string InventoryWindow::getDescriptionText() const {
-  auto bag = m_bag.lock();
-  auto item = bag ? bag->getSelected() : nullptr;
-  if (!item) {
+  if (m_selectedItemDescription.empty()) {
     return "";
   }
-  std::string result = "Description:\n_____________\n";
-  result += item->toString() + "\n";
-  const auto description = item->getDescription();
-  if (!description.empty()) {
-    result += description + "\n";
+  std::ostringstream result;
+  result << "Description:\n_____________\n";
+  // Сначала имя предмета, затем описание, затем характеристики.
+  if (const auto it = m_selectedItemDescription.find("name"); it != m_selectedItemDescription.end()) {
+    result << it->second << "\n";
   }
-  // Характеристики предмета (например, урон/броня), если они есть.
-  const std::vector<std::pair<const char*, ESetting>> settings = {
-      {"damage", ESetting::damage},
-      {"damage1", ESetting::damage1},
-      {"damage2", ESetting::damage2},
-      {"damage3", ESetting::damage3},
-      {"protection", ESetting::protection},
-      {"resistance", ESetting::resistance},
-      {"abilities", ESetting::abilities},
-      {"addAttribute", ESetting::addAttribute},
-      {"addBaseChar", ESetting::addBaseChar},
-  };
-  for (const auto& [settingName, setting] : settings) {
-    auto chars = item->getChars(setting);
-    if (!chars) {
+  if (const auto it = m_selectedItemDescription.find("description"); it != m_selectedItemDescription.end()) {
+    result << it->second << "\n";
+  }
+  for (const auto& [key, value] : m_selectedItemDescription) {
+    if (key == "name" || key == "description") {
       continue;
     }
-    bool headerPrinted = false;
-    for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
-      const auto value = chars->getValue(i);
-      if (value != 0) {
-        if (!headerPrinted) {
-          result += std::string(settingName) + ":\n";
-          headerPrinted = true;
-        }
-        result += "  " + charNames[i] + ": " + std::to_string(value) + "\n";
-      }
-    }
+    result << value;
   }
-  return result;
+  return result.str();
 }
 
 void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {
@@ -71,9 +46,9 @@ void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {
   auto count = m_rectangle.height();
   if (lockPbag) {
     auto bag = std::dynamic_pointer_cast<Bag>(lockPbag);
-    auto bagItems = bag->showBag(count);
+    auto [bagItems, selectedItemDescription] = bag->showBag(count);
     m_itemsLeft.clear();
     std::copy(bagItems.begin(), bagItems.end(), std::back_inserter(m_itemsLeft));
-    m_bag = bag;
+    m_selectedItemDescription = std::move(selectedItemDescription);
   }
 }
