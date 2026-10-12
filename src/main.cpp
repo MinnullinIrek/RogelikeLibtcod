@@ -320,6 +320,10 @@ int main(int /*argc*/, char** /*argv*/) {
     // сразу обновляется на описание выбранного предмета.
     bag->addSubscriber(infoWindow);
 
+    // Сразу заполняем окно инвентаря, чтобы при первом открытии он был виден.
+    // Без этого m_itemsLeft пуст до первого события Bag::emit (нажатие кнопки).
+    bag->emit();
+
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
     {
       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
