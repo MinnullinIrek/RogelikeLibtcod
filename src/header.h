@@ -42,7 +42,7 @@ const Identifier BORDER_HOR = '*';
 const Distance VISIBLE_CONST = 0.8f;
 // bool retTrue(bool b = true) { return b; }
 
-enum class EAction { none, left, right, up, down, inventory, map, undo, charAction, effect };
+enum class EAction { none, left, right, up, down, inventory, map, undo, charAction, effect, equip };
 
 enum class ItemType {
   simple,

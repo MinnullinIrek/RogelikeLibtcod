@@ -6,6 +6,8 @@
 #include "units/chars.h"
 #include "units/iunit.h"
 #include "units/mover.h"
+#include "items_factory.h"
+#include "units/BodyPart.h"
 
 UnitsFactory::UnitsFactory(/* args */) : m_corpsDeleter(std::make_shared<CorpsDeleter>()) {}
 
@@ -36,7 +38,29 @@ std::shared_ptr<IUnit> UnitsFactory::createHero(std::shared_ptr<Map> map) {
             std::map<ESetting, std::shared_ptr<Chars>>{}));
   }
 
+  // Части тела (слоты под одежду/броню/оружие) + стартовые предметы в сумке.
+  hero->setBodyParts(BodyParts::createHumanoid());
+  equipHeroStdItems(hero);
+
   return hero;
+}
+
+void UnitsFactory::equipHeroStdItems(std::shared_ptr<Unit> hero) {
+  if (!hero) return;
+  auto bag = hero->getBag();
+  if (!bag) return;
+
+  ItemsFactory itemsFactory;
+
+  // Броня из armor.json: разные типы, покрывающие один и те же части тела.
+  for (const auto& armourStr : itemsFactory.readArmours()) {
+    bag->putItem(ItemsFactory::createArmour(armourStr));
+  }
+
+  // Оружие из weapons.json: на одну руку или на две.
+  for (const auto& weaponStr : itemsFactory.weaponStructs()) {
+    bag->putItem(ItemsFactory::createWeapon(weaponStr));
+  }
 }
 
 std::shared_ptr<IUnit> UnitsFactory::createEnemy(std::shared_ptr<Map> map) {

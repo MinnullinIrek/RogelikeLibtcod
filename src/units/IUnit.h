@@ -18,6 +18,7 @@ class MoverInterface;
 class Chars;
 class Interactor;
 class BodyParts;
+class WearingItem;
 class Effect;
 class CorpsDeleter;
 // class Prototype;
@@ -67,6 +68,11 @@ class Unit : public IUnit, public ToString, public Subscriber {
   std::shared_ptr<Chars> getChars();
   void setBodyParts(std::shared_ptr<BodyParts> bp);
   std::shared_ptr<BodyParts> getBodyParts();
+  // Надеть выбранный в сумке предмет на части тела (броня — на покрываемые части,
+  // оружие — в кисть/кисти). Возвращает true при успехе.
+  bool equipSelectedFromBag();
+  // Снять экипированный предмет с тела и вернуть его в сумку (заменяет выбранный слот).
+  bool unequipToBag(const std::shared_ptr<WearingItem>& item);
   void createTestEffect();
   void setInteractor(std::shared_ptr<Interactor> interactor) override;
   std::shared_ptr<Interactor> getInteractor() override;
@@ -87,6 +93,8 @@ class Unit : public IUnit, public ToString, public Subscriber {
   std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
   std::shared_ptr<Chars> m_chars;
   std::shared_ptr<BodyParts> m_bodyParts;
+  // Strong-хранилище экипированных предметов (части тела держат weak_ptr).
+  std::vector<std::shared_ptr<WearingItem>> m_equippedItems;
   std::shared_ptr<Interactor> m_currentInteractor;
   std::unordered_map<int, CharSubscriber> m_charSubscribers;
   std::weak_ptr<CorpsDeleter> m_corpsDeleter;

@@ -54,7 +54,37 @@ std::shared_ptr<MoverInterface> Unit::getMover() { return m_mover; }
 
 void Unit::setMover(std::shared_ptr<MoverInterface> mover) { m_mover = mover; }
 
-void Unit::setBodyParts(std::shared_ptr<BodyParts> bp) { m_bodyParts = bp; }
+void Unit::setBodyParts(std::shared_ptr<BodyParts> bp) {
+  m_bodyParts = bp;
+  if (m_bodyParts) {
+    // Уведомляем подписчиков окна инвентаря и через владельца тоже.
+    m_bodyParts->setOwner(std::dynamic_pointer_cast<Publisher>(shared_from_this()));
+  }
+}
+
+bool Unit::equipSelectedFromBag() {
+  if (!m_bodyParts || !m_bag) return false;
+  auto item = std::dynamic_pointer_cast<WearingItem>(m_bag->getSelected());
+  if (!item) return false;
+  if (!m_bodyParts->canEquip(item)) return false;
+
+  // Вешаем предмет на части тела (BodyParts хранит weak-ссылки, strong — у юнита),
+  // затем убираем его из сумки.
+  if (!m_bodyParts->equip(item)) return false;
+  m_equippedItems.push_back(item);
+  m_bag->popItem();
+  return true;
+}
+
+bool Unit::unequipToBag(const std::shared_ptr<WearingItem>& item) {
+  if (!m_bodyParts || !item) return false;
+  if (!m_bodyParts->unequip(item)) return false;
+  // Возвращаем strong-ссылку из «тельца» в сумку.
+  auto it = std::find(m_equippedItems.begin(), m_equippedItems.end(), item);
+  if (it != m_equippedItems.end()) m_equippedItems.erase(it);
+  if (m_bag) m_bag->putItem(item);
+  return true;
+}
 
 std::shared_ptr<BodyParts> Unit::getBodyParts() { return m_bodyParts; }
 

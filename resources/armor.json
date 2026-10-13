@@ -1,0 +1,171 @@
+{
+  "items": [
+    {
+      "name": "cloth shirt",
+      "description": "simple linen shirt",
+      "armourType": "clothes",
+      "wearingSlots": ["chest", "back", "waist"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 10.0 },
+            { "weight": 0.5 }
+          ]
+        },
+        {
+          "name": "resistance",
+          "value": [
+            { "fire": 0.95 },
+            { "sound": 1.0 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "wool cap",
+      "description": "warm wool cap",
+      "armourType": "clothes",
+      "wearingSlots": ["head"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 5.0 },
+            { "weight": 0.1 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "leather jerkin",
+      "description": "light leather jacket covering torso and arms",
+      "armourType": "light",
+      "wearingSlots": ["chest", "back", "larm", "rarm"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 25.0 },
+            { "weight": 3.0 }
+          ]
+        },
+        {
+          "name": "protection",
+          "value": [
+            { "cut": 0.8 },
+            { "chop": 0.85 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "chainmail hauberk",
+      "description": "medium mail shirt with sleeves, covers torso hips and upper legs",
+      "armourType": "medium",
+      "wearingSlots": ["chest", "back", "larm", "rarm", "lforearm", "rforearm", "waist", "hips"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 60.0 },
+            { "weight": 10.0 }
+          ]
+        },
+        {
+          "name": "protection",
+          "value": [
+            { "cut": 0.5 },
+            { "chop": 0.6 },
+            { "spike": 0.7 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "plate cuirass",
+      "description": "heavy plate breastplate, covers chest back and neck",
+      "armourType": "heavy",
+      "wearingSlots": ["chest", "back", "neck"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 120.0 },
+            { "weight": 18.0 }
+          ]
+        },
+        {
+          "name": "protection",
+          "value": [
+            { "cut": 0.3 },
+            { "chop": 0.3 },
+            { "spike": 0.4 },
+            { "crush": 0.6 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "iron greaves",
+      "description": "heavy shin guards for both legs",
+      "armourType": "heavy",
+      "wearingSlots": ["lshin", "rshin"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 50.0 },
+            { "weight": 6.0 }
+          ]
+        },
+        {
+          "name": "protection",
+          "value": [
+            { "cut": 0.4 },
+            { "crush": 0.5 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "combat boots",
+      "description": "sturdy leather boots",
+      "armourType": "light",
+      "wearingSlots": ["lfoot", "rfoot"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 20.0 },
+            { "weight": 1.5 }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "exo frame",
+      "description": "military exoskeleton: whole body support frame",
+      "armourType": "exoArmour",
+      "wearingSlots": ["chest", "back", "larm", "rarm", "waist", "hips", "lshin", "rshin"],
+      "chars": [
+        {
+          "name": "baseChar",
+          "value": [
+            { "hp": 200.0 },
+            { "weight": 40.0 },
+            { "strength": 15.0 }
+          ]
+        },
+        {
+          "name": "protection",
+          "value": [
+            { "electricity": 0.7 },
+            { "fire": 0.5 },
+            { "crush": 0.4 }
+          ]
+        }
+      ]
+    }
+  ]
+}
