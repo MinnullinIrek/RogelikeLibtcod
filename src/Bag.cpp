@@ -1,7 +1,18 @@
 #include "Bag.h"
+
 #include <assert.h>
+
 #include <algorithm>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "char_names.h"
+#include "char_types.h"
 #include "items/IItems.h"
+#include "units/chars.h"
 
 Bag::Bag() {}
 Bag::~Bag() {}
@@ -55,10 +66,11 @@ bool Bag::contains(std::shared_ptr<IItems> item) {
   return std::find(m_items.begin(), m_items.end(), item) != m_items.end();
 }
 
-std::list<Text> Bag::showBag(Count count) {
+std::pair<std::list<Text>, Bag::ItemDescription> Bag::showBag(Count count) {
   std::list<Text> bagList;
+  ItemDescription description;
   if (m_items.empty()) {
-    return bagList;
+    return {bagList, description};
   }
   const int size = static_cast<int>(m_items.size());
   // Выделение не должно теряться: если оно некорректное (первое открытие инвентаря),
@@ -87,7 +99,46 @@ std::list<Text> Bag::showBag(Count count) {
 
     bagList.emplace_back(Text(sbag, Color{255, 255, 255}, Color{0, 0, 0}));
   }
-  return bagList;
+
+  // Описание выбранного предмета.
+  const auto& selected = m_items[m_selected];
+  description["name"] = selected->toString();
+  const auto itemDescription = selected->getDescription();
+  if (!itemDescription.empty()) {
+    description["description"] = itemDescription;
+  }
+  // Характеристики предмета (например, урон/броня), если они есть.
+  const std::vector<std::pair<const char*, ESetting>> settings = {
+      {"damage", ESetting::damage},
+      {"damage1", ESetting::damage1},
+      {"damage2", ESetting::damage2},
+      {"damage3", ESetting::damage3},
+      {"protection", ESetting::protection},
+      {"resistance", ESetting::resistance},
+      {"abilities", ESetting::abilities},
+      {"addAttribute", ESetting::addAttribute},
+      {"addBaseChar", ESetting::addBaseChar},
+  };
+  for (const auto& [settingName, setting] : settings) {
+    auto chars = selected->getChars(setting);
+    if (!chars) {
+      continue;
+    }
+    std::string settingText;
+    for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
+      const auto value = chars->getValue(i);
+      if (value != 0) {
+        if (settingText.empty()) {
+          settingText += std::string(settingName) + ":\n";
+        }
+        settingText += "  " + charNames[i] + ": " + std::to_string(value) + "\n";
+      }
+    }
+    if (!settingText.empty()) {
+      description[settingName] = settingText;
+    }
+  }
+  return {bagList, description};
 }
 
 void Bag::putItem(std::shared_ptr<Bag> bag) {

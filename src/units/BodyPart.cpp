@@ -1,7 +1,5 @@
 #include "BodyPart.h"
 
-#include <assert.h>
-
 #include "../items/IItems.h"
 
 Bodypart::Bodypart(const std::string& name, float percent, CharValueType hp)

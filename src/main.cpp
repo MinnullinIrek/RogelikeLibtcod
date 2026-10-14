@@ -23,6 +23,7 @@
 #include "Bag.h"
 #include "char_names.h"
 #include "game_struct.h"
+#include "header.h"
 #include "keyboard.h"
 #include "map_generator.h"
 #include "maps/map.h"
@@ -34,7 +35,6 @@
 #include "units/chars.h"
 #include "units/interactor.h"
 #include "units/iunit.h"
-#include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
 #include "utils/game_log.h"
@@ -285,30 +285,30 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.vEffect->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
-    bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
     auto infoWindow = std::make_shared<Window>(
-        [&hero = gameStruct.hero](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
-          auto lockedPublisher = moverPub.lock();
-          if (lockedPublisher) {
-            auto mover = std::dynamic_pointer_cast<IMover>(lockedPublisher);
-            if (mover) {
-              const auto& heroCd = mover->getCoord();
-              text = "Info:\n___________\n";
-              text += "pos: " + heroCd.toString() + "\n";
-              auto chars = hero ? hero->getChars() : nullptr;
-              if (chars) {
-                for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
-                  text += charNames[i] + ": " + std::to_string(chars->getValue(i)) + "\n";
-                }
+        [&hero = gameStruct.hero, inventoryWindow](
+            std::weak_ptr<Publisher> /*publisher*/, std::string& text, Color& color, Color& bkColor) {
+          // Если в инвентаре выбран предмет - выводим его описание
+          // вместо информации о персонаже.
+          const auto itemDescription = inventoryWindow->getDescriptionText();
+          if (!itemDescription.empty()) {
+            text = itemDescription;
+          } else {
+            const auto& heroCd = gameStruct.hero->getCoord();
+            text = "Info:\n___________\n";
+            text += "pos: " + heroCd.toString() + "\n";
+            auto chars = hero ? hero->getChars() : nullptr;
+            if (chars) {
+              for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
+                text += charNames[i] + ": " + std::to_string(chars->getValue(i)) + "\n";
               }
-              color = {255, 255, 255};
-              bkColor = {0, 0, 255};
-              return 0;
             }
           }
-          return 1;
+          color = {255, 255, 255};
+          bkColor = {0, 0, 255};
+          return 0;
         },
         std::string_view(""),
         Color{255, 255, 255},
@@ -316,6 +316,13 @@ int main(int /*argc*/, char** /*argv*/) {
         Rectangle{{40, 10}, {60, 15}},
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
+    // При выборе предмета в инвентаре (Bag::select -> emit) окно описания
+    // сразу обновляется на описание выбранного предмета.
+    bag->addSubscriber(infoWindow);
+
+    // Сразу заполняем окно инвентаря, чтобы при первом открытии он был виден.
+    // Без этого m_itemsLeft пуст до первого события Bag::emit (нажатие кнопки).
+    bag->emit();
 
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
     {
