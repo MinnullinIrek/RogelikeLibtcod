@@ -29,6 +29,8 @@ class InventoryWindow : public IWindow, public Subscriber {
 
   std::weak_ptr<Unit> m_hero;
   Text m_itemDescription;
+
+  void refresh();
 };
 
 #endif  // INVENTORY_WINDOW_H
