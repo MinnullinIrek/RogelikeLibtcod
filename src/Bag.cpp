@@ -1,5 +1,7 @@
 #include "Bag.h"
+
 #include <assert.h>
+
 #include <algorithm>
 #include <map>
 #include <memory>
