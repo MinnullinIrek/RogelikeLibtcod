@@ -10,6 +10,40 @@
 #include "items/IItems.h"
 #include "units/chars.h"
 
+namespace {
+// JSON-ключы частей тела -> слоты.
+EWearingSlot slotFromJson(const std::string& key) {
+  static const std::map<std::string, EWearingSlot> kSlots = {
+      {"head", EWearingSlot::head},           {"neck", EWearingSlot::neck},
+      {"larm", EWearingSlot::larm},           {"rarm", EWearingSlot::rarm},
+      {"lforearm", EWearingSlot::lforearm},   {"rforearm", EWearingSlot::rforearm},
+      {"lhand", EWearingSlot::lhand},         {"rhand", EWearingSlot::rhand},
+      {"chest", EWearingSlot::chest},         {"back", EWearingSlot::back},
+      {"waist", EWearingSlot::waist},         {"hips", EWearingSlot::hips},
+      {"lshin", EWearingSlot::lshin},         {"rshin", EWearingSlot::rshin},
+      {"lfoot", EWearingSlot::lfoot},         {"rfoot", EWearingSlot::rfoot},
+  };
+  auto it = kSlots.find(key);
+  if (it == kSlots.end()) {
+    throw std::string("unknown wearing slot in json: ") + key;
+  }
+  return it->second;
+}
+
+EArmorItemTypes armourTypeFromJson(const std::string& key) {
+  static const std::map<std::string, EArmorItemTypes> kTypes = {
+      {"clothes", EArmorItemTypes::clothes},   {"light", EArmorItemTypes::light},
+      {"medium", EArmorItemTypes::medium},     {"heavy", EArmorItemTypes::heavy},
+      {"exoArmour", EArmorItemTypes::exoArmour},
+  };
+  auto it = kTypes.find(key);
+  if (it == kTypes.end()) {
+    throw std::string("unknown armour type in json: ") + key;
+  }
+  return it->second;
+}
+}  // namespace
+
 ItemsFactory::ItemsFactory() {
   m_rangedClose.insert({"close", EWeaponRangedClose::close});
   m_rangedClose.insert({"thrown", EWeaponRangedClose::thrown});
@@ -17,20 +51,11 @@ ItemsFactory::ItemsFactory() {
   m_rangedClose.insert({"melee", EWeaponRangedClose::melee});
   m_rangedClose.insert({"ranged", EWeaponRangedClose::ranged});
 
-  m_slots.insert({"brest", EWearingSlot::brest});
-  m_slots.insert({"head", EWearingSlot::head});
-  m_slots.insert({"hip", EWearingSlot::hip});
-  m_slots.insert({"larm", EWearingSlot::larm});
-  m_slots.insert({"lfoot", EWearingSlot::lfoot});
-  m_slots.insert({"lforearm", EWearingSlot::lforearm});
-  m_slots.insert({"lhend", EWearingSlot::lhend});
-  m_slots.insert({"lleg", EWearingSlot::lleg});
-  m_slots.insert({"neck", EWearingSlot::neck});
-  m_slots.insert({"rarm", EWearingSlot::rarm});
-  m_slots.insert({"rfoot", EWearingSlot::rfoot});
-  m_slots.insert({"rforearm", EWearingSlot::rforearm});
-  m_slots.insert({"rhand", EWearingSlot::rhand});
-  m_slots.insert({"rleg", EWearingSlot::rleg});
+  m_armorTypes.insert({"clothes", EArmorItemTypes::clothes});
+  m_armorTypes.insert({"light", EArmorItemTypes::light});
+  m_armorTypes.insert({"medium", EArmorItemTypes::medium});
+  m_armorTypes.insert({"heavy", EArmorItemTypes::heavy});
+  m_armorTypes.insert({"exoArmour", EArmorItemTypes::exoArmour});
 
   m_settings.insert({"abilities", ESetting::abilities});
   m_settings.insert({"addAttribute", ESetting::addAttribute});
@@ -103,7 +128,7 @@ std::shared_ptr<WearingItem> ItemsFactory::createWeapon(EWeaponType weaponType) 
 
       wpn.m_rangedClose.push_back(EWeaponRangedClose::melee);
       wpn.m_weaponSize = EWeaponSize::small;
-      wpn.m_slots = {{EWearingSlot::rhand}, {EWearingSlot::lhend}};
+      wpn.m_slots = {{EWearingSlot::rhand}, {EWearingSlot::lhand}};
       witem = std::make_shared<Weapon>(wpn);
     } break;
     case EWeaponType::blade:
@@ -217,10 +242,7 @@ void ItemsFactory::readJson() {
           std::vector<EWearingSlot> slots;
           for (auto iterSlot = iterSlots->begin(); iterSlot != iterSlots->end(); ++iterSlot) {
             auto rang = iterSlot.value().get<std::string>();
-            if (m_slots.find(rang) == m_slots.end()) {
-              throw std::string("m_rangedClose doesn't contains key ") + rang;
-            }
-            slots.push_back(m_slots.at(rang));
+            slots.push_back(slotFromJson(rang));
           }
           str.m_slots.push_back(slots);
         }
@@ -267,4 +289,84 @@ void ItemsFactory::readJson() {
   } else {
     throw "file not open fName = " + fName;
   }
+}
+
+std::shared_ptr<Armour> ItemsFactory::createArmour(const ArmourStruct& str) {
+  return std::make_shared<Armour>(str);
+}
+
+std::shared_ptr<Weapon> ItemsFactory::createWeapon(const WeaponStruct& str) {
+  return std::make_shared<Weapon>(str);
+}
+
+std::vector<ArmourStruct> ItemsFactory::readArmours() const {
+  std::vector<ArmourStruct> result;
+
+  std::string fName = "../resources/armor.json";
+  std::ifstream fileStream(fName);
+  if (!fileStream.is_open()) {
+    fName = "resources/armor.json";
+    fileStream.open(fName);
+  }
+  if (!fileStream.is_open()) {
+    throw "file not open fName = " + fName;
+  }
+
+  nlohmann::json jsonMain1;
+  try {
+    fileStream >> jsonMain1;
+  } catch (...) {
+    std::cerr << "exception on reading " << fName << std::endl;
+  }
+
+  nlohmann::json jsonMain = jsonMain1.begin().value();
+  for (auto& sv : jsonMain) {
+    ArmourStruct str;
+
+    if (!sv.contains("name")) {
+      throw std::string("armor [name] doesn't exist in armor.json");
+    }
+    str.name = sv["name"];
+
+    if (sv.contains("description")) {
+      str.description = sv["description"];
+    }
+
+    if (!sv.contains("armourType")) {
+      throw std::string("armor [armourType] doesn't exist in armor.json armor name =") + str.name;
+    }
+    str.m_armourType = armourTypeFromJson(sv["armourType"].get<std::string>());
+
+    // Части тела, которые покрывает предмет (одна или несколько).
+    if (!sv.contains("wearingSlots")) {
+      throw std::string("armor [wearingSlots] doesn't exist in armor.json armor name =") + str.name;
+    }
+    for (auto& slotJson : sv["wearingSlots"]) {
+      str.m_slots.push_back(slotFromJson(slotJson.get<std::string>()));
+    }
+
+    if (sv.contains("chars")) {
+      for (auto& charJson : sv["chars"]) {
+        for (const auto& chVal : {"name", "value"}) {
+          if (!charJson.contains(chVal)) {
+            throw std::string("armor [chars][") + chVal + "] doesn't exist in armor.json armor name =" + str.name;
+          }
+        }
+        ESetting sett = m_settings.at(charJson["name"].get<std::string>());
+        std::shared_ptr<Chars> charVal = std::make_shared<Chars>();
+        for (auto& ch : charJson["value"]) {
+          auto& key = ch.begin().key();
+          auto val = ch.begin().value().get<CharValueType>();
+          if (m_chars.find(key) == m_chars.end()) {
+            throw std::string("m_chars doesn't contains key ") + key;
+          }
+          charVal->setValue(m_chars.at(key), val);
+        }
+        str.m_chars.insert({sett, charVal});
+      }
+    }
+
+    result.push_back(str);
+  }
+  return result;
 }

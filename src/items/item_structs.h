@@ -20,6 +20,7 @@ struct WearingStruct {
 };
 
 struct WeaponStruct : public WearingStruct {
+  // Варианты экипировки: {lhand} или {rhand} — на одну руку, {lhand, rhand} — на две.
   std::vector<std::vector<EWearingSlot>> m_slots;
   std::vector<EWeaponType> m_weaponType;
   EWeaponSize m_weaponSize = EWeaponSize::small;
@@ -27,9 +28,10 @@ struct WeaponStruct : public WearingStruct {
 };
 
 struct ArmourStruct : public WearingStruct {
-  std::vector<std::vector<EWearingSlot>> m_slots;
-  std::vector<EArmorItemTypes> m_armourType;
-  std::map<ESetting, std::shared_ptr<Chars>> m_chars;
+  // Набор частей тела, которые покрывает предмет (одна или несколько).
+  std::vector<EWearingSlot> m_slots;
+  // Тип брони: одежда / легкая / средняя / тяжелая / экзоскелет.
+  EArmorItemTypes m_armourType = EArmorItemTypes::clothes;
 };
 
 #endif

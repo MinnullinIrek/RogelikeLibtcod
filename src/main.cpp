@@ -33,7 +33,7 @@
 #include "units/actor_strategy_map.h"
 #include "units/chars.h"
 #include "units/interactor.h"
-#include "units/iunit.h"
+#include "units/IUnit.h"
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"

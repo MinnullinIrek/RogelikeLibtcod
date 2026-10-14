@@ -17,11 +17,32 @@ WearingItem::WearingItem(const WearingStruct& wstr) : IItems(wstr.name, wstr.des
 
 WearingItem::~WearingItem() {}
 
-Armour::Armour(const ArmourStruct& str) : WearingItem(str) {}
+Armour::Armour(const ArmourStruct& str) : WearingItem(str), m_armourType(str.m_armourType) {
+  // Предмет покрывает набор частей тела (одну или несколько).
+  if (!str.m_slots.empty()) {
+    m_slots = {str.m_slots};
+  }
+}
 
 Armour::~Armour() {}
 
-Weapon::Weapon(const WeaponStruct& str) : WearingItem(str),
-  m_rangedClose(EWeaponRangedClose::melee), m_weaponSize(EWeaponSize::small) {}
+Weapon::Weapon(const WeaponStruct& str) : WearingItem(str) {
+  m_slots = str.m_slots;
+  m_weaponType = str.m_weaponType;
+  m_weaponSize = str.m_weaponSize;
+  if (!str.m_rangedClose.empty()) {
+    m_rangedClose = str.m_rangedClose.front();
+  }
+  // Определяем одну руку занимает оружие или две по слотам кистей.
+  bool hasLhand = false;
+  bool hasRhand = false;
+  for (const auto& slotVec : m_slots) {
+    for (auto slot : slotVec) {
+      if (slot == EWearingSlot::lhand) hasLhand = true;
+      if (slot == EWearingSlot::rhand) hasRhand = true;
+    }
+  }
+  m_hands = (hasLhand && hasRhand) ? EWeaponOneTwoHand::twoHand : EWeaponOneTwoHand::oneHand;
+}
 
 Weapon::~Weapon() {}

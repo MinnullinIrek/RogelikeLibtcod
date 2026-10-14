@@ -3,7 +3,7 @@
 #include "char_names.h"
 #include "char_types.h"
 #include "units/chars.h"
-#include "units/iunit.h"
+#include "units/IUnit.h"
 
 Info::Info(/* args */) {}
 

@@ -32,6 +32,22 @@ std::weak_ptr<IItems> Bag::popItem() {
   return popItem;
 }
 
+void Bag::replaceSelected(const std::shared_ptr<IItems>& item) {
+  if (m_selected >= 0 && m_selected < static_cast<int>(m_items.size())) {
+    m_items[m_selected] = item;
+    emit();
+  } else if (item) {
+    putItem(item);
+  }
+}
+
+std::shared_ptr<IItems> Bag::getSelected() const {
+  if (m_selected >= 0 && m_selected < static_cast<int>(m_items.size())) {
+    return m_items[m_selected];
+  }
+  return nullptr;
+}
+
 void Bag::select(int next) {
   if (!m_items.empty()) {
     // Если ничего не выделено (например, при первом открытии инвентаря),
