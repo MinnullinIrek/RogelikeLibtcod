@@ -71,9 +71,35 @@ std::shared_ptr<Armour> Bodypart::getArmourByType(EArmorItemTypes type) const {
   return nullptr;
 }
 
+std::string Bodypart::equippedDescription() const {
+  std::string result;
+  auto add = [&result](const std::string& s) {
+    if (!result.empty()) result += " + ";
+    result += s;
+  };
+  for (const auto& [type, weakArmour] : m_armour) {
+    auto armour = weakArmour.lock();
+    if (armour) add(std::string(armourTypeName(type)) + ": " + armour->toString());
+  }
+  auto weapon = m_weapon.lock();
+  if (weapon) add("weapon: " + weapon->toString());
+  if (result.empty()) result = "empty";
+  return result;
+}
+
 //----------------- BodyParts -----------------
 
-BodyParts::BodyParts(const std::map<EWearingSlot, std::shared_ptr<Bodypart>>& slots) : m_parts(slots) {}
+BodyParts::BodyParts(const std::map<EWearingSlot, std::shared_ptr<Bodypart>>& slots) : m_parts(slots) {
+  rebuildIndex();
+}
+
+void BodyParts::rebuildIndex() {
+  m_partsByIndex.assign(static_cast<size_t>(EWearingSlot::count), nullptr);
+  for (const auto& [slot, part] : m_parts) {
+    auto idx = static_cast<size_t>(slot);
+    if (idx < m_partsByIndex.size()) m_partsByIndex[idx] = part;
+  }
+}
 
 void BodyParts::setOwner(std::weak_ptr<Publisher> owner) { m_owner = owner; }
 
@@ -95,7 +121,51 @@ std::shared_ptr<Bodypart> BodyParts::getBodyPart(EWearingSlot slot) const {
   return nullptr;
 }
 
-void BodyParts::setBodyPart(EWearingSlot slot, std::shared_ptr<Bodypart> bodyPart) { m_parts[slot] = bodyPart; }
+void BodyParts::setBodyPart(EWearingSlot slot, std::shared_ptr<Bodypart> bodyPart) {
+  m_parts[slot] = bodyPart;
+  rebuildIndex();
+}
+
+std::vector<std::shared_ptr<Bodypart>> BodyParts::orderedParts() const {
+  std::vector<std::shared_ptr<Bodypart>> result;
+  for (const auto& part : m_partsByIndex) {
+    if (part) result.push_back(part);
+  }
+  return result;
+}
+
+int BodyParts::findFirstFreeSlot(const std::shared_ptr<WearingItem>& item) const {
+  if (!item || !canEquip(item)) return -1;
+  // Возвращаем индекс первой покрываемой части тела — под неё ставится ">".
+  for (size_t idx = 0; idx < m_partsByIndex.size(); ++idx) {
+    const auto& part = m_partsByIndex[idx];
+    if (!part) continue;
+    for (const auto& slotVec : item->getSlots()) {
+      if (std::find(slotVec.begin(), slotVec.end(), part->getSlot()) != slotVec.end()) {
+        return static_cast<int>(idx);
+      }
+    }
+  }
+  return -1;
+}
+
+std::list<Text> BodyParts::showSlots(int selectedSlot) const {
+  std::list<Text> result;
+  for (size_t idx = 0; idx < m_partsByIndex.size(); ++idx) {
+    const auto& part = m_partsByIndex[idx];
+    if (!part) continue;
+    std::string line = std::string(slotName(static_cast<EWearingSlot>(idx))) + ": " + part->equippedDescription();
+    Color color{255, 255, 255};
+    if (static_cast<int>(idx) == selectedSlot) {
+      line = "> " + line;
+      color = Color{255, 255, 0};
+    } else if (part->equippedDescription() == "empty") {
+      color = Color{130, 130, 130};
+    }
+    result.emplace_back(Text(line, color, Color{0, 0, 0}));
+  }
+  return result;
+}
 
 std::vector<std::shared_ptr<Bodypart>> BodyParts::coveredParts(const std::shared_ptr<WearingItem>& item) const {
   std::vector<std::shared_ptr<Bodypart>> result;

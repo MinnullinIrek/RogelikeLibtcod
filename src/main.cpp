@@ -285,6 +285,8 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.vEffect->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
+    // Окно инвентаря должно видеть части тела героя (правая колонка, включая пустые слоты).
+    inventoryWindow->setHero(gameStruct.hero);
     bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 

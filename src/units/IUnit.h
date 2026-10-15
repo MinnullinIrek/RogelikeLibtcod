@@ -79,6 +79,8 @@ class Unit : public IUnit, public ToString, public Subscriber {
   void selectEquipped(int delta);
   int getEquippedSelected() const { return m_equippedSelected; }
   std::shared_ptr<WearingItem> getEquippedSelectedItem() const;
+  // Индекс части тела, подсвечиваемой под выбранным в сумке предметом (или -1).
+  int getHighlightedSlotIndex() const;
   // Снять выбранный экипированный предмет (клавиша X в инвентаре).
   bool unequipSelected();
   void createTestEffect();

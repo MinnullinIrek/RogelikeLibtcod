@@ -88,6 +88,13 @@ std::shared_ptr<WearingItem> Unit::getEquippedSelectedItem() const {
   return m_equippedItems[m_equippedSelected];
 }
 
+int Unit::getHighlightedSlotIndex() const {
+  if (!m_bodyParts || !m_bag) return -1;
+  auto item = std::dynamic_pointer_cast<WearingItem>(m_bag->getSelected());
+  if (!item) return -1;
+  return m_bodyParts->findFirstFreeSlot(item);
+}
+
 bool Unit::unequipSelected() {
   auto item = getEquippedSelectedItem();
   if (!item) return false;
@@ -109,11 +116,10 @@ bool Unit::unequipToBag(const std::shared_ptr<WearingItem>& item) {
     if (m_equippedSelected >= idx) m_equippedSelected = std::max(-1, m_equippedSelected - 1);
   }
   if (m_bag) {
-    if (m_bag->hasSelected())
-      m_bag->putItem(item);
-    else
-      m_bag->replaceSelected(item);
+    // Снятую вещь кладём в сумку как новый предмет.
+    m_bag->putItem(item);
   }
+  emit();
   return true;
 }
 

@@ -43,6 +43,10 @@ class Bodypart : public ToString {
   // Оружие, держащееся в этой кисти (если это кисть).
   std::shared_ptr<Weapon> getWeapon() const { return m_weapon.lock(); }
 
+  // Человекочитаемое описание того, что надето на часть тела
+  // ("clothes: wool cap + light: leather cap" или "empty").
+  std::string equippedDescription() const;
+
  private:
   const EWearingSlot m_slot;
   const std::string m_name;
@@ -81,12 +85,26 @@ class BodyParts : public Publisher {
   // Список «предмет : где надет» для отображения в окне инвентаря.
   std::list<Text> showEquipped(Count count) const;
 
+  // Все части тела по порядку enum'а (для отображения слотов в окне инвентаря,
+  // включая пустые).
+  std::vector<std::shared_ptr<Bodypart>> orderedParts() const;
+
+  // Индекс первой свободной части тела, подходящей под предмет (или -1).
+  int findFirstFreeSlot(const std::shared_ptr<WearingItem>& item) const;
+
+  // Список всех частей тела «slot: что надето» (пустые — "empty") для окна инвентаря.
+  // selectedSlot — подсвечиваемый ">" слот (например, первый подходящий под выбранный предмет).
+  std::list<Text> showSlots(int selectedSlot = -1) const;
+
   // Полный набор частей тела humanoid'а: голова, шея, руки, кисти, грудь, спина,
   // пояс, бедра, голени, ступни.
   static std::shared_ptr<BodyParts> createHumanoid();
 
  private:
   std::map<EWearingSlot, std::shared_ptr<Bodypart>> m_parts;
+  // Части тела по порядку enum'а EWearingSlot (индекс == slot) — для отображения слотов.
+  std::vector<std::shared_ptr<Bodypart>> m_partsByIndex;
+  void rebuildIndex();
   std::weak_ptr<Publisher> m_owner;
 };
 

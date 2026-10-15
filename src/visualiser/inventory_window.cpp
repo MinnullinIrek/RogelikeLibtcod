@@ -6,58 +6,80 @@
 #include "../Bag.h"
 #include "../units/BodyPart.h"
 #include "../units/IUnit.h"
-// #include "window.h"
 
-InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {}
+InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {
+  m_headerLeft = Text("Bag:", Color{255, 255, 0}, Color{0, 0, 0});
+  m_headerRight = Text("Body parts:", Color{255, 255, 0}, Color{0, 0, 0});
+}
 
 void InventoryWindow::setHero(std::shared_ptr<Unit> hero) {
   m_hero = hero;
   if (hero) {
     // Подписываемся на героя: Unit и BodyParts каскадно шлют emit при экипировке.
-    hero->addSubscriber(std::static_pointer_cast<Subscriber>(std::shared_ptr<Subscriber>(hero.get(), [](Subscriber*) {})));
+    hero->addSubscriber(hero);
+    // Части тела тоже шлют emit напрямую — подписываемся и на них.
+    if (auto bp = hero->getBodyParts()) {
+      bp->addSubscriber(hero);
+    }
+    refresh();
+  }
+}
+
+void InventoryWindow::refresh() {
+  auto hero = m_hero.lock();
+  if (!hero) return;
+
+  // Левая колонка — сумка.
+  auto count = m_rectangle.height();
+  m_itemsLeft.clear();
+  if (auto bag = hero->getBag()) {
+    auto bagItems = bag->showBag(count - 1);
+    std::copy(bagItems.begin(), bagItems.end(), std::back_inserter(m_itemsLeft));
+  }
+
+  // Правая колонка — ВСЕ части тела, даже пустые ("head: empty").
+  m_itemsRight.clear();
+  if (auto bp = hero->getBodyParts()) {
+    int highlight = hero->getHighlightedSlotIndex();
+    auto slots = bp->showSlots(highlight);
+    std::copy(slots.begin(), slots.end(), std::back_inserter(m_itemsRight));
   }
 }
 
 void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
-  Text text{"", Color{255, 255, 255}, Color{0, 0, 0}};
+  // Левая колонка — сумка.
   Coord cd = parentCd + Coord{0, 0};
+  visualizator({m_headerLeft.m_text, m_headerLeft.m_color, m_headerLeft.m_bgColor}, cd);
   for (auto it = m_itemsLeft.begin(); it != m_itemsLeft.end(); ++it) {
     cd.y += 1;
-    visualizator({it->m_text, Color{255, 255, 255}, Color{0, 0, 0}}, cd);
+    visualizator({it->m_text, it->m_color, it->m_bgColor}, cd);
   }
-  // Правая колонка — экипированные предметы (части тела).
+  // Правая колонка — части тела и что надето (пустые слоты тоже видны).
   Coord rcd = parentCd + Coord{m_rectangle.width() / 2, 0};
-  rcd.y += 1;
-  visualizator({m_headerRight.m_text, Color{255, 255, 0}, Color{0, 0, 0}}, rcd);
+  visualizator({m_headerRight.m_text, m_headerRight.m_color, m_headerRight.m_bgColor}, rcd);
   for (auto it = m_itemsRight.begin(); it != m_itemsRight.end(); ++it) {
     rcd.y += 1;
-    visualizator({it->m_text, Color{255, 255, 255}, Color{0, 0, 0}}, rcd);
+    visualizator({it->m_text, it->m_color, it->m_bgColor}, rcd);
   }
 }
 
 void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {
   auto lockPbag = pbag.lock();
-  auto count = m_rectangle.height();
   if (lockPbag) {
     auto bag = std::dynamic_pointer_cast<Bag>(lockPbag);
     if (bag) {
-      auto bagItems = bag->showBag(count);
+      auto count = m_rectangle.height();
+      auto bagItems = bag->showBag(count - 1);
       m_itemsLeft.clear();
       std::copy(bagItems.begin(), bagItems.end(), std::back_inserter(m_itemsLeft));
     }
   }
-  // Обновляем список надетых вещей по частям тела.
+  // Части тела всегда пересчитываются от героя — в т.ч. после equip/unequip.
   auto hero = m_hero.lock();
   m_itemsRight.clear();
-  m_headerRight = Text("Worn items:", Color{255, 255, 0}, Color{0, 0, 0});
   if (hero && hero->getBodyParts()) {
-    auto equipped = hero->getBodyParts()->showEquipped(count - 1);
-    int sel = hero->getEquippedSelected();
-    int i = 0;
-    for (auto& t : equipped) {
-      if (i == sel) t.m_text = "> " + t.m_text;
-      m_itemsRight.push_back(t);
-      ++i;
-    }
+    int highlight = hero->getHighlightedSlotIndex();
+    auto slots = hero->getBodyParts()->showSlots(highlight);
+    std::copy(slots.begin(), slots.end(), std::back_inserter(m_itemsRight));
   }
 }
