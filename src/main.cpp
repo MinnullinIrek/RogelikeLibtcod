@@ -319,7 +319,9 @@ int main(int /*argc*/, char** /*argv*/) {
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
 
-    gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
+    // В режиме инвентаря Info не показываем: его место занимает колонка частей тела.
+    mainWindow->addHideWindow(EMainWindows::einventory, infoWindow);
+
     {
       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
       auto chars = gameStruct.hero->getChars();

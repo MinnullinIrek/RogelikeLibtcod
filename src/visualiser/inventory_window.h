@@ -30,7 +30,13 @@ class InventoryWindow : public IWindow, public Subscriber {
   std::weak_ptr<Unit> m_hero;
   Text m_itemDescription;
 
+  // Индекс части тела, на которую встанет выбранный в сумке предмет.
+  int m_highlightedSlot = -1;
+
   void refresh();
+  // Обновление только правой колонки (части тела) — вызывается при каждом show,
+  // чтобы подсветка слота не «замораживалась» до событий equip/unequip.
+  void refreshBodyParts();
 };
 
 #endif  // INVENTORY_WINDOW_H

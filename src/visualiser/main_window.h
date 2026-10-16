@@ -2,6 +2,7 @@
 #define MAIN_WINDOW_H
 
 #include <unordered_map>
+#include <vector>
 
 #include "../header.h"
 #include "../utils/subscriber.h"
@@ -20,10 +21,13 @@ class MainWindow : public IWindow, public Subscriber {
   void notify(std::weak_ptr<Publisher> publisher) override;
   void addWindow(EMainWindows eWindowType, std::shared_ptr<IWindow>);
   void setCurrent(EMainWindows currentWindowType);
+  // Скрыть стороннее окно (например Info), когда активен указанный режим.
+  void addHideWindow(EMainWindows whenCurrent, std::shared_ptr<IWindow> windowToHide);
 
  private:
   EMainWindows m_currentWindowType = EMainWindows::emap;
   std::unordered_map<EMainWindows, std::shared_ptr<IWindow>> m_windows;
+  std::vector<std::pair<EMainWindows, std::shared_ptr<IWindow>>> m_hiddenWindows;
 };
 
 #endif  // MAIN_WINDOW_H
