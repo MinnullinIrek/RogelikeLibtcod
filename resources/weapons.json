@@ -59,10 +59,10 @@
       ],
       "wearingSlots": [
         [
-          "larm"
+          "lhand"
         ],
         [
-          "rarm"
+          "rhand"
         ]
       ],
       "weaponSize": "medium"
@@ -126,10 +126,10 @@
       ],
       "wearingSlots": [
         [
-          "larm"
+          "lhand"
         ],
         [
-          "rarm"
+          "rhand"
         ]
       ]
     },
@@ -192,17 +192,17 @@
       ],
       "wearingSlots": [
         [
-          "larm"
+          "lhand"
         ],
         [
-          "rarm"
+          "rhand"
         ]
       ]
     },
     {
       "name": "great sword",
       "description": "iron long sword",
-      "weaponSize":"giant",
+      "weaponSize": "giant",
       "ranged": [
         "close"
       ],
@@ -261,15 +261,15 @@
       ],
       "wearingSlots": [
         [
-          "larm",
-          "rarm"
+          "lhand",
+          "rhand"
         ]
       ]
     },
     {
       "name": "spike",
       "description": "spike",
-      "weaponSize":"heavy",
+      "weaponSize": "heavy",
       "ranged": [
         "close",
         "thrown"
@@ -323,21 +323,21 @@
       ],
       "wearingSlots": [
         [
-          "larm",
-          "rarm"
+          "lhand",
+          "rhand"
         ],
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     },
     {
       "name": "pilum",
       "description": "",
-      "weaponSize":"medium",
+      "weaponSize": "medium",
       "ranged": [
         "close",
         "thrown"
@@ -391,17 +391,17 @@
       ],
       "wearingSlots": [
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     },
     {
       "name": "knife",
       "description": "",
-      "weaponSize":"small",
+      "weaponSize": "small",
       "ranged": [
         "close",
         "thrown"
@@ -458,17 +458,17 @@
       ],
       "wearingSlots": [
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     },
     {
       "name": "small shield",
       "description": "",
-      "weaponSize":"small",
+      "weaponSize": "small",
       "ranged": [
         "close",
         "thrown"
@@ -533,17 +533,17 @@
       ],
       "wearingSlots": [
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     },
     {
       "name": "medium shield",
       "description": "",
-      "weaponSize":"medium",
+      "weaponSize": "medium",
       "ranged": [
         "close",
         "thrown"
@@ -608,17 +608,17 @@
       ],
       "wearingSlots": [
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     },
     {
       "name": "big shield",
       "description": "",
-      "weaponSize":"giant",
+      "weaponSize": "giant",
       "ranged": [
         "close",
         "thrown"
@@ -683,10 +683,10 @@
       ],
       "wearingSlots": [
         [
-          "rarm"
+          "rhand"
         ],
         [
-          "larm"
+          "lhand"
         ]
       ]
     }

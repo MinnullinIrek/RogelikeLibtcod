@@ -36,6 +36,9 @@ class WearingItem : public IItems {
   WearingItem(const WearingStruct& wstr);
   virtual ~WearingItem();
 
+  // Части тела, которые покрывает предмет (одежда/броня).
+  const std::vector<std::vector<EWearingSlot>>& getSlots() const { return m_slots; }
+
  protected:
   std::vector<std::vector<EWearingSlot>> m_slots;
 };
@@ -47,7 +50,13 @@ class Armour : public WearingItem {
   virtual ~Armour();
 
  public:
-  std::vector<EArmorItemTypes> m_wearingTypes;
+  // Тип брони (одежда/легкая/средняя/тяжелая/экзоскелет).
+  // Один и тот же тип может занимать только один слот на части тела,
+  // но разные типы могут покрывать одну часть тела одновременно.
+  EArmorItemTypes getArmourType() const { return m_armourType; }
+
+ private:
+  EArmorItemTypes m_armourType = EArmorItemTypes::clothes;
 };
 
 class Weapon : public WearingItem {
@@ -56,10 +65,15 @@ class Weapon : public WearingItem {
 
   virtual ~Weapon();
 
+  // oneHand — weaponSlots содержит одну кисть, twoHand — обе (lhand+rhand).
+  EWeaponOneTwoHand getHands() const { return m_hands; }
+  EWeaponSize getSize() const { return m_weaponSize; }
+
  protected:
   std::vector<EWeaponType> m_weaponType;
-  EWeaponSize m_weaponSize;
-  EWeaponRangedClose m_rangedClose;
+  EWeaponSize m_weaponSize = EWeaponSize::small;
+  EWeaponRangedClose m_rangedClose = EWeaponRangedClose::melee;
+  EWeaponOneTwoHand m_hands = EWeaponOneTwoHand::oneHand;
 };
 
 #endif

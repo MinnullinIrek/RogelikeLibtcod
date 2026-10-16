@@ -33,7 +33,7 @@
 #include "units/actor_strategy_map.h"
 #include "units/chars.h"
 #include "units/interactor.h"
-#include "units/iunit.h"
+#include "units/IUnit.h"
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
@@ -285,6 +285,8 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.vEffect->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
+    // Окно инвентаря должно видеть части тела героя (правая колонка, включая пустые слоты).
+    inventoryWindow->setHero(gameStruct.hero);
     bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
@@ -317,7 +319,9 @@ int main(int /*argc*/, char** /*argv*/) {
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
 
-    gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
+    // В режиме инвентаря Info не показываем: его место занимает колонка частей тела.
+    mainWindow->addHideWindow(EMainWindows::einventory, infoWindow);
+
     {
       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
       auto chars = gameStruct.hero->getChars();
