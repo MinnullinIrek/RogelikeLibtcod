@@ -2,14 +2,22 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 
 #include "../Bag.h"
+#include "../items/IItems.h"
 #include "../units/BodyPart.h"
 #include "../units/IUnit.h"
 
 namespace {
 // Ширина строки Text (в символах), чтобы не печатать за пределы колонки.
 int textWidth(const std::string& s) { return static_cast<int>(s.size()); }
+
+// Абсолютная X окна Info (Rectangle{{40, 10}, ...} в main.cpp).
+// В режиме инвентаря Info скрыт, и его место занимает колонка частей тела.
+constexpr int kInfoX = 40;
+// Высота блока Info (pos + характеристики) — ниже него начинается описание предмета.
+constexpr int kInfoBlockHeight = 13;
 }  // namespace
 
 InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {
@@ -39,6 +47,19 @@ void InventoryWindow::refreshBodyParts() {
     m_highlightedSlot = hero->getHighlightedSlotIndex();
     auto slots = bp->showSlots(m_highlightedSlot);
     std::copy(slots.begin(), slots.end(), std::back_inserter(m_itemsRight));
+  }
+
+  // Описание выбранного в сумке предмета — печатается под колонкой частей тела,
+  // на месте скрытого в этом режиме блока Info.
+  m_itemDescription = Text("", Color{255, 255, 255}, Color{0, 0, 0});
+  if (auto bag = hero->getBag()) {
+    if (auto item = bag->getSelected()) {
+      std::string desc = item->toString();
+      if (!item->getDescription().empty()) {
+        desc += "\n" + item->getDescription();
+      }
+      m_itemDescription = Text(desc, Color{255, 255, 255}, Color{0, 0, 0});
+    }
   }
 }
 
@@ -84,6 +105,21 @@ void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visu
   // Правая колонка — части тела. Смещена влево на место Info:
   // раньше Info рисовался по абсолютной X=40, теперь BodyParts стартуют оттуда же.
   renderColumn(Coord{parentCd.x + kInfoX, parentCd.y}, m_headerRight, m_itemsRight);
+
+  // Описание выбранного предмета — под блоком Info (его высота зарезервирована),
+  // там же по X. Печатаем построчно, чтобы многострочный текст встал на свои места.
+  if (!m_itemDescription.m_text.empty()) {
+    Coord descCd{parentCd.x + kInfoX, parentCd.y + kInfoBlockHeight};
+    std::istringstream stream(m_itemDescription.m_text);
+    std::string line;
+    while (std::getline(stream, line)) {
+      if (textWidth(line) > halfWidth - 1) {
+        line = line.substr(0, halfWidth - 1);
+      }
+      visualizator({line, m_itemDescription.m_color, m_itemDescription.m_bgColor}, descCd);
+      descCd.y += 1;
+    }
+  }
 }
 
 void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {
