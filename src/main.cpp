@@ -49,6 +49,11 @@
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
 
+// Общие координаты блока Info / колонки частей тела (см. inventory_window.cpp).
+// X — там, где раньше стоял Info; Y — ниже колонок сумки/частей тела.
+constexpr int kInfoX = 40;
+constexpr int kInfoY = 25;
+
 std::unique_ptr<fsm_cxx::machine_t<fsm_cxx::GameState>> gamefsm;
 std::shared_ptr<MainWindow> mainWindow;
 
@@ -290,6 +295,9 @@ int main(int /*argc*/, char** /*argv*/) {
     bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
+    // Info остаётся видимым и в режиме инвентаря (описание предметов нужно).
+    // Колонка частей тела в окне инвентаря смещена влево на место Info,
+    // поэтому сам Info опускаем ниже колонок (см. kBodyPartsColumnHeight в inventory_window.cpp).
     auto infoWindow = std::make_shared<Window>(
         [&hero = gameStruct.hero](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
           auto lockedPublisher = moverPub.lock();
@@ -315,12 +323,14 @@ int main(int /*argc*/, char** /*argv*/) {
         std::string_view(""),
         Color{255, 255, 255},
         Color{0, 0, 255},
-        Rectangle{{40, 10}, {60, 15}},
+        // X = место Info (колонка частей тела в инвентаре тоже стартует отсюда).
+        // Y = ниже колонок сумки/частей тела, чтобы не перекрываться с ними.
+        Rectangle{{kInfoX, kInfoY}, {60, kInfoY + 5}},
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
-
-    // В режиме инвентаря Info не показываем: его место занимает колонка частей тела.
-    mainWindow->addHideWindow(EMainWindows::einventory, infoWindow);
+    // Info показываем во всех режимах, включая инвентарь (описание предметов нужно).
+    // Инвентарь будет подставлять в Info описание выбранного предмета:
+    inventoryWindow->setInfoWindow(infoWindow);
 
     {
       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
