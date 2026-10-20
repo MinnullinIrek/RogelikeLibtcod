@@ -39,6 +39,9 @@ class InventoryWindow : public IWindow, public Subscriber {
   // Индекс части тела, на которую встанет выбранный в сумке предмет.
   int m_highlightedSlot = -1;
 
+  // Печать Info-блока (описание выбранного предмета) внутри окна инвентаря.
+  void renderItemInfo(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd);
+
   void refresh();
   // Обновление только правой колонки (части тела) — вызывается при каждом show,
   // чтобы подсветка слота не «замораживалась» до событий equip/unequip.

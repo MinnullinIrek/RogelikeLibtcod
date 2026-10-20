@@ -5,6 +5,8 @@
 #include <sstream>
 
 #include "../Bag.h"
+#include "../char_names.h"
+#include "../char_types.h"
 #include "../items/IItems.h"
 #include "../units/BodyPart.h"
 #include "../units/IUnit.h"
@@ -14,14 +16,8 @@ namespace {
 // Ширина строки Text (в символах), чтобы не печатать за пределы колонки.
 int textWidth(const std::string& s) { return static_cast<int>(s.size()); }
 
-// Абсолютная X блока Info (Rectangle{{40, kInfoY}, ...} в main.cpp).
-// Колонка частей тела стоит на месте Info по X, но начинается сверху окна.
-constexpr int kInfoX = 40;
-// Y, ниже которого рисуется Info (main.cpp: kInfoY = 25).
-// Столбцы сумки/частей тела заканчиваются выше — пересечений нет.
-constexpr int kInfoY = 25;
-// Максимальная высота колонок (сумка / части тела) — до блока Info.
-constexpr int kColumnMaxHeight = kInfoY - 1;
+// Абсолютная X колонки частей тела — там же, где раньше стоял Info.
+constexpr int kBodyPartsX = 40;
 }  // namespace
 
 InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {
@@ -55,6 +51,8 @@ void InventoryWindow::refreshBodyParts() {
 
   // Описание выбранного в сумке предмета — его печатает окно Info (main.cpp),
   // опущенное ниже колонок сумки/частей тела. Готовим текст здесь и обновляем Info.
+  // Текст формируется через тот же renderInfoText, что и внутренний Info-блок,
+  // но без заголовка "Info:".
   std::string desc;
   if (auto bag = hero->getBag()) {
     if (auto item = bag->getSelected()) {
@@ -66,7 +64,56 @@ void InventoryWindow::refreshBodyParts() {
   }
   m_itemDescription = Text(desc, Color{255, 255, 255}, Color{0, 0, 0});
   if (auto info = m_infoWindow.lock()) {
+    // В режиме инвентаря описание печатает внутренний Info-блок окна (renderItemInfo),
+    // а внешний Info в это время скрыт через MainWindow::addHideWindow (см. main.cpp) —
+    // иначе два Info перекрывали бы друг друга и описание казалось «пропавшим».
     info->setText(desc.empty() ? "Info:" : ("Info:\n" + desc));
+  }
+}
+
+// Печать описания выбранного предмета в блок Info (внизу окна инвентаря).
+// Вызывается из show() независимо от того, подключено ли отдельное Info-окно.
+void InventoryWindow::renderItemInfo(const std::function<void(Text&&, const Coord&)>& visualizator,
+                                     const Coord& parentCd) {
+  auto hero = m_hero.lock();
+  if (!hero) return;
+
+  std::string desc;
+  bool hasItem = false;
+  if (auto bag = hero->getBag()) {
+    if (auto item = bag->getSelected()) {
+      hasItem = true;
+      desc = item->toString();
+      if (!item->getDescription().empty()) {
+        desc += "\n" + item->getDescription();
+      }
+    }
+  }
+  // Если ничего не выбрано — показываем характеристики героя (как обычное Info).
+  if (!hasItem) {
+    const auto& cd = hero->getCoord();
+    desc = "pos: " + cd.toString();
+    if (auto chars = hero->getChars()) {
+      for (int i = 0; i < static_cast<int>(ECharTypes::count); ++i) {
+        desc += "\n" + std::string(charNames[i]) + ": " + std::to_string(chars->getValue(i));
+      }
+    }
+  }
+
+  // Блок ниже колонок сумки/частей тела (высота колонок ограничена 18 строками).
+  const Coord start{parentCd.x + kBodyPartsX, parentCd.y + 19};
+  visualizator(Text("Info:", Color{255, 255, 0}, Color{0, 0, 0}), start);
+  // Разбивание по '\n' и печать построчно, обрезая по ширине блока.
+  std::istringstream stream(desc);
+  std::string line;
+  int y = start.y + 1;
+  const int maxY = parentCd.y + std::max(m_rectangle.height(), 26);
+  while (std::getline(stream, line) && y <= maxY) {
+    if (textWidth(line) > 30) {
+      line = line.substr(0, 30);
+    }
+    visualizator(Text(line, Color{255, 255, 255}, Color{0, 0, 0}), Coord{start.x, y});
+    ++y;
   }
 }
 
@@ -112,7 +159,10 @@ void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visu
 
   // Правая колонка — части тела. Смещена влево на место Info:
   // раньше Info рисовался по абсолютной X=40, теперь BodyParts стартуют оттуда же.
-  renderColumn(Coord{parentCd.x + kInfoX, parentCd.y}, m_headerRight, m_itemsRight);
+  renderColumn(Coord{parentCd.x + kBodyPartsX, parentCd.y}, m_headerRight, m_itemsRight);
+
+  // Описание выбранного предмета (Info) — ниже колонок, в той же правой колонке.
+  renderItemInfo(visualizator, parentCd);
 }
 
 void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {

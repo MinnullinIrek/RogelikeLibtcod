@@ -328,8 +328,12 @@ int main(int /*argc*/, char** /*argv*/) {
         Rectangle{{kInfoX, kInfoY}, {60, kInfoY + 5}},
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
-    // Info показываем во всех режимах, включая инвентарь (описание предметов нужно).
-    // Инвентарь будет подставлять в Info описание выбранного предмета:
+    // В режимах Map/Char Info показывает позицию и характеристики героя.
+    // В режиме инвентаря внешний Info скрывается: описание выбранного предмета
+    // печатает внутренний Info-блок окна инвентаря (ниже колонок, там же по X),
+    // чтобы два блока не перекрывали друг друга.
+    mainWindow->addHideWindow(EMainWindows::einventory, std::static_pointer_cast<IWindow>(infoWindow));
+    // Инвентарь подставляет в Info описание выбранного предмета (для не-инвентарных режимов):
     inventoryWindow->setInfoWindow(infoWindow);
 
     {
