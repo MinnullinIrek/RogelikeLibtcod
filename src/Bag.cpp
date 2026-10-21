@@ -32,6 +32,22 @@ std::weak_ptr<IItems> Bag::popItem() {
   return popItem;
 }
 
+void Bag::replaceSelected(const std::shared_ptr<IItems>& item) {
+  if (m_selected >= 0 && m_selected < static_cast<int>(m_items.size())) {
+    m_items[m_selected] = item;
+    emit();
+  } else if (item) {
+    putItem(item);
+  }
+}
+
+std::shared_ptr<IItems> Bag::getSelected() const {
+  if (m_selected >= 0 && m_selected < static_cast<int>(m_items.size())) {
+    return m_items[m_selected];
+  }
+  return nullptr;
+}
+
 void Bag::select(int next) {
   if (!m_items.empty()) {
     // Если ничего не выделено (например, при первом открытии инвентаря),
@@ -68,11 +84,16 @@ std::list<Text> Bag::showBag(Count count) {
   }
 
   const int visible = std::min(static_cast<int>(count), size);
-  // Выделение всегда в верхней строке окна, пока под ним хватает строк до
-  // конца инвентаря. Когда достигаются последние предметы, окно «прилипает»
-  // к концу списка (ниже последнего элемента оно не уходит) — дальше при
-  // навигации перемещается только выделение [#], а сами предметы стоят на месте.
-  int first = m_selected;
+  // Прокрутка начинается, когда выделение доходит до середины видимого окна:
+  // пока выделен предмет в верхней половине — список стоит (первый предмет сверху),
+  // как только выделение переходит за середину — список скролится, удерживая
+  // выделенный предмет на его строке. У самого конца списка окно «прилипает»
+  // к последнему предмету (за него выделение не уходит).
+  const int mid = visible / 2;
+  int first = 0;
+  if (m_selected > mid) {
+    first = m_selected - mid;
+  }
   if (first > size - visible) {
     first = size - visible;
   }

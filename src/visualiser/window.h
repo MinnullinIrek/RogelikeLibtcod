@@ -30,6 +30,9 @@ class Window : public IWindow, public Subscriber {
   Color m_color;
   Color m_bgColor;
 
+  // Обновить текст окна извне (например, описание выбранного предмета из инвентаря).
+  void setText(std::string text) { m_text = std::move(text); }
+
   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
 
   void notify(std::weak_ptr<Publisher> publisher) override;

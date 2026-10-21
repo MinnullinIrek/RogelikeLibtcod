@@ -18,6 +18,7 @@ class MoverInterface;
 class Chars;
 class Interactor;
 class BodyParts;
+class WearingItem;
 class Effect;
 class CorpsDeleter;
 // class Prototype;
@@ -67,6 +68,21 @@ class Unit : public IUnit, public ToString, public Subscriber {
   std::shared_ptr<Chars> getChars();
   void setBodyParts(std::shared_ptr<BodyParts> bp);
   std::shared_ptr<BodyParts> getBodyParts();
+  // weak-копия набора частей тела (для emit-уведомлений от отдельных Bodypart).
+  std::weak_ptr<BodyParts> m_bodyPartsWeak() const;
+  // Надеть выбранный в сумке предмет на части тела (броня — на покрываемые части,
+  // оружие — в кисть/кисти). Возвращает true при успехе.
+  bool equipSelectedFromBag();
+  // Снять экипированный предмет с тела и вернуть его в сумку.
+  bool unequipToBag(const std::shared_ptr<WearingItem>& item);
+  // Навигация по списку экипированных предметов (для окна инвентаря):
+  void selectEquipped(int delta);
+  int getEquippedSelected() const { return m_equippedSelected; }
+  std::shared_ptr<WearingItem> getEquippedSelectedItem() const;
+  // Индекс части тела, подсвечиваемой под выбранным в сумке предметом (или -1).
+  int getHighlightedSlotIndex() const;
+  // Снять выбранный экипированный предмет (клавиша X в инвентаре).
+  bool unequipSelected();
   void createTestEffect();
   void setInteractor(std::shared_ptr<Interactor> interactor) override;
   std::shared_ptr<Interactor> getInteractor() override;
@@ -87,6 +103,9 @@ class Unit : public IUnit, public ToString, public Subscriber {
   std::unordered_map<Coord, bool, KeyHasher> m_watchingCoords;
   std::shared_ptr<Chars> m_chars;
   std::shared_ptr<BodyParts> m_bodyParts;
+  // Strong-хранилище экипированных предметов (части тела держат weak_ptr).
+  std::vector<std::shared_ptr<WearingItem>> m_equippedItems;
+  int m_equippedSelected = -1;
   std::shared_ptr<Interactor> m_currentInteractor;
   std::unordered_map<int, CharSubscriber> m_charSubscribers;
   std::weak_ptr<CorpsDeleter> m_corpsDeleter;

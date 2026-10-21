@@ -51,6 +51,12 @@ void Keyboard::setKey(int key, bool down) {
     case SDLK_C:
       action = EAction::charAction;
       break;
+    case SDLK_E:
+      action = EAction::equip;
+      break;
+    case SDLK_X:
+      action = EAction::unequip;
+      break;
     case SDLK_B:
       // if (m_lastKeys == SDLK_LCTRL)
       {

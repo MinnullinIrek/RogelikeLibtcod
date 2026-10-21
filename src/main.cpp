@@ -33,7 +33,7 @@
 #include "units/actor_strategy_map.h"
 #include "units/chars.h"
 #include "units/interactor.h"
-#include "units/iunit.h"
+#include "units/IUnit.h"
 #include "units/mover.h"
 #include "units_factory.h"
 #include "utils/consts_reader.h"
@@ -48,6 +48,11 @@
 #include "visualiser/map_window.h"
 #include "visualiser/visualiser.h"
 #include "visualiser/window.h"
+
+// Общие координаты блока Info / колонки частей тела (см. inventory_window.cpp).
+// X — там, где раньше стоял Info; Y — ниже колонок сумки/частей тела.
+constexpr int kInfoX = 40;
+constexpr int kInfoY = 25;
 
 std::unique_ptr<fsm_cxx::machine_t<fsm_cxx::GameState>> gamefsm;
 std::shared_ptr<MainWindow> mainWindow;
@@ -285,9 +290,14 @@ int main(int /*argc*/, char** /*argv*/) {
     gameStruct.vEffect->addSubscriber(mapWindow);
 
     bag->addSubscriber(inventoryWindow);
+    // Окно инвентаря должно видеть части тела героя (правая колонка, включая пустые слоты).
+    inventoryWindow->setHero(gameStruct.hero);
     bag->emit();
     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
 
+    // Info остаётся видимым и в режиме инвентаря (описание предметов нужно).
+    // Колонка частей тела в окне инвентаря смещена влево на место Info,
+    // поэтому сам Info опускаем ниже колонок (см. kBodyPartsColumnHeight в inventory_window.cpp).
     auto infoWindow = std::make_shared<Window>(
         [&hero = gameStruct.hero](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
           auto lockedPublisher = moverPub.lock();
@@ -313,11 +323,19 @@ int main(int /*argc*/, char** /*argv*/) {
         std::string_view(""),
         Color{255, 255, 255},
         Color{0, 0, 255},
-        Rectangle{{40, 10}, {60, 15}},
+        // X = место Info (колонка частей тела в инвентаре тоже стартует отсюда).
+        // Y = ниже колонок сумки/частей тела, чтобы не перекрываться с ними.
+        Rectangle{{kInfoX, kInfoY}, {60, kInfoY + 5}},
         false);
     gameStruct.hero->getMover()->addSubscriber(infoWindow);
+    // В режимах Map/Char Info показывает позицию и характеристики героя.
+    // В режиме инвентаря внешний Info скрывается: описание выбранного предмета
+    // печатает внутренний Info-блок окна инвентаря (ниже колонок, там же по X),
+    // чтобы два блока не перекрывали друг друга.
+    mainWindow->addHideWindow(EMainWindows::einventory, std::static_pointer_cast<IWindow>(infoWindow));
+    // Инвентарь подставляет в Info описание выбранного предмета (для не-инвентарных режимов):
+    inventoryWindow->setInfoWindow(infoWindow);
 
-    gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(infoWindow));
     {
       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
       auto chars = gameStruct.hero->getChars();

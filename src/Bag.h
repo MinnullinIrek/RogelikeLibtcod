@@ -18,6 +18,11 @@ class Bag : public Publisher {
   void putItem(std::shared_ptr<Bag> bag);
 
   std::weak_ptr<IItems> popItem();
+  bool hasSelected() const { return m_selected >= 0; }
+  // Заменить выбранный предмет другим (например, вернуть снятую с тела вещь в сумку).
+  void replaceSelected(const std::shared_ptr<IItems>& item);
+  // Текущий выбранный предмет (или nullptr, если сумка пуста).
+  std::shared_ptr<IItems> getSelected() const;
   void select(int next);
   std::list<Text> showBag(Count count);
 
