@@ -1,0 +1,199 @@
+From cf2f88e903f8df220f0f33530cbb42ef858540f1 Mon Sep 17 00:00:00 2001
+From: "qwen.ai[bot]" <qwenlm-intl@service.alibaba.com>
+Date: Mon, 19 Oct 2026 19:20:25 +0000
+Subject: [PATCH] Keep Info visible in inventory mode, lowered below columns;
+ item description shown in Info
+
+---
+ src/main.cpp                        | 18 +++++++++---
+ src/visualiser/inventory_window.cpp | 43 ++++++++++++-----------------
+ src/visualiser/inventory_window.h   |  6 ++++
+ src/visualiser/window.h             |  3 ++
+ 4 files changed, 41 insertions(+), 29 deletions(-)
+
+diff --git a/src/main.cpp b/src/main.cpp
+index a773545..137e056 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -49,6 +49,11 @@
+ #include "visualiser/visualiser.h"
+ #include "visualiser/window.h"
+ 
++// Общие координаты блока Info / колонки частей тела (см. inventory_window.cpp).
++// X — там, где раньше стоял Info; Y — ниже колонок сумки/частей тела.
++constexpr int kInfoX = 40;
++constexpr int kInfoY = 25;
++
+ std::unique_ptr<fsm_cxx::machine_t<fsm_cxx::GameState>> gamefsm;
+ std::shared_ptr<MainWindow> mainWindow;
+ 
+@@ -290,6 +295,9 @@ int main(int /*argc*/, char** /*argv*/) {
+     bag->emit();
+     gameStruct.visualiser->addWindow(std::static_pointer_cast<IWindow>(mainWindow));
+ 
++    // Info остаётся видимым и в режиме инвентаря (описание предметов нужно).
++    // Колонка частей тела в окне инвентаря смещена влево на место Info,
++    // поэтому сам Info опускаем ниже колонок (см. kBodyPartsColumnHeight в inventory_window.cpp).
+     auto infoWindow = std::make_shared<Window>(
+         [&hero = gameStruct.hero](std::weak_ptr<Publisher> moverPub, std::string& text, Color& color, Color& bkColor) {
+           auto lockedPublisher = moverPub.lock();
+@@ -315,12 +323,14 @@ int main(int /*argc*/, char** /*argv*/) {
+         std::string_view(""),
+         Color{255, 255, 255},
+         Color{0, 0, 255},
+-        Rectangle{{40, 10}, {60, 15}},
++        // X = место Info (колонка частей тела в инвентаре тоже стартует отсюда).
++        // Y = ниже колонок сумки/частей тела, чтобы не перекрываться с ними.
++        Rectangle{{kInfoX, kInfoY}, {60, kInfoY + 5}},
+         false);
+     gameStruct.hero->getMover()->addSubscriber(infoWindow);
+-
+-    // В режиме инвентаря Info не показываем: его место занимает колонка частей тела.
+-    mainWindow->addHideWindow(EMainWindows::einventory, infoWindow);
++    // Info показываем во всех режимах, включая инвентарь (описание предметов нужно).
++    // Инвентарь будет подставлять в Info описание выбранного предмета:
++    inventoryWindow->setInfoWindow(infoWindow);
+ 
+     {
+       auto charWindow = std::make_shared<CharsWindow>(Rectangle{{1, 1}, {30, 30}});
+diff --git a/src/visualiser/inventory_window.cpp b/src/visualiser/inventory_window.cpp
+index e51b367..644441f 100644
+--- a/src/visualiser/inventory_window.cpp
++++ b/src/visualiser/inventory_window.cpp
+@@ -8,16 +8,20 @@
+ #include "../items/IItems.h"
+ #include "../units/BodyPart.h"
+ #include "../units/IUnit.h"
++#include "window.h"
+ 
+ namespace {
+ // Ширина строки Text (в символах), чтобы не печатать за пределы колонки.
+ int textWidth(const std::string& s) { return static_cast<int>(s.size()); }
+ 
+-// Абсолютная X окна Info (Rectangle{{40, 10}, ...} в main.cpp).
+-// В режиме инвентаря Info скрыт, и его место занимает колонка частей тела.
++// Абсолютная X блока Info (Rectangle{{40, kInfoY}, ...} в main.cpp).
++// Колонка частей тела стоит на месте Info по X, но начинается сверху окна.
+ constexpr int kInfoX = 40;
+-// Высота блока Info (pos + характеристики) — ниже него начинается описание предмета.
+-constexpr int kInfoBlockHeight = 13;
++// Y, ниже которого рисуется Info (main.cpp: kInfoY = 25).
++// Столбцы сумки/частей тела заканчиваются выше — пересечений нет.
++constexpr int kInfoY = 25;
++// Максимальная высота колонок (сумка / части тела) — до блока Info.
++constexpr int kColumnMaxHeight = kInfoY - 1;
+ }  // namespace
+ 
+ InventoryWindow::InventoryWindow(const Rectangle& rect) : IWindow(rect) {
+@@ -49,18 +53,21 @@ void InventoryWindow::refreshBodyParts() {
+     std::copy(slots.begin(), slots.end(), std::back_inserter(m_itemsRight));
+   }
+ 
+-  // Описание выбранного в сумке предмета — печатается под колонкой частей тела,
+-  // на месте скрытого в этом режиме блока Info.
+-  m_itemDescription = Text("", Color{255, 255, 255}, Color{0, 0, 0});
++  // Описание выбранного в сумке предмета — его печатает окно Info (main.cpp),
++  // опущенное ниже колонок сумки/частей тела. Готовим текст здесь и обновляем Info.
++  std::string desc;
+   if (auto bag = hero->getBag()) {
+     if (auto item = bag->getSelected()) {
+-      std::string desc = item->toString();
++      desc = item->toString();
+       if (!item->getDescription().empty()) {
+         desc += "\n" + item->getDescription();
+       }
+-      m_itemDescription = Text(desc, Color{255, 255, 255}, Color{0, 0, 0});
+     }
+   }
++  m_itemDescription = Text(desc, Color{255, 255, 255}, Color{0, 0, 0});
++  if (auto info = m_infoWindow.lock()) {
++    info->setText(desc.empty() ? "Info:" : ("Info:\n" + desc));
++  }
+ }
+ 
+ void InventoryWindow::refresh() {
+@@ -80,7 +87,8 @@ void InventoryWindow::refresh() {
+ }
+ 
+ void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) {
+-  // Части тела всегда актуальны (подсветка зависит от выбранного в сумке предмета).
++  // Части тела и описание выбранного предмета всегда актуальны (подсветка слотов
++  // и описание зависят от того, какой предмет выбран стрелками в сумке).
+   refreshBodyParts();
+ 
+   const int halfWidth = m_rectangle.width() / 2;
+@@ -105,21 +113,6 @@ void InventoryWindow::show(const std::function<void(Text&&, const Coord&)>& visu
+   // Правая колонка — части тела. Смещена влево на место Info:
+   // раньше Info рисовался по абсолютной X=40, теперь BodyParts стартуют оттуда же.
+   renderColumn(Coord{parentCd.x + kInfoX, parentCd.y}, m_headerRight, m_itemsRight);
+-
+-  // Описание выбранного предмета — под блоком Info (его высота зарезервирована),
+-  // там же по X. Печатаем построчно, чтобы многострочный текст встал на свои места.
+-  if (!m_itemDescription.m_text.empty()) {
+-    Coord descCd{parentCd.x + kInfoX, parentCd.y + kInfoBlockHeight};
+-    std::istringstream stream(m_itemDescription.m_text);
+-    std::string line;
+-    while (std::getline(stream, line)) {
+-      if (textWidth(line) > halfWidth - 1) {
+-        line = line.substr(0, halfWidth - 1);
+-      }
+-      visualizator({line, m_itemDescription.m_color, m_itemDescription.m_bgColor}, descCd);
+-      descCd.y += 1;
+-    }
+-  }
+ }
+ 
+ void InventoryWindow::notify(std::weak_ptr<Publisher> pbag) {
+diff --git a/src/visualiser/inventory_window.h b/src/visualiser/inventory_window.h
+index 3c0757c..e914d38 100644
+--- a/src/visualiser/inventory_window.h
++++ b/src/visualiser/inventory_window.h
+@@ -3,11 +3,13 @@
+ 
+ #include <list>
+ #include <memory>
++#include <string>
+ 
+ #include "../utils/subscriber.h"
+ #include "iwindow.h"
+ 
+ class Unit;
++class Window;
+ 
+ // Окно инвентаря: слева — сумка, справа — экипированные предметы по частям тела.
+ // Подписка и на Bag, и на героя (Unit/BodyParts каскадно шлют emit), поэтому
+@@ -19,6 +21,9 @@ class InventoryWindow : public IWindow, public Subscriber {
+   void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
+   void notify(std::weak_ptr<Publisher> publisher) override;
+   void setHero(std::shared_ptr<Unit> hero);
++  // Окно Info (описание выбранного предмета). InventoryWindow обновляет его текст
++  // при навигации по сумке; в режиме инвентаря Info опущен ниже колонок (main.cpp).
++  void setInfoWindow(std::shared_ptr<Window> info) { m_infoWindow = info; }
+ 
+  private:
+   Text m_headerLeft;
+@@ -28,6 +33,7 @@ class InventoryWindow : public IWindow, public Subscriber {
+   std::list<Text> m_itemsRight;
+ 
+   std::weak_ptr<Unit> m_hero;
++  std::weak_ptr<Window> m_infoWindow;
+   Text m_itemDescription;
+ 
+   // Индекс части тела, на которую встанет выбранный в сумке предмет.
+diff --git a/src/visualiser/window.h b/src/visualiser/window.h
+index 92f9da2..176fe98 100644
+--- a/src/visualiser/window.h
++++ b/src/visualiser/window.h
+@@ -30,6 +30,9 @@ class Window : public IWindow, public Subscriber {
+   Color m_color;
+   Color m_bgColor;
+ 
++  // Обновить текст окна извне (например, описание выбранного предмета из инвентаря).
++  void setText(std::string text) { m_text = std::move(text); }
++
+   virtual void show(const std::function<void(Text&&, const Coord&)>& visualizator, const Coord& parentCd) override;
+ 
+   void notify(std::weak_ptr<Publisher> publisher) override;
+-- 
+2.39.5
+
